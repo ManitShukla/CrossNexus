@@ -29,13 +29,29 @@ const app = express();
 const server = http.createServer(app);
 
 // Whitelist origins for local dev and configured deployment
-const configuredClient = process.env.CLIENT_URL || 'http://localhost:5173';
-const allowedOrigins = [
+const configuredClient = process.env.CLIENT_URL || 'https://crossnexus.vercel.app';
+const staticAllowedOrigins = [
   configuredClient,
   'https://crossnexus.vercel.app',
+  'https://nsut-connect-by-ms.vercel.app',
   'http://localhost:5173',
   'http://127.0.0.1:5173',
+  'http://localhost:3000',
 ];
+
+/**
+ * Robust origin validator: checks explicit list, CLIENT_URL, Vercel wildcard subdomains, and local dev
+ */
+const isOriginAllowed = (origin) => {
+  if (!origin) return true; // Allow server-to-server, curl, mobile, or same-origin
+  if (staticAllowedOrigins.includes(origin)) return true;
+  if (process.env.CLIENT_URL && origin === process.env.CLIENT_URL) return true;
+  // Match any *.vercel.app domain (production and preview branches)
+  if (/^https:\/\/([a-zA-Z0-9-]+\.)*vercel\.app$/.test(origin)) return true;
+  // Match localhost / loopback dev ports
+  if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return true;
+  return false;
+};
 
 // -----------------------------------------------------------------------------
 // REAL-TIME PROTOCOL: SOCKET.IO INITIALIZATION
@@ -43,10 +59,10 @@ const allowedOrigins = [
 const io = new Server(server, {
   cors: {
     origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
+      if (isOriginAllowed(origin)) {
         callback(null, true);
       } else {
-        callback(new Error('CORS origin rejected by tactical policy'));
+        callback(new Error(`CORS origin rejected by tactical policy: ${origin}`));
       }
     },
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
@@ -72,7 +88,7 @@ app.use(
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
-        connectSrc: ["'self'", ...allowedOrigins, 'ws:', 'wss:'],
+        connectSrc: ["'self'", ...staticAllowedOrigins, 'https://*.vercel.app', 'https://*.onrender.com', 'ws:', 'wss:'],
         scriptSrc: ["'self'", "'unsafe-inline'"],
         styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
         fontSrc: ["'self'", 'https://fonts.gstatic.com'],
@@ -83,21 +99,23 @@ app.use(
   })
 );
 
-// Tactical CORS policy
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error(`CORS blocked for untrusted origin: ${origin}`));
-      }
-    },
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'X-Client-Interface'],
-  })
-);
+// Tactical CORS policy for Express with full preflight handling
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (isOriginAllowed(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error(`CORS blocked for untrusted origin: ${origin}`));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'X-Client-Interface'],
+  exposedHeaders: ['Authorization'],
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 // Tactical rate limiting: prevent API abuse and brute-force
 const apiLimiter = rateLimit({
@@ -176,7 +194,7 @@ server.listen(PORT, () => {
   console.log('\x1b[36m%s\x1b[0m', '==================================================');
   console.log('\x1b[32m%s\x1b[0m', `[SYS_ONLINE] CrossNexus Core Server listening on port: ${PORT}`);
   console.log('\x1b[32m%s\x1b[0m', `[SYS_ONLINE] Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log('\x1b[32m%s\x1b[0m', `[SYS_ONLINE] Allowed Client Origins: ${allowedOrigins.join(', ')}`);
+  console.log('\x1b[32m%s\x1b[0m', `[SYS_ONLINE] Allowed Client Origins: ${staticAllowedOrigins.join(', ')} + (*.vercel.app)`);
   console.log('\x1b[36m%s\x1b[0m', '==================================================');
 });
 

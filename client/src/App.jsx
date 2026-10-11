@@ -41,7 +41,10 @@ function DashboardHUD() {
     setIsPinging(true);
     setLogs(prev => [`[${new Date().toLocaleTimeString()}] Pinging backend /health endpoint...`, ...prev]);
     try {
-      const res = await fetch('http://localhost:5000/health');
+      const rawBackend = (import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || 'https://nsut-connect.onrender.com')
+        .replace(/\/+$/, '')
+        .replace(/\/api$/, '');
+      const res = await fetch(`${rawBackend}/health`);
       const data = await res.json();
       setServerStatus({ 
         status: 'CONNECTION_VERIFIED', 

@@ -11,10 +11,11 @@ const NSUT_DOMAIN_REGEX = /^[a-zA-Z0-9._%+-]+@nsut\.ac\.in$/;
 const configurePassport = () => {
   const clientID = process.env.GOOGLE_CLIENT_ID;
   const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
-  const callbackURL = process.env.GOOGLE_CALLBACK_URL || 'http://localhost:5000/api/auth/google/callback';
+  const backendBase = (process.env.BACKEND_URL || 'https://nsut-connect.onrender.com').replace(/\/+$/, '');
+  const callbackURL = process.env.GOOGLE_CALLBACK_URL || `${backendBase}/api/auth/google/callback`;
 
   if (!clientID || !clientSecret || clientID.includes('your-google-client-id') || clientID.includes('mock-google-client-id')) {
-    console.warn('\x1b[33m%s\x1b[0m', '[AUTH_WARN] Google OAuth 2.0 credentials not fully hydrated in server/.env.');
+    console.warn('\x1b[33m%s\x1b[0m', '[AUTH_WARN] Google OAuth 2.0 credentials not fully hydrated in server environment.');
     return;
   }
 

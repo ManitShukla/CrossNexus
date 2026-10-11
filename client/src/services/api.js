@@ -3,15 +3,20 @@ import axios from 'axios';
 /**
  * Tactical API Client Interface
  * Standardized REST client pointing to backend API server with credentials & token injection.
+ * Dynamically resolves VITE_API_URL or VITE_API_BASE_URL, defaulting to live production Render backend.
  */
+const rawUrl = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || 'https://nsut-connect.onrender.com';
+const cleanBaseUrl = rawUrl.replace(/\/+$/, '');
+const API_BASE_URL = cleanBaseUrl.endsWith('/api') ? cleanBaseUrl : `${cleanBaseUrl}/api`;
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api',
+  baseURL: API_BASE_URL,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
     'X-Client-Interface': 'CROSSNEXUS-TACTICAL-FUI',
   },
-  timeout: 15000,
+  timeout: 20000,
 });
 
 api.interceptors.request.use(

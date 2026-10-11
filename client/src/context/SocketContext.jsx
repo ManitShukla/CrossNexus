@@ -52,9 +52,8 @@ export const SocketProvider = ({ children }) => {
     // -------------------------------------------------------------------------
     setConnectionStatus('CONNECTING');
 
-    const backendUrl = import.meta.env.VITE_API_URL 
-      ? import.meta.env.VITE_API_URL.replace(/\/api\/?$/, '') 
-      : 'http://localhost:5000';
+    const rawSocketUrl = import.meta.env.VITE_SOCKET_URL || import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || 'https://nsut-connect.onrender.com';
+    const backendUrl = rawSocketUrl.replace(/\/+$/, '').replace(/\/api$/, '');
 
     console.log(`[WSS_INITIATING] Targeting tactical endpoint: ${backendUrl}`);
 

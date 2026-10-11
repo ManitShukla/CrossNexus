@@ -4,7 +4,7 @@ const User = require('../models/User');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'TACTICAL_ALPHA_KEY_SECURE_9812739182371982_CROSSNEXUS';
 const JWT_EXPIRES_IN = '7d';
-const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:5173';
+const CLIENT_URL = (process.env.CLIENT_URL || 'https://crossnexus.vercel.app').replace(/\/+$/, '');
 
 /**
  * Generate cryptographically signed tactical JWT

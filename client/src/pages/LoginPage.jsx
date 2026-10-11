@@ -34,15 +34,17 @@ export default function LoginPage() {
     errorParam === 'unauthorized_domain' || 
     errorParam === 'INVALID_DOMAIN' || 
     devError === 'unauthorized_domain';
+  const isGoogleUnconfigured = 
+    errorParam === 'google_oauth_unconfigured' || 
+    errorParam === 'oauth_unconfigured';
   const isOtherError = 
-    (errorParam && !isUnauthorizedDomain) || 
+    (errorParam && !isUnauthorizedDomain && !isGoogleUnconfigured) || 
     (devError && devError !== 'unauthorized_domain');
 
   const handleGoogleSSO = () => {
     setIsRedirecting(true);
-    const backendUrl = import.meta.env.VITE_API_BASE_URL 
-      ? import.meta.env.VITE_API_BASE_URL.replace('/api', '') 
-      : 'http://localhost:5000';
+    const rawBackend = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || 'https://nsut-connect.onrender.com';
+    const backendUrl = rawBackend.replace(/\/+$/, '').replace(/\/api$/, '');
     window.location.href = `${backendUrl}/api/auth/google`;
   };
 
@@ -59,6 +61,8 @@ export default function LoginPage() {
       } else {
         navigate('/feed');
       }
+    } else {
+      setDevError(result?.error?.message || 'Server connection failed. Please ensure the backend is active.');
     }
   };
 
@@ -115,8 +119,33 @@ export default function LoginPage() {
           </div>
         )}
 
+        {/* GOOGLE OAUTH CONFIGURATION NOTICE */}
+        {isGoogleUnconfigured && (
+          <div className="border border-teal/70 bg-charcoal-panel p-4 relative">
+            <div className="fui-reticle-tl border-teal" />
+            <div className="fui-reticle-tr border-teal" />
+            <div className="fui-reticle-bl border-teal" />
+            <div className="fui-reticle-br border-teal" />
+
+            <div className="flex items-start gap-3">
+              <KeyRound className="w-6 h-6 text-teal flex-shrink-0 mt-0.5" />
+              <div className="space-y-1.5">
+                <div className="text-xs font-bold text-teal tracking-alert uppercase">
+                  [ GOOGLE OAUTH CREDENTIALS PENDING CONFIGURATION ]
+                </div>
+                <p className="text-[11px] text-tactical-bright leading-relaxed">
+                  Google OAuth 2.0 credentials have not yet been registered in Render environment variables. You can enter immediately using the <span className="text-phosphor font-bold">Evaluator Demo Harness</span> below to test Student or Campus Admin roles without needing Google credentials.
+                </p>
+                <div className="text-[10px] text-tactical-muted font-mono pt-1 border-t border-stroke-dim">
+                  GUIDANCE: Populate GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET on Render Dashboard to enable live Google SSO.
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* GENERAL ERROR NOTICE */}
-        {isOtherError && !isUnauthorizedDomain && (
+        {isOtherError && !isUnauthorizedDomain && !isGoogleUnconfigured && (
           <div className="border border-stroke-bright bg-charcoal-surface p-4 text-xs text-tactical-muted">
             <span className="text-hazard font-bold">[ SYSTEM NOTICE ]</span> Authentication error occurred: {errorParam || devError}. Check server status.
           </div>
