@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const User = require('../models/User');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'TACTICAL_ALPHA_KEY_SECURE_9812739182371982_NSUT_CONNECT';
+const JWT_SECRET = process.env.JWT_SECRET || 'TACTICAL_ALPHA_KEY_SECURE_9812739182371982_CROSSNEXUS';
 const JWT_EXPIRES_IN = '7d';
 const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:5173';
 

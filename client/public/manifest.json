@@ -1,7 +1,7 @@
 {
-  "name": "NSUT Connect // Tactical Operations",
-  "short_name": "NSUT Connect",
-  "description": "Tactical FUI Campus Intelligence, Real-Time Announcements, Smart Timetable, and IPFS Academic Vault",
+  "name": "CrossNexus // Tactical Operations",
+  "short_name": "CrossNexus",
+  "description": "CrossNexus: Tactical FUI Campus Intelligence, Real-Time Announcements, Smart Timetable, and IPFS Academic Vault",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

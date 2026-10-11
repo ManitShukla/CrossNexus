@@ -1,11 +1,11 @@
 /**
- * NSUT Connect // Tactical Operations Service Worker
+ * CrossNexus // Tactical Operations Service Worker
  * Protocol: Mil-Spec Offline Resilience & Autonomous Timetable Cache
- * Caches: nsut-static-v1, nsut-timetable-cache-v1
+ * Caches: crossnexus-static-v1, crossnexus-timetable-cache-v1
  */
 
-const STATIC_CACHE_NAME = 'nsut-static-v1';
-const TIMETABLE_CACHE_NAME = 'nsut-timetable-cache-v1';
+const STATIC_CACHE_NAME = 'crossnexus-static-v1';
+const TIMETABLE_CACHE_NAME = 'crossnexus-timetable-cache-v1';
 
 const STATIC_ASSETS = [
   '/',

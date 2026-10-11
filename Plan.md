@@ -1,7 +1,7 @@
 
-# NSUT Connect: Full-Stack Implementation & Architecture Plan
+# CrossNexus: Full-Stack Implementation & Architecture Plan
 
-This document outlines the systematic, step-by-step implementation plan for **NSUT Connect**. It provides precise schemas, endpoint definitions, directory layouts, component structures, and validation criteria for automated or manual execution.
+This document outlines the systematic, step-by-step implementation plan for **CrossNexus**. It provides precise schemas, endpoint definitions, directory layouts, component structures, and validation criteria for automated or manual execution.
 
 ---
 
@@ -35,7 +35,7 @@ Announcements, Posts)
 ## 2. Directory Structure
 
 ```text
-nsut-connect/
+crossnexus/
 ├── client/
 │   ├── public/
 │   │   ├── manifest.json
@@ -334,7 +334,7 @@ Implement REST controllers and routes in `/server`:
 
 
 2. **Authentication & Onboarding Flow**:
-* `LoginPage.jsx`: Clean hero screen with NSUT Connect branding, university background vector, and "Sign in with Google (@nsut.ac.in)" button.
+* `LoginPage.jsx`: Clean hero screen with CrossNexus branding, university background vector, and "Sign in with Google (@nsut.ac.in)" button.
 * Error modal triggers on `403 Unauthorized Domain`.
 * `OnboardingPage.jsx`: Dynamic selection form (Branch dropdown, Semester 1–8 selector, Section/Group toggle). Submitting calls `/api/users/onboard` and routes to `/feed`.
 
@@ -358,13 +358,13 @@ Implement REST controllers and routes in `/server`:
 ### Phase 6: Progressive Web App (PWA) & Offline Timetable
 
 1. **Web App Manifest (`client/public/manifest.json`)**:
-* Define `name: "NSUT Connect"`, `display: "standalone"`, `theme_color: "#0f172a"`, and icons.
+* Define `name: "CrossNexus"`, `display: "standalone"`, `theme_color: "#0f172a"`, and icons.
 
 
 2. **Service Worker Implementation (`client/public/sw.js`)**:
 * Cache critical assets (HTML, CSS, JS bundles) on install.
 * Implement a **Network-First with Cache-Fallback** strategy for the endpoint `/api/timetable`:
-* When online: Fetch fresh timetable, dynamically clone and update `caches.open('nsut-timetable-cache')`.
+* When online: Fetch fresh timetable, dynamically clone and update `caches.open('crossnexus-timetable-cache')`.
 * When offline or request fails: Intercept request and immediately return cached JSON response.
 
 

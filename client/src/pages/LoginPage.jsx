@@ -145,13 +145,13 @@ export default function LoginPage() {
           {/* BRAND TITLE & ACADEMIC PORTAL BRIEFING */}
           <div className="mb-6">
             <h1 className="text-xl sm:text-2xl font-bold tracking-ui text-tactical-bright uppercase mb-1">
-              NSUT CONNECT <span className="text-phosphor">//</span> PORTAL
+              CROSSNEXUS <span className="text-phosphor">//</span> PORTAL
             </h1>
             <p className="text-xs text-teal font-medium mb-3 uppercase tracking-wider">
               Official Academic Portal // Netaji Subhas University of Technology
             </p>
             <p className="text-xs text-tactical-muted leading-relaxed font-mono">
-              Welcome to NSUT Connect, the unified academic collaboration and campus operations network. Access real-time campus announcements, the smart timetable matrix with live lecture tracking, peer discussion forums, and the decentralized IPFS academic resource repository.
+              Welcome to CrossNexus, the unified academic collaboration and campus operations network. Access real-time campus announcements, the smart timetable matrix with live lecture tracking, peer discussion forums, and the decentralized IPFS academic resource repository.
             </p>
           </div>
 
@@ -285,7 +285,7 @@ export default function LoginPage() {
 
       {/* FOOTER TICKER */}
       <footer className="border-t border-stroke-dim pt-3 flex flex-wrap items-center justify-between gap-3 text-[11px] text-tactical-muted">
-        <div>NSUT CONNECT // OFFICIAL ACADEMIC PLATFORM // NODE 01</div>
+        <div>CROSSNEXUS // OFFICIAL ACADEMIC PLATFORM // NODE 01</div>
         <div className="text-stroke-bright font-mono">STATUS: VERIFIED</div>
       </footer>
     </div>

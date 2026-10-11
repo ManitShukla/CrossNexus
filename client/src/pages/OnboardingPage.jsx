@@ -192,7 +192,7 @@ export default function OnboardingPage() {
       </main>
 
       <footer className="border-t border-stroke-dim p-4 text-center text-[10px] text-tactical-muted">
-        ACADEMIC SETUP GATEWAY // NSUT CONNECT CAMPUS OPERATING SYSTEM
+        ACADEMIC SETUP GATEWAY // CROSSNEXUS CAMPUS OPERATING SYSTEM
       </footer>
     </div>
   );

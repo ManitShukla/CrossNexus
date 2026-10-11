@@ -1,5 +1,5 @@
 {
-  "name": "nsut-connect-client",
+  "name": "crossnexus-client",
   "private": true,
   "version": "1.0.0",
   "type": "module",
@@ -12,7 +12,7 @@
     "axios": "^1.7.2",
     "clsx": "^2.1.1",
     "lucide-react": "^0.408.0",
-    "nsut-connect-monorepo": "file:..",
+    "crossnexus-monorepo": "file:..",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.25.1",

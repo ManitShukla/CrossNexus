@@ -77,7 +77,7 @@ const onboardUser = async (req, res) => {
     return res.status(200).json({
       success: true,
       status: 'ONBOARDING_COMPLETE',
-      message: 'Academic profile setup complete. Welcome to NSUT Connect.',
+      message: 'Academic profile setup complete. Welcome to CrossNexus.',
       user: profile,
     });
   } catch (error) {

@@ -22,7 +22,7 @@ function initAnnouncementSockets(io) {
         return next(new Error('AUTHENTICATION_FAILED: Session token missing.'));
       }
 
-      const jwtSecret = process.env.JWT_SECRET || 'TACTICAL_ALPHA_KEY_SECURE_9812739182371982_NSUT_CONNECT';
+      const jwtSecret = process.env.JWT_SECRET || 'TACTICAL_ALPHA_KEY_SECURE_9812739182371982_CROSSNEXUS';
       let decoded;
       try {
         decoded = jwt.verify(token, jwtSecret);

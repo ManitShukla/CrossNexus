@@ -26,7 +26,7 @@ const vaultRoutes = require('./routes/vaultRoutes');
 
 async function runFinalAcceptanceSuite() {
   console.log('================================================================================');
-  console.log('      NSUT CONNECT // MASTER ACCEPTANCE & INTEGRITY AUDIT SUITE (PHASES 1-7)     ');
+  console.log('      CROSSNEXUS // MASTER ACCEPTANCE & INTEGRITY AUDIT SUITE (PHASES 1-7)      ');
   console.log('================================================================================\n');
 
   let passed = 0;
@@ -75,7 +75,7 @@ async function runFinalAcceptanceSuite() {
   console.log('--- PILLAR 1: AUTHENTICATION, DOMAIN LOCK & RBAC GATING ---');
 
   test('AUTH 1.1: JWT Generation with strict @nsut.ac.in domain signature', () => {
-    const secret = process.env.JWT_SECRET || 'TACTICAL_ALPHA_KEY_SECURE_9812739182371982_NSUT_CONNECT';
+    const secret = process.env.JWT_SECRET || 'TACTICAL_ALPHA_KEY_SECURE_9812739182371982_CROSSNEXUS';
     const payload = { id: 'cadet-01', email: 'officer@nsut.ac.in', role: 'admin', branch: 'ECE' };
     const token = jwt.sign(payload, secret, { expiresIn: '2h' });
     const decoded = jwt.verify(token, secret);
@@ -173,7 +173,7 @@ async function runFinalAcceptanceSuite() {
   console.log('\n--- PILLAR 3: WEBSOCKET TELEMETRY & EVENT DISPATCH (PHASE 4) ---');
 
   test('SOCKET 3.1: Socket Handshake token verification extracts valid cadet identity', () => {
-    const secret = process.env.JWT_SECRET || 'TACTICAL_ALPHA_KEY_SECURE_9812739182371982_NSUT_CONNECT';
+    const secret = process.env.JWT_SECRET || 'TACTICAL_ALPHA_KEY_SECURE_9812739182371982_CROSSNEXUS';
     const token = jwt.sign({ id: 'live-cadet-socket', role: 'student', branch: 'IT' }, secret);
     const decoded = jwt.verify(token, secret);
     assert.strictEqual(decoded.id, 'live-cadet-socket');
@@ -210,7 +210,7 @@ async function runFinalAcceptanceSuite() {
   console.log('\n--- PILLAR 5: ACADEMIC VAULT & DECENTRALIZED IPFS PINNING (PHASE 6) ---');
 
   await asyncTest('VAULT 5.1: Deterministic SHA-256 Base58btc multihash adheres to IPFS CIDv0 standard', async () => {
-    const sampleBuffer = Buffer.from('NSUT Connect Cryptographic Master Exam Blueprint');
+    const sampleBuffer = Buffer.from('CrossNexus Cryptographic Master Exam Blueprint');
     const result = await pinFileToIPFS(sampleBuffer, 'blueprint.pdf');
     assert.strictEqual(result.ipfsHash.startsWith('Qm'), true);
     assert.strictEqual(result.ipfsHash.length, 46);
@@ -282,8 +282,8 @@ async function runFinalAcceptanceSuite() {
   test('PWA 7.1: Manifest matches PWA installability specification', () => {
     const manifestPath = path.resolve(__dirname, '../client/public/manifest.json');
     const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
-    assert.strictEqual(manifest.name, 'NSUT Connect // Tactical Operations');
-    assert.strictEqual(manifest.short_name, 'NSUT Connect');
+    assert.strictEqual(manifest.name, 'CrossNexus // Tactical Operations');
+    assert.strictEqual(manifest.short_name, 'CrossNexus');
     assert.strictEqual(manifest.display, 'standalone');
     assert.strictEqual(manifest.background_color, '#000000');
     assert.strictEqual(manifest.theme_color, '#070707');
@@ -293,8 +293,8 @@ async function runFinalAcceptanceSuite() {
   test('PWA 7.2: sw.js contains Network-First timetable cache strategy and exclusions', () => {
     const swPath = path.resolve(__dirname, '../client/public/sw.js');
     const swText = fs.readFileSync(swPath, 'utf8');
-    assert.strictEqual(swText.includes('nsut-static-v1'), true);
-    assert.strictEqual(swText.includes('nsut-timetable-cache-v1'), true);
+    assert.strictEqual(swText.includes('crossnexus-static-v1'), true);
+    assert.strictEqual(swText.includes('crossnexus-timetable-cache-v1'), true);
     assert.strictEqual(swText.includes('/api/timetable'), true);
     assert.strictEqual(swText.includes('/socket.io'), true);
     assert.strictEqual(swText.includes("request.method !== 'GET'"), true);

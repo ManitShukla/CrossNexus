@@ -29,7 +29,7 @@ export default function Navbar() {
           <NavLink to="/" className="flex items-center gap-2 group">
             <span className="w-2.5 h-2.5 bg-phosphor inline-block animate-pulse" />
             <span className="text-phosphor font-bold tracking-ui group-hover:text-white transition-colors">
-              NSUT CONNECT
+              CROSSNEXUS
             </span>
             <span className="text-stroke-bright">//</span>
             <span className="text-[10px] text-tactical-muted hidden sm:inline">CAMPUS OS</span>

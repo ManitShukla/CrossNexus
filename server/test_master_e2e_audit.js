@@ -1,4 +1,4 @@
-﻿const assert = require('assert');
+const assert = require('assert');
 const jwt = require('jsonwebtoken');
 
 // Import Configs & Middlewares
@@ -24,7 +24,7 @@ const vaultRoutes = require('./routes/vaultRoutes');
 
 async function runMasterE2EAudit() {
   console.log('======================================================================');
-  console.log('    NSUT CONNECT // MASTER RETROSPECTIVE E2E INTEGRITY AUDIT SUITE    ');
+  console.log('    CROSSNEXUS // MASTER RETROSPECTIVE E2E INTEGRITY AUDIT SUITE      ');
   console.log('======================================================================\n');
 
   let passed = 0;
@@ -74,7 +74,7 @@ async function runMasterE2EAudit() {
   console.log('--- SECTION 1: AUTHENTICATION & ACCESS CONTROL (PHASES 1 & 2) ---');
 
   test('AUTH 1.1: JWT Generation and Verification with Tactical Claims', () => {
-    const secret = process.env.JWT_SECRET || 'TACTICAL_ALPHA_KEY_SECURE_9812739182371982_NSUT_CONNECT';
+    const secret = process.env.JWT_SECRET || 'TACTICAL_ALPHA_KEY_SECURE_9812739182371982_CROSSNEXUS';
     const payload = { id: 'cadet-001', email: 'test.cadet@nsut.ac.in', role: 'student', branch: 'ECE' };
     const token = jwt.sign(payload, secret, { expiresIn: '1h' });
     const decoded = jwt.verify(token, secret);
@@ -101,7 +101,7 @@ async function runMasterE2EAudit() {
   });
 
   await asyncTest('AUTH 1.4: authenticateJWT Middleware Attaches Decoded Cadet Session', async () => {
-    const secret = process.env.JWT_SECRET || 'TACTICAL_ALPHA_KEY_SECURE_9812739182371982_NSUT_CONNECT';
+    const secret = process.env.JWT_SECRET || 'TACTICAL_ALPHA_KEY_SECURE_9812739182371982_CROSSNEXUS';
     const token = jwt.sign({ id: 'cadet-007', email: 'cadet@nsut.ac.in', role: 'student' }, secret);
     const req = { headers: { authorization: `Bearer ${token}` } };
     const res = createMockRes(200);
@@ -183,7 +183,7 @@ async function runMasterE2EAudit() {
   console.log('\n--- SECTION 3: REAL-TIME WEBSOCKET INFRASTRUCTURE (PHASE 4) ---');
 
   test('SOCKET 3.1: Socket Handshake Auth Middleware Logic', () => {
-    const secret = process.env.JWT_SECRET || 'TACTICAL_ALPHA_KEY_SECURE_9812739182371982_NSUT_CONNECT';
+    const secret = process.env.JWT_SECRET || 'TACTICAL_ALPHA_KEY_SECURE_9812739182371982_CROSSNEXUS';
     const validToken = jwt.sign({ id: 'socket-cadet', role: 'student' }, secret);
     const decoded = jwt.verify(validToken, secret);
     assert.strictEqual(decoded.id, 'socket-cadet');
@@ -213,7 +213,7 @@ async function runMasterE2EAudit() {
   console.log('\n--- SECTION 5: ACADEMIC VAULT & DECENTRALIZED IPFS (PHASE 6) ---');
 
   await asyncTest('VAULT 5.1: Deterministic SHA-256 Base58btc Multihash Generation', async () => {
-    const buffer = Buffer.from('NSUT Connect PYQ Cryptographic Content');
+    const buffer = Buffer.from('CrossNexus PYQ Cryptographic Content');
     const result = await pinFileToIPFS(buffer, 'pyq.pdf');
     assert.strictEqual(result.ipfsHash.startsWith('Qm'), true);
     assert.strictEqual(result.ipfsHash.length, 46);

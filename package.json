@@ -1,8 +1,13 @@
 {
-  "name": "nsut-connect-monorepo",
+  "name": "crossnexus-monorepo",
   "version": "1.0.0",
   "private": true,
-  "description": "NSUT Connect - Tactical FUI Campus Platform Monorepo",
+  "description": "CrossNexus - Tactical Operations Campus Platform Monorepo",
+  "homepage": "https://crossnexus.vercel.app",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ManitShukla/CrossNexus"
+  },
   "scripts": {
     "install:all": "npm install --prefix server && npm install --prefix client",
     "server:dev": "npm run dev --prefix server",

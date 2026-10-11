@@ -1,4 +1,4 @@
-﻿const crypto = require('crypto');
+const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
 
@@ -62,7 +62,7 @@ async function pinFileToIPFS(fileBuffer, originalName, metadata = {}) {
         keyvalues: {
           courseCode: metadata.courseCode || 'UNKNOWN',
           type: metadata.type || 'DOCUMENT',
-          platform: 'NSUT_CONNECT',
+          platform: 'CROSSNEXUS',
         },
       });
       formData.append('pinataMetadata', pinataMetadata);

@@ -1,4 +1,4 @@
-﻿require('dotenv').config();
+require('dotenv').config();
 
 const express = require('express');
 const http = require('http');
@@ -32,6 +32,7 @@ const server = http.createServer(app);
 const configuredClient = process.env.CLIENT_URL || 'http://localhost:5173';
 const allowedOrigins = [
   configuredClient,
+  'https://crossnexus.vercel.app',
   'http://localhost:5173',
   'http://127.0.0.1:5173',
 ];
@@ -140,7 +141,7 @@ app.get('/health', (req, res) => {
   const mongoose = require('mongoose');
   res.status(200).json({
     status: 'OPERATIONAL',
-    system: 'NSUT_CONNECT_TACTICAL_CORE',
+    system: 'CROSSNEXUS_TACTICAL_CORE',
     timestamp: new Date().toISOString(),
     uptimeSeconds: Math.floor(process.uptime()),
     nodeVersion: process.version,
@@ -153,7 +154,7 @@ app.get('/health', (req, res) => {
 
 app.get('/api', (req, res) => {
   res.status(200).json({
-    platform: 'NSUT Connect FUI Platform',
+    platform: 'CrossNexus Platform',
     version: '1.0.0-TACTICAL',
     spec: 'MIL-SPEC HUD CAMPUS PROTOCOL',
     status: 'GRID_ACTIVE',
@@ -173,7 +174,7 @@ const PORT = process.env.PORT || 5000;
 
 server.listen(PORT, () => {
   console.log('\x1b[36m%s\x1b[0m', '==================================================');
-  console.log('\x1b[32m%s\x1b[0m', `[SYS_ONLINE] NSUT Connect Core Server listening on port: ${PORT}`);
+  console.log('\x1b[32m%s\x1b[0m', `[SYS_ONLINE] CrossNexus Core Server listening on port: ${PORT}`);
   console.log('\x1b[32m%s\x1b[0m', `[SYS_ONLINE] Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log('\x1b[32m%s\x1b[0m', `[SYS_ONLINE] Allowed Client Origins: ${allowedOrigins.join(', ')}`);
   console.log('\x1b[36m%s\x1b[0m', '==================================================');

@@ -9,7 +9,7 @@ const api = axios.create({
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
-    'X-Client-Interface': 'NSUT-CONNECT-TACTICAL-FUI',
+    'X-Client-Interface': 'CROSSNEXUS-TACTICAL-FUI',
   },
   timeout: 15000,
 });

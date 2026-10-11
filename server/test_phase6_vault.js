@@ -1,4 +1,4 @@
-﻿const assert = require('assert');
+const assert = require('assert');
 const crypto = require('crypto');
 const { pinFileToIPFS, computeDeterministicCIDv0 } = require('./config/ipfs');
 const {
@@ -10,7 +10,7 @@ const {
 
 async function runPhase6Tests() {
   console.log('===============================================================');
-  console.log('   NSUT CONNECT // PHASE 6 ACADEMIC VAULT & IPFS HARNESS');
+  console.log('   CROSSNEXUS // PHASE 6 ACADEMIC VAULT & IPFS HARNESS');
   console.log('===============================================================');
   let passed = 0;
   let total = 0;
@@ -39,7 +39,7 @@ async function runPhase6Tests() {
 
   // TEST 1: CIDv0 Multihash generation adheres to IPFS spec (46-char, starts with 'Qm')
   await asyncTest('CIDv0 Generation: Valid SHA-256 Base58btc multihash starting with Qm', async () => {
-    const sampleBuffer = Buffer.from('NSUT Connect Autonomous Peer-to-Peer Academic Record');
+    const sampleBuffer = Buffer.from('CrossNexus Autonomous Peer-to-Peer Academic Record');
     const result = await pinFileToIPFS(sampleBuffer, 'sample.pdf');
     assert.strictEqual(typeof result.ipfsHash, 'string');
     assert.strictEqual(result.ipfsHash.startsWith('Qm'), true, `CID must start with Qm, got ${result.ipfsHash}`);

@@ -1,8 +1,10 @@
-# NSUT CONNECT // MASTER SYSTEM ARCHITECTURE, TECHNICAL SPECIFICATION & USERFLOW MANUAL
+# CROSSNEXUS // MASTER SYSTEM ARCHITECTURE, TECHNICAL SPECIFICATION & USERFLOW MANUAL
 **Document Version:** 1.0.0-TACTICAL // RELEASE CERTIFIED  
 **Security Classification:** MIL-SPEC HUD TACTICAL PROTOCOL  
 **Target Platform:** Netaji Subhas University of Technology (NSUT)  
 **Authorship:** Principal Lead Systems Architect & Senior Cryptographic Engineer  
+**Repository:** [https://github.com/ManitShukla/CrossNexus](https://github.com/ManitShukla/CrossNexus)  
+**Production Deployment:** [https://crossnexus.vercel.app](https://crossnexus.vercel.app)  
 
 ---
 
@@ -37,7 +39,7 @@
 
 ## 1.1 Macro Architectural Topology & Dataflow
 
-NSUT Connect is engineered as a zero-latency, domain-gated campus intelligence and academic coordination platform. The system operates on a dual-protocol event-driven paradigm where stateless REST API transactions coexist with a stateful bidirectional WebSocket pipeline over an authenticated TCP connection.
+CrossNexus is engineered as a zero-latency, domain-gated campus intelligence and academic coordination platform. The system operates on a dual-protocol event-driven paradigm where stateless REST API transactions coexist with a stateful bidirectional WebSocket pipeline over an authenticated TCP connection.
 
 ```mermaid
 flowchart TD
@@ -94,12 +96,12 @@ flowchart TD
 
 Modern web applications are oversaturated with homogenous "consumer SaaS" design conventions: pastel purple gradients, oversized rounded corners (`border-radius: 16px` to `24px`), diffuse drop-shadows, floating pills, and cheerful circular spinners. 
 
-NSUT Connect categorically rejects these conventions in favor of a **Military-Specification (Mil-Spec) HUD / Tactical FUI (Fictional User Interface)** architecture for concrete engineering and cognitive reasons:
+CrossNexus categorically rejects these conventions in favor of a **Military-Specification (Mil-Spec) HUD / Tactical FUI (Fictional User Interface)** architecture for concrete engineering and cognitive reasons:
 
 1. **Information Density & Zero Wasted Pixels:** Academic life moves fast. Students rushing between classrooms need immediate, unambiguous answers—what room is class in right now, what official notices were posted five minutes ago, and where is the mid-term paper. Rounded corners force artificial padding and truncate tabular figures. A 0px border-radius, rectangular grid maximizes usable screen real estate.
 2. **Cognitive Contrast Under Hostile Lighting:** Campus environments feature challenging visual conditions: direct outdoor sunlight on campus lawns, harsh fluorescent library lighting, or pitch-black lecture halls during projector slides. The true-black (`#000000`) canvas paired with ultra-high-contrast Phosphor Green (`#cfff04`) and Tactical Teal (`#00e5ff`) guarantees readable typography with zero eye fatigue.
 3. **Monospaced Numerical Alignment:** Time slots (`09:00 - 10:00`), room numbers (`Room 204`), and cryptographic IPFS CIDs (`QmXoyp...`) demand uniform glyph widths. Proportional sans-serif typefaces cause visual jitter when digits increment. Monospaced typography (`JetBrains Mono`, `Space Mono`) ensures that countdowns, timestamps, and hashes remain mechanically stable.
-4. **Zero Latency Perception:** Fluid animations and soft fade-ins waste human attention. NSUT Connect employs razor-sharp 100ms micro-transitions, instantaneous state updates, and CRT-style terminal scanline overlays to cultivate a perception of raw mechanical velocity.
+4. **Zero Latency Perception:** Fluid animations and soft fade-ins waste human attention. CrossNexus employs razor-sharp 100ms micro-transitions, instantaneous state updates, and CRT-style terminal scanline overlays to cultivate a perception of raw mechanical velocity.
 
 ---
 
@@ -161,7 +163,7 @@ const io = new Server(server, {
 
 ## 2.2 Authentication & Access Control Pipeline
 
-NSUT Connect enforces a zero-trust, institutional identity gate that locks the platform to accredited `@nsut.ac.in` email accounts.
+CrossNexus enforces a zero-trust, institutional identity gate that locks the platform to accredited `@nsut.ac.in` email accounts.
 
 ```mermaid
 sequenceDiagram
@@ -305,7 +307,7 @@ erDiagram
 
 ## 2.4 Real-Time WebSocket Architecture (`server/sockets/announcementSockets.js`)
 
-NSUT Connect utilizes Socket.io to establish an instant campus-wide telemetry broadcast pipeline. 
+CrossNexus utilizes Socket.io to establish an instant campus-wide telemetry broadcast pipeline. 
 
 ### 1. Connection Handshake Guard (`io.use`)
 Before any client socket can complete the TCP handshake, the socket middleware validates the JWT token passed in `socket.handshake.auth.token` or HTTP headers:
@@ -389,7 +391,7 @@ This guarantees that identical files always generate identical CIDs deterministi
 
 Under institutional cybersecurity guidelines, student identification numbers and personal emails must never be visible to peers in public discussion threads or study feeds. 
 
-NSUT Connect enforces strict projection scrubbing at the Mongoose driver level across every controller:
+CrossNexus enforces strict projection scrubbing at the Mongoose driver level across every controller:
 
 ```javascript
 // server/controllers/announcementController.js
@@ -455,7 +457,7 @@ If Cadet A and Cadet B click upvote within the same millisecond:
 3. Thread A saves `upvotes: [User1, UserA]`
 4. Thread B saves `upvotes: [User1, UserB]` (overwriting UserA's vote permanently!)
 
-NSUT Connect eliminates this vulnerability by employing MongoDB's **`$addToSet`** and **`$pull`** atomic operators directly inside `findByIdAndUpdate`. The mutation executes atomically at the storage engine level with row-level write locks. The operation is idempotent, thread-safe, and immune to concurrent write collisions.
+CrossNexus eliminates this vulnerability by employing MongoDB's **`$addToSet`** and **`$pull`** atomic operators directly inside `findByIdAndUpdate`. The mutation executes atomically at the storage engine level with row-level write locks. The operation is idempotent, thread-safe, and immune to concurrent write collisions.
 
 ---
 
@@ -884,13 +886,13 @@ sequenceDiagram
 ```bash
 # Server Network Binding
 PORT=5000
-CLIENT_URL=http://localhost:5173
+CLIENT_URL=https://crossnexus.vercel.app
 
 # Database Uplink
-MONGO_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/nsut_connect?retryWrites=true&w=majority
+MONGO_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/crossnexus?retryWrites=true&w=majority
 
 # Cryptographic Token Signer
-JWT_SECRET=TACTICAL_ALPHA_KEY_SECURE_9812739182371982_NSUT_CONNECT
+JWT_SECRET=TACTICAL_ALPHA_KEY_SECURE_9812739182371982_CROSSNEXUS
 
 # Google OAuth 2.0 Credentials (Optional: devLogin bypass available)
 GOOGLE_CLIENT_ID=your_google_client_id.apps.googleusercontent.com
@@ -936,4 +938,4 @@ node server/test_final_acceptance.js
 ```
 
 ---
-*End of Specification // NSUT Connect Mil-Spec HUD Platform // All Systems Certified*
+*End of Specification // CrossNexus Tactical FUI Platform // All Systems Certified*

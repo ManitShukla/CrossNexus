@@ -215,7 +215,7 @@ function DashboardHUD() {
 
       {/* FOOTER TICKER */}
       <footer className="border-t border-stroke-dim p-4 max-w-7xl mx-auto w-full flex flex-wrap items-center justify-between gap-3 text-[11px] text-tactical-muted font-mono">
-        <div>NSUT CONNECT // CAMPUS OPERATING SYSTEM // ALL MODULES OPERATIONAL</div>
+        <div>CROSSNEXUS // CAMPUS OPERATING SYSTEM // ALL MODULES OPERATIONAL</div>
         <div className="flex items-center gap-3">
           <span>SYSTEM STATUS: PRODUCTION READY</span>
           <span className="text-phosphor font-bold">[ACTIVE]</span>

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 /**
- * Tactical User Schema (NSUT Connect Core Identity)
+ * Tactical User Schema (CrossNexus Core Identity)
  * Domain-restricted to @nsut.ac.in credentials.
  */
 const userSchema = new mongoose.Schema(

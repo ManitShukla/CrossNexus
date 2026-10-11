@@ -1,11 +1,11 @@
-﻿const assert = require('assert');
+const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
 function runPhase7PWATests() {
   console.log('======================================================================');
-  console.log('   NSUT CONNECT // PHASE 7 PROGRESSIVE WEB APP & OFFLINE HARNESS     ');
+  console.log('   CROSSNEXUS // PHASE 7 PROGRESSIVE WEB APP & OFFLINE HARNESS       ');
   console.log('======================================================================\n');
 
   let passed = 0;
@@ -29,8 +29,8 @@ function runPhase7PWATests() {
     const manifestRaw = fs.readFileSync(manifestPath, 'utf8');
     const manifest = JSON.parse(manifestRaw);
 
-    assert.strictEqual(manifest.name, 'NSUT Connect // Tactical Operations');
-    assert.strictEqual(manifest.short_name, 'NSUT Connect');
+    assert.strictEqual(manifest.name, 'CrossNexus // Tactical Operations');
+    assert.strictEqual(manifest.short_name, 'CrossNexus');
     assert.strictEqual(manifest.start_url, '/');
     assert.strictEqual(manifest.display, 'standalone');
     assert.strictEqual(manifest.background_color, '#000000');
@@ -59,8 +59,8 @@ function runPhase7PWATests() {
   test('SW 2.2: sw.js defines cache versioning and precaches tactical app shell', () => {
     const swPath = path.resolve(__dirname, '../client/public/sw.js');
     const swContent = fs.readFileSync(swPath, 'utf8');
-    assert.strictEqual(swContent.includes('nsut-static-v1'), true);
-    assert.strictEqual(swContent.includes('nsut-timetable-cache-v1'), true);
+    assert.strictEqual(swContent.includes('crossnexus-static-v1'), true);
+    assert.strictEqual(swContent.includes('crossnexus-timetable-cache-v1'), true);
     assert.strictEqual(swContent.includes('skipWaiting()'), true);
     assert.strictEqual(swContent.includes('clients.claim()'), true);
   });
@@ -110,7 +110,7 @@ function runPhase7PWATests() {
     const pagePath = path.resolve(__dirname, '../client/src/pages/TimetablePage.jsx');
     const pageContent = fs.readFileSync(pagePath, 'utf8');
     assert.strictEqual(pageContent.includes('useOfflineTimetable'), true);
-    assert.strictEqual(pageContent.includes('[ OFFLINE PROTOCOL ENGAGED // SHOWING LOCALLY STORED TIMETABLE MATRIX ]'), true);
+    assert.strictEqual(pageContent.includes('[ OFFLINE MODE ACTIVE // SHOWING LOCALLY STORED TIMETABLE ]'), true);
     assert.strictEqual(pageContent.includes('loadTimetableLocally'), true);
     assert.strictEqual(pageContent.includes('saveTimetableLocally'), true);
   });
