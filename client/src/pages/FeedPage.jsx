@@ -6,6 +6,7 @@ import Navbar from '../components/common/Navbar';
 import DiscussionCard from '../components/feed/DiscussionCard';
 import AnnouncementCard from '../components/feed/AnnouncementCard';
 import CreatePostModal from '../components/feed/CreatePostModal';
+import GlobalFooter from '../components/common/GlobalFooter';
 import { Terminal, Plus, RefreshCw, Radio, Flame, Clock, Filter, AlertOctagon, ShieldAlert } from 'lucide-react';
 
 const DISCUSSION_CHANNELS = ['ALL', 'Tech & Projects', 'Academics', 'Campus Life', 'General'];
@@ -336,6 +337,9 @@ export default function FeedPage() {
           </aside>
         </div>
       </main>
+
+      {/* CREATOR SPECIFICATION BOX */}
+      <GlobalFooter />
 
       {/* CREATE POST / NOTICE MODAL */}
       <CreatePostModal

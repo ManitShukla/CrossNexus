@@ -9,7 +9,10 @@ import {
   ShieldCheck, 
   XCircle,
   Activity,
-  Layers
+  Layers,
+  Github,
+  Globe,
+  ExternalLink
 } from 'lucide-react';
 
 export default function LoginPage() {
@@ -329,6 +332,102 @@ export default function LoginPage() {
                 ID: intruder@gmail.com (REJECTED)
               </div>
             </button>
+          </div>
+        </div>
+
+        {/* CONTAINER C: CREATOR SPECIFICATION & PORTFOLIO BOX */}
+        <div className="border border-stroke-bright bg-charcoal-panel/90 p-5 sm:p-6 relative">
+          <div className="fui-reticle-tl" />
+          <div className="fui-reticle-tr" />
+          <div className="fui-reticle-bl" />
+          <div className="fui-reticle-br" />
+
+          {/* HEADER BADGE */}
+          <div className="flex items-center justify-between pb-3 mb-4 border-b border-stroke-dim">
+            <div className="flex items-center gap-2">
+              <Terminal className="w-4 h-4 text-phosphor" />
+              <span className="text-xs font-bold text-phosphor tracking-widest uppercase">
+                [ DEVELOPER SPECIFICATION // SYSTEM ARCHITECT ]
+              </span>
+            </div>
+            <span className="text-[10px] text-teal bg-teal/10 px-2 py-0.5 border border-teal/30 font-semibold uppercase">
+              LEAD CREATOR
+            </span>
+          </div>
+
+          {/* MAIN DEVELOPER HEADLINE */}
+          <div className="mb-4">
+            <div className="text-[10px] text-tactical-muted uppercase tracking-label mb-1">
+              ENGINEERED & MAINTAINED BY
+            </div>
+            <h2 className="text-base sm:text-lg font-bold text-tactical-bright uppercase tracking-ui flex items-center gap-2">
+              <span>MADE BY</span>
+              <span className="text-phosphor font-mono">MANIT SHUKLA</span>
+            </h2>
+            <p className="text-xs text-tactical-muted mt-1 leading-relaxed font-mono">
+              Full-stack campus architecture built for Netaji Subhas University of Technology (NSUT). Unifies IMS timetables, real-time broadcasts, and IPFS academic vault distribution.
+            </p>
+          </div>
+
+          {/* ACADEMIC & INSTITUTIONAL CREDENTIAL TILES */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 mb-4 text-xs font-mono">
+            <div className="border border-stroke-dim bg-black p-2.5">
+              <div className="text-[10px] text-tactical-muted uppercase tracking-label">Developer</div>
+              <div className="text-tactical-bright font-semibold mt-0.5">Manit Shukla</div>
+            </div>
+            <div className="border border-stroke-dim bg-black p-2.5">
+              <div className="text-[10px] text-tactical-muted uppercase tracking-label">Branch</div>
+              <div className="text-teal font-semibold mt-0.5">ECE (Electronics & Comm.)</div>
+            </div>
+            <div className="border border-stroke-dim bg-black p-2.5">
+              <div className="text-[10px] text-tactical-muted uppercase tracking-label">University Roll No.</div>
+              <div className="text-phosphor font-semibold mt-0.5">2026UEC2604</div>
+            </div>
+          </div>
+
+          {/* ACTION LINKS: GITHUB & PORTFOLIO */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+            {/* GITHUB REPOSITORY */}
+            <a
+              href="https://github.com/ManitShukla/CrossNexus"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-3.5 border border-stroke-bright hover:border-phosphor bg-black hover:bg-phosphor/5 transition-all flex items-center justify-between group cursor-pointer"
+            >
+              <div className="flex items-center gap-2.5">
+                <Github className="w-4 h-4 text-phosphor flex-shrink-0" />
+                <div>
+                  <div className="text-xs font-bold text-tactical-bright group-hover:text-phosphor uppercase tracking-label">
+                    GITHUB REPOSITORY
+                  </div>
+                  <div className="text-[10px] text-tactical-muted font-mono truncate max-w-[170px] sm:max-w-[200px]">
+                    github.com/ManitShukla/CrossNexus
+                  </div>
+                </div>
+              </div>
+              <ExternalLink className="w-3.5 h-3.5 text-tactical-muted group-hover:text-phosphor transition-colors flex-shrink-0 ml-1" />
+            </a>
+
+            {/* PORTFOLIO WEBSITE */}
+            <a
+              href="https://manitshukla.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-3.5 border border-stroke-bright hover:border-teal bg-black hover:bg-teal/5 transition-all flex items-center justify-between group cursor-pointer"
+            >
+              <div className="flex items-center gap-2.5">
+                <Globe className="w-4 h-4 text-teal flex-shrink-0" />
+                <div>
+                  <div className="text-xs font-bold text-tactical-bright group-hover:text-teal uppercase tracking-label">
+                    PORTFOLIO WEBSITE
+                  </div>
+                  <div className="text-[10px] text-tactical-muted font-mono truncate max-w-[170px] sm:max-w-[200px]">
+                    manitshukla.vercel.app
+                  </div>
+                </div>
+              </div>
+              <ExternalLink className="w-3.5 h-3.5 text-tactical-muted group-hover:text-teal transition-colors flex-shrink-0 ml-1" />
+            </a>
           </div>
         </div>
 

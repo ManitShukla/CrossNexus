@@ -13,6 +13,7 @@ import OnboardingPage from './pages/OnboardingPage';
 import FeedPage from './pages/FeedPage';
 import TimetablePage from './pages/TimetablePage';
 import VaultPage from './pages/VaultPage';
+import GlobalFooter from './components/common/GlobalFooter';
 import { Terminal, Shield, Wifi, Radio, Cpu, Activity, RefreshCw, CheckCircle2, User as UserIcon, ArrowRight } from 'lucide-react';
 
 function DashboardHUD() {
@@ -215,6 +216,9 @@ function DashboardHUD() {
           </div>
         </section>
       </main>
+
+      {/* CREATOR SPECIFICATION BOX */}
+      <GlobalFooter />
 
       {/* FOOTER TICKER */}
       <footer className="border-t border-stroke-dim p-4 max-w-7xl mx-auto w-full flex flex-wrap items-center justify-between gap-3 text-[11px] text-tactical-muted font-mono">

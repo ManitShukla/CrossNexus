@@ -56,53 +56,8 @@ sequenceDiagram
     Gateway-->>Client: 201 Created {ipfsHash, verified: false}
 ```
 
----
 
-## 2. Design System & Frontend Philosophy
-
-### 2.1 Brutalist FUI Specification (`design.md`)
-
-CrossNexus deliberately rejects contemporary consumer software design tropes—such as skeuomorphic drop shadows, saturated pastel gradients, expansive border radii, and low-contrast grey palettes. These conventions introduce unnecessary spatial overhead, reduce typographical information density, and degrade legibility in challenging physical campus environments (e.g., bright sunlight on campus lawns, dimly lit lecture auditoriums).
-
-The visual language adheres to a **Military-Specification (Mil-Spec) HUD / Tactical Fictional User Interface (FUI)** design philosophy:
-
-```
-+-----------------------------------------------------------------------------+
-| CROSSNEXUS // CAMPUS OS            [SYS_STATUS: NOMINAL]      14:32:01 UTC  |
-+-----------------------------------------------------------------------------+
-|                                                                             |
-| +--[ COHORT: ECE / SEM 1 / SEC 1 ]----------------------------------------+ |
-| | [ACTIVE CLASS // HAPPENING NOW]                                         | |
-| | COURSE: EC101 // ANALOG ELECTRONICS                WINDOW: 14:00 - 15:00| |
-| | LOCATION: ROOM 204 // LAB BLOCK 2                  INSTRUCTOR: DR. ROY  | |
-| | PROGRESS: [ ■■■■■■■■□□ ] 80% ELAPSED               ENDS IN: 12 MINS     | |
-| +-------------------------------------------------------------------------+ |
-|                                                                             |
-+-----------------------------------------------------------------------------+
-```
-
-#### Sensory Token Architecture & Chromatic Tokens
-
-| Semantic Token | Hex Code | Purpose & Functional Context |
-| :--- | :--- | :--- |
-| `Canvas Base` | `#000000` | True-black foundational canvas maximizing OLED efficiency and contrast |
-| `Panel Surface` | `#070707` / `#0d110f` | Charcoal container backgrounds for structural grouping and panel demarcation |
-| `Phosphor Green` | `#cfff04` | Primary operational indicator, active states, reticles, verified attestations |
-| `Tactical Teal` | `#00e5ff` | Telemetry metadata, course codes, non-critical status badges, countdown labels |
-| `Hazard Amber` | `#ffb700` | High-priority warnings, urgent administrative announcements, intermediate thresholds |
-| `Alert Red` | `#ff003c` | Critical alerts, domain unauthorized security rejections, destructive vectors |
-| `Stroke Dim` | `#1c2420` | Subtle hairline dividers, secondary borders, inert structural framing |
-| `Stroke Bright` | `#2a3832` | Elevated hairline borders on active or focused interactive surfaces |
-
-#### Architectural Constraints
-1. **Global Zero Border-Radius:** Every graphical container, button, modal dialog, and input element enforces `border-radius: 0px`. This guarantees maximal display utilization and alignment with Cartesian coordinate grids.
-2. **Hairline Geometric Framing:** Structural borders are constrained to 1px thickness (`border-stroke-dim`, `border-stroke-bright`, `border-phosphor`). Panels feature corner reticles (`.fui-reticle-tl`, `.fui-reticle-tr`, `.fui-reticle-bl`, `.fui-reticle-br`) to convey instrumentation calibration.
-3. **Monospaced Typography:** Interface typography is bound to fixed-width fonts (`JetBrains Mono`, `Space Mono`). Numerical telemetry, military time designations (`14:00 - 15:00`), IPFS hashes (`QmXoyp...`), and countdown tickers use tabular figures (`tabular-nums`) to prevent horizontal jitter during real-time value changes.
-4. **Mechanical Transitions:** Animated state changes reject soft easing curves in favor of high-velocity micro-transitions: $100\text{ms}$ linear transitions or $150\text{ms}$ cubic-bezier curves (`cubic-bezier(0.2, 0.8, 0.2, 1)`). Rotational loaders are discarded in favor of monospace telemetry tickers (`[ AWAITING TELEMETRY █ ]`, `[ ■■■■■□□□ ]`).
-
----
-
-## 3. Subsystem Architecture & Technical Implementation
+## 2. Subsystem Architecture & Technical Implementation
 
 ### A. Domain-Restricted Authentication & Access Control
 
@@ -359,9 +314,9 @@ The `useOfflineTimetable` hook (`client/src/hooks/useOfflineTimetable.js`) monit
 
 ---
 
-## 4. Security Architecture & Data Privacy Engineering
+## 3. Security Architecture & Data Privacy Engineering
 
-### 4.1 Zero-PII Projection Scrubbing
+### 3.1 Zero-PII Projection Scrubbing
 To protect student privacy and comply with data protection standards, sensitive personal identifiers—such as Google IDs (`googleId`) and institutional email addresses (`email`)—are scrubbed at the database driver level.
 
 Controllers apply projection whitelists across all `.populate()` calls before data is serialized into JSON:
@@ -379,7 +334,7 @@ Controllers apply projection whitelists across all `.populate()` calls before da
 
 Public API payloads expose only the student's display name, academic branch, role, and avatar. Institutional email addresses are never leaked into the public discussion feeds or vault archives.
 
-### 4.2 Concurrency Guards & Idempotent Upvoting
+### 3.2 Concurrency Guards & Idempotent Upvoting
 Standard read-modify-write patterns (`doc.upvotes.push(userId); await doc.save();`) suffer from write collisions under concurrent loads. CrossNexus avoids this vulnerability by using MongoDB's atomic **`$addToSet`** and **`$pull`** operators directly within `findByIdAndUpdate` (`server/controllers/discussionController.js`):
 
 ```javascript
@@ -397,7 +352,7 @@ const updatedDiscussion = await Discussion.findByIdAndUpdate(
 
 This operation executes atomically within MongoDB's storage engine using document-level locks. It guarantees mathematical idempotency and prevents race conditions, regardless of concurrent interactions.
 
-### 4.3 Input Sanitization & Whitelisting
+### 3.3 Input Sanitization & Whitelisting
 Departmental calibration forms (`/api/users/onboard`) validate user input against accredited university branches:
 
 $$\text{Approved Academic Branches: } \{\texttt{CSE}, \texttt{CSAI}, \texttt{CSDS}, \texttt{IT}, \texttt{ITNS}, \texttt{MAC}, \texttt{ECE}, \texttt{EE}, \texttt{ICE}, \texttt{MECH}, \texttt{BT}, \texttt{CIVIL}, \texttt{DESIGN}\}$$
@@ -406,7 +361,7 @@ Inputs are forced to uppercase, trimmed, and checked against the whitelist. Inva
 
 ---
 
-## 5. Database Schema & Indexing Topology
+## 4. Database Schema & Indexing Topology
 
 ```
 +-------------------------------------------------------------+
@@ -424,7 +379,7 @@ Inputs are forced to uppercase, trimmed, and checked against the whitelist. Inva
            +---> Resources (IPFS Academic Vault Records)
 ```
 
-### 5.1 `User` Schema
+### 4.1 `User` Schema
 ```javascript
 {
   googleId:     { type: String, required: true, unique: true, index: true },
@@ -441,7 +396,7 @@ Inputs are forced to uppercase, trimmed, and checked against the whitelist. Inva
 }
 ```
 
-### 5.2 `Announcement` Schema
+### 4.2 `Announcement` Schema
 ```javascript
 {
   title:        { type: String, required: true, trim: true },
@@ -457,7 +412,7 @@ Inputs are forced to uppercase, trimmed, and checked against the whitelist. Inva
 announcementSchema.index({ isPinned: -1, createdAt: -1 });
 ```
 
-### 5.3 `Discussion` & `Comment` Schemas
+### 4.3 `Discussion` & `Comment` Schemas
 ```javascript
 // Discussion Document
 {
@@ -481,7 +436,7 @@ discussionSchema.index({ channel: 1, createdAt: -1 });
 }
 ```
 
-### 5.4 `Timetable` Schema
+### 4.4 `Timetable` Schema
 ```javascript
 // Slot Subdocument
 {
@@ -505,7 +460,7 @@ discussionSchema.index({ channel: 1, createdAt: -1 });
 timetableSchema.index({ branch: 1, semester: 1, section: 1 }, { unique: true });
 ```
 
-### 5.5 `Resource` (Academic Vault) Schema
+### 4.5 `Resource` (Academic Vault) Schema
 ```javascript
 {
   title:        { type: String, required: true, trim: true },
@@ -523,9 +478,9 @@ resourceSchema.index({ courseCode: 1, type: 1, verified: -1 });
 
 ---
 
-## 6. Verification Harness & Local Operation
+## 5. Verification Harness & Local Operation
 
-### 6.1 Prerequisites & Toolchain
+### 5.1 Prerequisites & Toolchain
 * **Node.js:** Runtime environment version `18.x` or `20.x` LTS
 * **npm:** Package manager version `9.x` or higher
 * **MongoDB:** Local instance or MongoDB Atlas cluster URI
@@ -533,7 +488,7 @@ resourceSchema.index({ courseCode: 1, type: 1, verified: -1 });
 
 ---
 
-### 6.2 Environment Variable Dictionary
+### 5.2 Environment Variable Dictionary
 
 #### Backend Server Environment (`server/.env`)
 ```bash
@@ -543,7 +498,7 @@ NODE_ENV=development
 
 # Allowed Origins and Base Routing
 CLIENT_URL=https://crossnexus.vercel.app
-BACKEND_URL=https://nsut-connect.onrender.com
+BACKEND_URL=test.com
 
 # Persistence Uplink (MongoDB Atlas Cluster)
 MONGODB_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/crossnexus?retryWrites=true&w=majority
@@ -554,7 +509,7 @@ JWT_SECRET=TACTICAL_ALPHA_KEY_SECURE_9812739182371982_CROSSNEXUS
 # Google OAuth 2.0 Credentials (@nsut.ac.in Restricted)
 GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
 GOOGLE_CLIENT_SECRET=your-google-client-secret
-GOOGLE_CALLBACK_URL=https://nsut-connect.onrender.com/api/auth/google/callback
+GOOGLE_CALLBACK_URL=https://test.com/api/auth/google/callback
 
 # Pinata IPFS Cluster Credentials (Optional: deterministic Base58btc fallback available)
 PINATA_API_KEY=your_pinata_api_key
@@ -564,15 +519,15 @@ PINATA_SECRET_API_KEY=your_pinata_secret_api_key
 #### Frontend Client Environment (`client/.env`)
 ```bash
 # REST API Endpoint
-VITE_API_URL=https://nsut-connect.onrender.com
+VITE_API_URL=https://test.com
 
 # WebSocket Broker URL
-VITE_SOCKET_URL=https://nsut-connect.onrender.com
+VITE_SOCKET_URL=https://test.com
 ```
 
 ---
 
-### 6.3 Installation & Bootstrapping
+### 5.3 Installation & Bootstrapping
 
 #### 1. Clone Repository & Install Monorepo Dependencies
 ```bash
@@ -630,7 +585,7 @@ npm run dev
 
 ---
 
-### 6.4 Local Telemetry Simulation Harness
+### 5.4 Local Telemetry Simulation Harness
 
 To verify functionality without needing external Google Cloud OAuth credentials, the authentication interface (`client/src/pages/LoginPage.jsx`) includes a built-in simulation harness. This harness calls the `/api/auth/dev-login` endpoint to issue cryptographically signed, stateless JWT sessions directly from the development server:
 

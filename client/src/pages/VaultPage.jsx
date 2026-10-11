@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import Navbar from '../components/common/Navbar';
 import ResourceCard from '../components/vault/ResourceCard';
 import UploadResourceModal from '../components/vault/UploadResourceModal';
+import GlobalFooter from '../components/common/GlobalFooter';
 import api from '../services/api';
 import { 
   Database, 
@@ -321,6 +322,9 @@ export default function VaultPage() {
           </section>
         )}
       </main>
+
+      {/* CREATOR SPECIFICATION BOX */}
+      <GlobalFooter />
 
       {/* UPLOAD MODAL COMPONENT */}
       <UploadResourceModal

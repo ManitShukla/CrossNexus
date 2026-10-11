@@ -6,6 +6,7 @@ import Navbar from '../components/common/Navbar';
 import CurrentSlotCard from '../components/timetable/CurrentSlotCard';
 import DayView from '../components/timetable/DayView';
 import WeekView from '../components/timetable/WeekView';
+import GlobalFooter from '../components/common/GlobalFooter';
 import { 
   Calendar, 
   Grid, 
@@ -312,6 +313,9 @@ export default function TimetablePage() {
           </div>
         )}
       </main>
+
+      {/* CREATOR SPECIFICATION BOX */}
+      <GlobalFooter />
     </div>
   );
 }

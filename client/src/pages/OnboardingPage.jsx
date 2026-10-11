@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 import Navbar from '../components/common/Navbar';
+import GlobalFooter from '../components/common/GlobalFooter';
 import { Cpu, CheckCircle2, ChevronRight, AlertTriangle } from 'lucide-react';
 
 const BRANCH_OPTIONS = [
@@ -190,6 +191,9 @@ export default function OnboardingPage() {
           </form>
         </div>
       </main>
+
+      {/* CREATOR SPECIFICATION BOX */}
+      <GlobalFooter />
 
       <footer className="border-t border-stroke-dim p-4 text-center text-[10px] text-tactical-muted">
         ACADEMIC SETUP GATEWAY // CROSSNEXUS CAMPUS OPERATING SYSTEM
