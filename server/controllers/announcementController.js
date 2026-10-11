@@ -182,6 +182,19 @@ const createAnnouncement = async (req, res) => {
       console.log(`[SOCKET_BROADCAST] Sent notice '${createdAnnouncement.title}' to campus_all.`);
     }
 
+    // Dual-Tier Push Pipeline: Web Push (VAPID) across registered devices
+    try {
+      const { broadcastPushNotification } = require('./notificationController');
+      broadcastPushNotification({
+        title: `CAMPUS NOTICE // ${String(createdAnnouncement.category || 'OFFICIAL').toUpperCase()}`,
+        body: createdAnnouncement.title,
+        url: '/feed',
+        id: createdAnnouncement._id,
+      }).catch((pushErr) => console.warn('[PUSH_BROADCAST_WARN]', pushErr.message));
+    } catch (err) {
+      console.warn('[PUSH_BROADCAST_TRIGGER_WARN]', err.message);
+    }
+
     return res.status(201).json({
       success: true,
       status: 'NOTICE_PUBLISHED',

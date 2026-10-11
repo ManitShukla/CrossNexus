@@ -13,6 +13,8 @@
     "server:dev": "npm run dev --prefix server",
     "server:start": "npm start --prefix server",
     "client:dev": "npm run dev --prefix client",
-    "client:build": "npm run build --prefix client"
+    "client:build": "npm run build --prefix client",
+    "build:mobile": "npm --prefix client run build:mobile",
+    "build:apk": "npm --prefix client run build:apk"
   }
 }

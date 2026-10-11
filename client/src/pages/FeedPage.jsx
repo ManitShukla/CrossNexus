@@ -153,7 +153,7 @@ export default function FeedPage() {
       </div>
 
       {/* CORE TWO-COLUMN FEED GRID */}
-      <main className="max-w-7xl w-full mx-auto p-4 sm:p-6 flex-grow">
+      <main className="max-w-7xl w-full mx-auto p-4 sm:p-6 flex-grow pb-20 md:pb-6">
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(420px,1.45fr)_minmax(320px,1fr)] gap-6 items-start">
           
           {/* ================================================================= */}

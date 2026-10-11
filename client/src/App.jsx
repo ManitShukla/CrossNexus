@@ -14,6 +14,7 @@ import FeedPage from './pages/FeedPage';
 import TimetablePage from './pages/TimetablePage';
 import VaultPage from './pages/VaultPage';
 import GlobalFooter from './components/common/GlobalFooter';
+import MobileNavbar from './components/common/MobileNavbar';
 import { Terminal, Shield, Wifi, Radio, Cpu, Activity, RefreshCw, CheckCircle2, User as UserIcon, ArrowRight } from 'lucide-react';
 
 function DashboardHUD() {
@@ -76,7 +77,7 @@ function DashboardHUD() {
       <div className="fui-hazard-divider" />
 
       {/* MAIN OPERATIONS GRID */}
-      <main className="max-w-7xl w-full mx-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 flex-grow">
+      <main className="max-w-7xl w-full mx-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 flex-grow pb-20 md:pb-6">
         {/* LEFT COLUMN: ACTIVE USER STATUS & QUICK LAUNCH */}
         <section className="lg:col-span-7 flex flex-col gap-6">
           {/* USER IDENTITY PANEL */}
@@ -282,6 +283,7 @@ export default function App() {
             } 
           />
         </Routes>
+        <MobileNavbar />
         </SocketProvider>
       </AuthProvider>
     </BrowserRouter>

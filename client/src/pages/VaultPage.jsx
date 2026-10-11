@@ -111,7 +111,7 @@ export default function VaultPage() {
     <div className="min-h-screen bg-black text-tactical-main font-mono flex flex-col selection:bg-phosphor selection:text-black">
       <Navbar />
 
-      <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 space-y-6">
+      <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 space-y-6 pb-20 md:pb-6">
         {/* TELEMETRY BANNER */}
         <section className="border border-stroke-dim bg-charcoal-panel p-4">
           <div className="flex items-center justify-between gap-4 border-b border-stroke-dim pb-3 mb-4">

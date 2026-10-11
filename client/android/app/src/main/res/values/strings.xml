@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">CrossNexus</string>
+    <string name="title_activity_main">CrossNexus</string>
+    <string name="package_name">in.ac.nsut.crossnexus</string>
+    <string name="custom_url_scheme">in.ac.nsut.crossnexus</string>
+</resources>

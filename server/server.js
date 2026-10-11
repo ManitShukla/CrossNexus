@@ -15,6 +15,7 @@ const announcementRoutes = require('./routes/announcementRoutes');
 const discussionRoutes = require('./routes/discussionRoutes');
 const timetableRoutes = require('./routes/timetableRoutes');
 const vaultRoutes = require('./routes/vaultRoutes');
+const notificationRoutes = require('./routes/notificationRoutes');
 const { notFoundHandler, errorHandler } = require('./middleware/errorMiddleware');
 const { initAnnouncementSockets } = require('./sockets/announcementSockets');
 
@@ -151,6 +152,7 @@ app.use('/api/announcements', announcementRoutes);
 app.use('/api/discussions', discussionRoutes);
 app.use('/api/timetable', timetableRoutes);
 app.use('/api/vault', vaultRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // -----------------------------------------------------------------------------
 // TELEMETRY & SYSTEM HEALTH ENDPOINTS

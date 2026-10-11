@@ -152,25 +152,12 @@ export default function TimetablePage() {
         </div>
       </div>
 
-      <main className="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6">
+      <main className="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 pb-20 md:pb-6">
         {/* OFFLINE STATUS BANNER */}
         {(isOffline || isFromCache) && (
-          <div className="border border-hazard bg-hazard/10 p-3 mb-6 text-xs text-hazard font-mono flex flex-wrap items-center justify-between gap-3">
-            <div className="flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4 shrink-0 text-hazard animate-pulse" />
-              <span className="font-bold tracking-widest uppercase">
-                [ OFFLINE MODE ACTIVE // SHOWING LOCALLY STORED TIMETABLE ]
-              </span>
-            </div>
-            <div className="flex items-center gap-2 text-[10px] text-hazard/80 font-mono">
-              <Database className="w-3.5 h-3.5 shrink-0" />
-              <span>OFFLINE CACHE ACTIVE</span>
-              {cachedTimestamp && (
-                <span className="hidden sm:inline text-tactical-muted">
-                  [SNAPSHOT: {new Date(cachedTimestamp).toLocaleTimeString()}]
-                </span>
-              )}
-            </div>
+          <div className="w-full bg-black border border-amber-500 text-amber-500 p-3 mb-4 font-mono text-xs tracking-wider flex flex-wrap items-center justify-between gap-2">
+            <span>[ STATUS: DISCONNECTED // OFFLINE CACHE PROTOCOL ENGAGED ]</span>
+            <span>[ OFFLINE MODE ACTIVE // SHOWING LOCALLY STORED TIMETABLE ]</span>
           </div>
         )}
 

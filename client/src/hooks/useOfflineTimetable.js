@@ -1,6 +1,7 @@
-﻿import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
-const LOCAL_STORAGE_TIMETABLE_KEY = 'nsut_offline_timetable_matrix';
+const LOCAL_STORAGE_TIMETABLE_KEY = 'crossnexus_timetable_snapshot';
+const LEGACY_STORAGE_TIMETABLE_KEY = 'nsut_offline_timetable_matrix';
 
 /**
  * Tactical Offline Timetable Resilience Hook
@@ -13,10 +14,10 @@ export function useOfflineTimetable() {
   const [isFromCache, setIsFromCache] = useState(false);
   const [cachedTimestamp, setCachedTimestamp] = useState(() => {
     try {
-      const stored = localStorage.getItem(LOCAL_STORAGE_TIMETABLE_KEY);
+      const stored = localStorage.getItem(LOCAL_STORAGE_TIMETABLE_KEY) || localStorage.getItem(LEGACY_STORAGE_TIMETABLE_KEY);
       if (stored) {
         const parsed = JSON.parse(stored);
-        return parsed.timestamp || null;
+        return parsed.timestamp || (parsed.updatedAt ? new Date(parsed.updatedAt).toISOString() : null);
       }
     } catch (e) {
       /* ignore */
@@ -72,13 +73,13 @@ export function useOfflineTimetable() {
    */
   const loadTimetableLocally = useCallback((requestedCohort) => {
     try {
-      const stored = localStorage.getItem(LOCAL_STORAGE_TIMETABLE_KEY);
+      const stored = localStorage.getItem(LOCAL_STORAGE_TIMETABLE_KEY) || localStorage.getItem(LEGACY_STORAGE_TIMETABLE_KEY);
       if (!stored) return null;
 
       const parsed = JSON.parse(stored);
-      if (parsed && parsed.data) {
+      if (parsed) {
         setIsFromCache(true);
-        return parsed.data;
+        return parsed.data || (parsed.schedule ? parsed : null);
       }
     } catch (err) {
       console.warn('[OFFLINE_CACHE_READ_FAIL]', err);

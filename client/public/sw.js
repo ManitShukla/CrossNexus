@@ -1,17 +1,13 @@
-/**
- * CrossNexus // Tactical Operations Service Worker
- * Protocol: Mil-Spec Offline Resilience & Autonomous Timetable Cache
- * Caches: crossnexus-static-v1, crossnexus-timetable-cache-v1
- */
-
 const STATIC_CACHE_NAME = 'crossnexus-static-v1';
+const CACHE_NAME = STATIC_CACHE_NAME;
 const TIMETABLE_CACHE_NAME = 'crossnexus-timetable-cache-v1';
-
+const TIMETABLE_CACHE = TIMETABLE_CACHE_NAME;
 const STATIC_ASSETS = [
   '/',
   '/index.html',
   '/manifest.json',
-  '/icons/icon.svg',
+  '/favicon.ico',
+  '/icons/icon.svg'
 ];
 
 // -----------------------------------------------------------------------------
@@ -20,13 +16,9 @@ const STATIC_ASSETS = [
 // -----------------------------------------------------------------------------
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(STATIC_CACHE_NAME).then((cache) => {
-      console.log('[SW_INSTALL] Pre-caching tactical application shell assets.');
-      return cache.addAll(STATIC_ASSETS);
-    }).then(() => {
-      return self.skipWaiting();
-    })
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(STATIC_ASSETS))
   );
+  self.skipWaiting();
 });
 
 // -----------------------------------------------------------------------------
@@ -34,22 +26,19 @@ self.addEventListener('install', (event) => {
 // Cleans up legacy cache versions and claims active clients.
 // -----------------------------------------------------------------------------
 self.addEventListener('activate', (event) => {
-  const currentCaches = [STATIC_CACHE_NAME, TIMETABLE_CACHE_NAME];
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (!currentCaches.includes(cacheName)) {
-            console.log(`[SW_ACTIVATE] Purging obsolete cache archive: ${cacheName}`);
-            return caches.delete(cacheName);
+    caches.keys().then((keys) =>
+      Promise.all(
+        keys.map((key) => {
+          if (key !== CACHE_NAME && key !== TIMETABLE_CACHE) {
+            console.log(`[SW_ACTIVATE] Purging obsolete cache: ${key}`);
+            return caches.delete(key);
           }
         })
-      );
-    }).then(() => {
-      console.log('[SW_ACTIVATE] Tactical Service Worker active. Controlling clients.');
-      return self.clients.claim();
-    })
+      )
+    )
   );
+  self.clients.claim();
 });
 
 // -----------------------------------------------------------------------------
@@ -59,94 +48,113 @@ self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // 1. Never intercept non-GET mutations (POST, PUT, DELETE, PATCH)
+  // 1. Bypass non-GET mutations (POST, PUT, DELETE, PATCH)
   if (request.method !== 'GET') {
     return;
   }
 
-  // 2. Never intercept WebSocket protocol upgrades or socket.io channels
+  // 2. Bypass WebSocket protocol upgrades and socket.io channels
   if (url.pathname.includes('/socket.io') || url.protocol === 'ws:' || url.protocol === 'wss:') {
     return;
   }
 
-  // 3. MISSION-CRITICAL TIMETABLE: NETWORK-FIRST WITH CACHE-FALLBACK
-  if (url.pathname.includes('/api/timetable')) {
+  // 3. Network-First with Cache Fallback for Timetable API
+  if (url.pathname.startsWith('/api/timetable') && request.method === 'GET') {
     event.respondWith(
       fetch(request)
-        .then((networkResponse) => {
-          // If network returns a valid status, update dynamic timetable cache
-          if (networkResponse && networkResponse.status === 200) {
-            const responseClone = networkResponse.clone();
-            caches.open(TIMETABLE_CACHE_NAME).then((cache) => {
-              cache.put(request, responseClone);
-            });
+        .then((response) => {
+          if (response && response.ok) {
+            const clone = response.clone();
+            caches.open(TIMETABLE_CACHE_NAME).then((cache) => cache.put(request, clone));
           }
-          return networkResponse;
+          return response;
         })
-        .catch(async (fetchError) => {
-          console.warn('[SW_OFFLINE] Network unreachable for timetable. Intercepting with local cache fallback.');
-          const cache = await caches.open(TIMETABLE_CACHE_NAME);
-
-          // Attempt exact match for specific cohort query
-          const cachedResponse = await cache.match(request);
+        .catch(async () => {
+          console.warn('[SW_OFFLINE] Network unreachable for timetable. Intercepting with cache fallback.');
+          const cachedResponse = await caches.match(request);
           if (cachedResponse) {
-            console.log('[SW_OFFLINE] Exact cohort timetable match delivered from cache.');
             return cachedResponse;
           }
 
-          // Fallback: match any cached timetable record if cohort query slightly differs
-          const allCachedKeys = await cache.keys();
-          if (allCachedKeys.length > 0) {
-            console.log('[SW_OFFLINE] Delivering closest available cached cohort schedule.');
-            return await cache.match(allCachedKeys[0]);
+          // Fallback: match any cached timetable record if cohort query differs slightly
+          const timetableCache = await caches.open(TIMETABLE_CACHE_NAME);
+          const allKeys = await timetableCache.keys();
+          if (allKeys.length > 0) {
+            return timetableCache.match(allKeys[0]);
           }
 
-          // If cache is empty, return tactical offline JSON message
           return new Response(
             JSON.stringify({
-              success: false,
-              status: 'OFFLINE_CACHE_EMPTY',
-              message: 'Autonomous disconnected mode active, but no local timetable matrix was found in storage.',
+              success: true,
+              offline: true,
+              message: 'OFFLINE_CACHE_DELIVERY',
+              schedule: []
             }),
-            {
-              status: 503,
-              headers: { 'Content-Type': 'application/json' },
-            }
+            { headers: { 'Content-Type': 'application/json' } }
           );
         })
     );
     return;
   }
 
-  // 4. STATIC ASSETS & APPLICATION SHELL: CACHE-FIRST / STALE-WHILE-REVALIDATE
-  // Matches HTML navigations, CSS, JS chunks, and SVG assets
-  event.respondWith(
-    caches.match(request).then((cachedResponse) => {
-      if (cachedResponse) {
-        // Revalidate in background if online
-        fetch(request).then((freshResponse) => {
-          if (freshResponse && freshResponse.status === 200) {
-            caches.open(STATIC_CACHE_NAME).then((cache) => cache.put(request, freshResponse));
-          }
-        }).catch(() => {/* Offline: silence revalidation failure */});
-        return cachedResponse;
-      }
+  // 4. Standard Cache-First for static assets, Network-First for dynamic routes
+  if (request.destination === 'style' || request.destination === 'script' || request.destination === 'image') {
+    event.respondWith(
+      caches.match(request).then((cached) => cached || fetch(request))
+    );
+    return;
+  }
 
-      // Not in cache, fetch from network
-      return fetch(request)
-        .then((networkResponse) => {
-          if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
-            const responseClone = networkResponse.clone();
-            caches.open(STATIC_CACHE_NAME).then((cache) => cache.put(request, responseClone));
-          }
-          return networkResponse;
-        })
-        .catch(() => {
-          // SPA Fallback: for HTML navigation requests when offline, serve cached index.html
-          if (request.mode === 'navigate') {
-            return caches.match('/index.html');
-          }
-        });
+  // 5. SPA Navigation Fallback: serve cached index.html when offline
+  if (request.mode === 'navigate') {
+    event.respondWith(
+      fetch(request).catch(() => caches.match('/index.html'))
+    );
+    return;
+  }
+});
+
+// -----------------------------------------------------------------------------
+// LIFECYCLE: PUSH EVENT (VAPID BACKGROUND NOTIFICATION DISPATCH)
+// -----------------------------------------------------------------------------
+self.addEventListener('push', (event) => {
+  let payload = { title: 'CAMPUS NOTICE // CROSSNEXUS', body: 'New transmission received.' };
+  try {
+    if (event.data) {
+      payload = event.data.json();
+    }
+  } catch (e) {
+    payload.body = event.data.text();
+  }
+
+  const options = {
+    body: payload.body,
+    icon: '/icons/icon.svg',
+    badge: '/icons/icon.svg',
+    vibrate: [100, 50, 100],
+    data: { url: payload.url || '/feed' }
+  };
+
+  event.waitUntil(self.registration.showNotification(payload.title, options));
+});
+
+// -----------------------------------------------------------------------------
+// LIFECYCLE: NOTIFICATION CLICK EVENT
+// Focuses existing client window or opens target URL upon notification tap
+// -----------------------------------------------------------------------------
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+      const targetUrl = event.notification.data?.url || '/feed';
+      for (const client of clientList) {
+        if (client.url.includes(targetUrl) && 'focus' in client) {
+          return client.focus();
+        }
+      }
+      if (clients.openWindow) {
+        return clients.openWindow(targetUrl);
+      }
     })
   );
 });

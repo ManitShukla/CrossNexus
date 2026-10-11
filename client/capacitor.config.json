@@ -1,0 +1,16 @@
+{
+  "appId": "in.ac.nsut.crossnexus",
+  "appName": "CrossNexus",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https",
+    "cleartext": true
+  },
+  "plugins": {
+    "StatusBar": {
+      "style": "DARK",
+      "backgroundColor": "#000000"
+    }
+  }
+}
