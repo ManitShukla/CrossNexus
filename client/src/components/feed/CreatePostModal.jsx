@@ -13,6 +13,13 @@ export default function CreatePostModal({ isOpen, onClose, onCreated, defaultTyp
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
 
+  React.useEffect(() => {
+    if (isOpen) {
+      setPostType(defaultType);
+      setError(null);
+    }
+  }, [isOpen, defaultType]);
+
   if (!isOpen) return null;
 
   const handleSubmit = async (e) => {

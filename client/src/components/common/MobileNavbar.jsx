@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { Radio, Calendar, Database, Activity, X, Bell, Shield, User, Wifi, WifiOff } from 'lucide-react';
+import { Terminal, Radio, MessageSquare, Calendar, Database, Activity, X, Bell, Shield, User, Wifi, WifiOff } from 'lucide-react';
 import { subscribeToPushNotifications, getNotificationPermissionState } from '../../utils/pushNotifications';
 
 export default function MobileNavbar() {
@@ -34,48 +34,54 @@ export default function MobileNavbar() {
   };
 
   const navItems = [
+    { name: 'PORTAL', path: '/', icon: Terminal, exact: true },
     { name: 'FEED', path: '/feed', icon: Radio },
+    { name: 'DISCUSSIONS', path: '/discussions', icon: MessageSquare },
     { name: 'TIMETABLE', path: '/timetable', icon: Calendar },
     { name: 'VAULT', path: '/vault', icon: Database },
   ];
 
   return (
     <>
-      {/* MOBILE BOTTOM-DOCKED HUD NAVIGATION DOCK */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-black border-t border-stroke-dim pb-[env(safe-area-inset-bottom)] font-mono text-[11px] selection:bg-phosphor selection:text-black">
-        <div className="grid grid-cols-4 items-stretch h-14">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = location.pathname.startsWith(item.path);
-            return (
-              <NavLink
-                key={item.path}
-                to={item.path}
-                className={`flex flex-col items-center justify-center gap-1 border-r border-stroke-dim/40 transition-colors uppercase font-bold tracking-tight ${
-                  isActive
-                    ? 'bg-phosphor text-black'
-                    : 'text-tactical-muted hover:text-tactical-bright bg-black'
-                }`}
-              >
-                <Icon className={`w-4 h-4 ${isActive ? 'stroke-[2.5]' : ''}`} />
-                <span className="text-[9px] tracking-widest">{item.name}</span>
-              </NavLink>
-            );
-          })}
+      {/* MOBILE BOTTOM-DOCKED HUD NAVIGATION DOCK WITH YELLOW ENCLOSURE */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-black pb-[env(safe-area-inset-bottom)] font-mono text-[10px] selection:bg-phosphor selection:text-black">
+        <div className="p-1 bg-black border-t-2 border-yellow-400 shadow-[0_0_12px_rgba(250,204,21,0.25)]">
+          <div className="grid grid-cols-6 items-stretch h-14">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = item.exact
+                ? location.pathname === item.path
+                : location.pathname.startsWith(item.path);
+              return (
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  className={`flex flex-col items-center justify-center gap-0.5 border-r border-stroke-dim/40 transition-colors uppercase font-bold tracking-tight ${
+                    isActive
+                      ? 'bg-yellow-400 text-black'
+                      : 'text-zinc-300 hover:text-black hover:bg-yellow-400 bg-black'
+                  }`}
+                >
+                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'stroke-[2.5]' : ''}`} />
+                  <span className="text-[7.5px] tracking-tight">{item.name}</span>
+                </NavLink>
+              );
+            })}
 
-          {/* STATUS TAB TRIGGER */}
-          <button
-            type="button"
-            onClick={() => setShowStatusModal(true)}
-            className={`flex flex-col items-center justify-center gap-1 transition-colors uppercase font-bold tracking-tight cursor-pointer ${
-              showStatusModal
-                ? 'bg-phosphor text-black'
-                : 'text-tactical-muted hover:text-teal bg-black'
-            }`}
-          >
-            <Activity className="w-4 h-4" />
-            <span className="text-[9px] tracking-widest">STATUS</span>
-          </button>
+            {/* STATUS TAB TRIGGER */}
+            <button
+              type="button"
+              onClick={() => setShowStatusModal(true)}
+              className={`flex flex-col items-center justify-center gap-0.5 transition-colors uppercase font-bold tracking-tight cursor-pointer ${
+                showStatusModal
+                  ? 'bg-yellow-400 text-black'
+                  : 'text-zinc-300 hover:text-black hover:bg-yellow-400 bg-black'
+              }`}
+            >
+              <Activity className="w-3.5 h-3.5" />
+              <span className="text-[7.5px] tracking-tight">STATUS</span>
+            </button>
+          </div>
         </div>
       </nav>
 

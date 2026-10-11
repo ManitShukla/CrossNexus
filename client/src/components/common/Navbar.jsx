@@ -14,12 +14,6 @@ export default function Navbar() {
     navigate('/login');
   };
 
-  const navLinkClass = ({ isActive }) =>
-    `px-3 py-1.5 text-xs tracking-ui uppercase border transition-all duration-100 ${
-      isActive
-        ? 'border-phosphor bg-phosphor/10 text-phosphor font-semibold'
-        : 'border-transparent text-tactical-muted hover:border-stroke-bright hover:text-tactical-main'
-    }`;
 
   return (
     <header className="border-b border-stroke-dim bg-charcoal-panel/95 backdrop-blur-sm sticky top-0 z-40">
@@ -36,23 +30,61 @@ export default function Navbar() {
           </NavLink>
         </div>
 
-        {/* PRIMARY NAVIGATION */}
-        <nav className="flex items-center gap-1 sm:gap-2">
-          <NavLink to="/" className={navLinkClass}>
-            // PORTAL
-          </NavLink>
-          <NavLink to="/feed" className={navLinkClass}>
-            // FEED
-          </NavLink>
-          <NavLink to="/timetable" className={navLinkClass}>
-            // TIMETABLE
-          </NavLink>
-          <NavLink to="/vault" className={navLinkClass}>
-            // VAULT
-          </NavLink>
-          <NavLink to="/onboard" className={navLinkClass}>
-            // PROFILE
-          </NavLink>
+        {/* PRIMARY NAVIGATION WITH PROMINENT YELLOW ENCLOSURE */}
+        <nav className="flex items-center">
+          <div className="flex items-center gap-1 p-1 bg-black border-2 border-yellow-400 shadow-[0_0_12px_rgba(250,204,21,0.25)]">
+            <NavLink
+              to="/"
+              end
+              className={({ isActive }) =>
+                isActive
+                  ? 'font-mono text-xs font-bold px-3 py-1.5 bg-yellow-400 text-black uppercase tracking-wider'
+                  : 'font-mono text-xs font-bold px-3 py-1.5 text-zinc-300 hover:text-black hover:bg-yellow-400 transition-colors uppercase tracking-wider'
+              }
+            >
+              [ PORTAL ]
+            </NavLink>
+            <NavLink
+              to="/feed"
+              className={({ isActive }) =>
+                isActive
+                  ? 'font-mono text-xs font-bold px-3 py-1.5 bg-yellow-400 text-black uppercase tracking-wider'
+                  : 'font-mono text-xs font-bold px-3 py-1.5 text-zinc-300 hover:text-black hover:bg-yellow-400 transition-colors uppercase tracking-wider'
+              }
+            >
+              [ FEED ]
+            </NavLink>
+            <NavLink
+              to="/discussions"
+              className={({ isActive }) =>
+                isActive
+                  ? 'font-mono text-xs font-bold px-3 py-1.5 bg-yellow-400 text-black uppercase tracking-wider'
+                  : 'font-mono text-xs font-bold px-3 py-1.5 text-zinc-300 hover:text-black hover:bg-yellow-400 transition-colors uppercase tracking-wider'
+              }
+            >
+              [ DISCUSSIONS ]
+            </NavLink>
+            <NavLink
+              to="/timetable"
+              className={({ isActive }) =>
+                isActive
+                  ? 'font-mono text-xs font-bold px-3 py-1.5 bg-yellow-400 text-black uppercase tracking-wider'
+                  : 'font-mono text-xs font-bold px-3 py-1.5 text-zinc-300 hover:text-black hover:bg-yellow-400 transition-colors uppercase tracking-wider'
+              }
+            >
+              [ TIMETABLE ]
+            </NavLink>
+            <NavLink
+              to="/vault"
+              className={({ isActive }) =>
+                isActive
+                  ? 'font-mono text-xs font-bold px-3 py-1.5 bg-yellow-400 text-black uppercase tracking-wider'
+                  : 'font-mono text-xs font-bold px-3 py-1.5 text-zinc-300 hover:text-black hover:bg-yellow-400 transition-colors uppercase tracking-wider'
+              }
+            >
+              [ VAULT ]
+            </NavLink>
+          </div>
         </nav>
 
         {/* USER TELEMETRY & CONTROLS */}
