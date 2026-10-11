@@ -1,0 +1,340 @@
+﻿[
+  {
+    "branch": "ECE",
+    "semester": 1,
+    "section": "1",
+    "schedule": [
+      {
+        "day": "Monday",
+        "startTime": "09:00",
+        "endTime": "10:00",
+        "subjectCode": "EC101",
+        "subjectName": "Analog Electronics",
+        "faculty": "Dr. S. Sharma",
+        "room": "Block 6 - Room 204"
+      },
+      {
+        "day": "Monday",
+        "startTime": "10:00",
+        "endTime": "11:00",
+        "subjectCode": "MA101",
+        "subjectName": "Engineering Mathematics I",
+        "faculty": "Dr. R. Gupta",
+        "room": "Block 6 - Room 204"
+      },
+      {
+        "day": "Monday",
+        "startTime": "11:15",
+        "endTime": "12:15",
+        "subjectCode": "PH101",
+        "subjectName": "Applied Physics",
+        "faculty": "Prof. V. K. Meena",
+        "room": "Block 6 - Room 204"
+      },
+      {
+        "day": "Monday",
+        "startTime": "13:00",
+        "endTime": "14:00",
+        "subjectCode": "CS101",
+        "subjectName": "Programming in C",
+        "faculty": "Er. Amit Rawat",
+        "room": "Block 4 - Lab 102"
+      },
+      {
+        "day": "Monday",
+        "startTime": "14:00",
+        "endTime": "16:00",
+        "subjectCode": "EC102",
+        "subjectName": "Electronics Circuit Lab",
+        "faculty": "Prof. Verma",
+        "room": "Block 6 - Lab 3"
+      },
+      {
+        "day": "Tuesday",
+        "startTime": "09:00",
+        "endTime": "10:00",
+        "subjectCode": "MA101",
+        "subjectName": "Engineering Mathematics I",
+        "faculty": "Dr. R. Gupta",
+        "room": "Block 6 - Room 204"
+      },
+      {
+        "day": "Tuesday",
+        "startTime": "10:00",
+        "endTime": "11:00",
+        "subjectCode": "HU101",
+        "subjectName": "Professional Communication",
+        "faculty": "Dr. A. Mathur",
+        "room": "Admin Quad - Room 108"
+      },
+      {
+        "day": "Tuesday",
+        "startTime": "11:00",
+        "endTime": "13:00",
+        "subjectCode": "CS102",
+        "subjectName": "C Programming Lab",
+        "faculty": "Er. Amit Rawat",
+        "room": "Block 4 - Lab 102"
+      },
+      {
+        "day": "Tuesday",
+        "startTime": "14:00",
+        "endTime": "15:00",
+        "subjectCode": "EC101",
+        "subjectName": "Analog Electronics",
+        "faculty": "Dr. S. Sharma",
+        "room": "Block 6 - Room 204"
+      },
+      {
+        "day": "Tuesday",
+        "startTime": "15:00",
+        "endTime": "16:00",
+        "subjectCode": "PH101",
+        "subjectName": "Applied Physics",
+        "faculty": "Prof. V. K. Meena",
+        "room": "Block 6 - Room 204"
+      },
+      {
+        "day": "Wednesday",
+        "startTime": "09:00",
+        "endTime": "10:00",
+        "subjectCode": "ME101",
+        "subjectName": "Engineering Graphics",
+        "faculty": "Dr. M. P. Singh",
+        "room": "Drawing Hall 2"
+      },
+      {
+        "day": "Wednesday",
+        "startTime": "10:00",
+        "endTime": "12:00",
+        "subjectCode": "ME102",
+        "subjectName": "Workshop Practice",
+        "faculty": "Er. Rajesh Kumar",
+        "room": "Central Workshop"
+      },
+      {
+        "day": "Wednesday",
+        "startTime": "13:00",
+        "endTime": "14:00",
+        "subjectCode": "EC101",
+        "subjectName": "Analog Electronics",
+        "faculty": "Dr. S. Sharma",
+        "room": "Block 6 - Room 204"
+      },
+      {
+        "day": "Wednesday",
+        "startTime": "14:00",
+        "endTime": "15:00",
+        "subjectCode": "MA101",
+        "subjectName": "Engineering Mathematics I",
+        "faculty": "Dr. R. Gupta",
+        "room": "Block 6 - Room 204"
+      },
+      {
+        "day": "Wednesday",
+        "startTime": "15:00",
+        "endTime": "16:00",
+        "subjectCode": "CY101",
+        "subjectName": "Environmental Sciences",
+        "faculty": "Dr. Neha Jain",
+        "room": "Block 6 - Room 204"
+      },
+      {
+        "day": "Thursday",
+        "startTime": "09:00",
+        "endTime": "10:00",
+        "subjectCode": "PH101",
+        "subjectName": "Applied Physics",
+        "faculty": "Prof. V. K. Meena",
+        "room": "Block 6 - Room 204"
+      },
+      {
+        "day": "Thursday",
+        "startTime": "10:00",
+        "endTime": "11:00",
+        "subjectCode": "CS101",
+        "subjectName": "Programming in C",
+        "faculty": "Er. Amit Rawat",
+        "room": "Block 4 - Lab 102"
+      },
+      {
+        "day": "Thursday",
+        "startTime": "11:15",
+        "endTime": "13:15",
+        "subjectCode": "PH102",
+        "subjectName": "Physics Practical Lab",
+        "faculty": "Prof. V. K. Meena",
+        "room": "Physics Lab Block 5"
+      },
+      {
+        "day": "Thursday",
+        "startTime": "14:00",
+        "endTime": "15:00",
+        "subjectCode": "HU101",
+        "subjectName": "Professional Communication",
+        "faculty": "Dr. A. Mathur",
+        "room": "Admin Quad - Room 108"
+      },
+      {
+        "day": "Thursday",
+        "startTime": "15:00",
+        "endTime": "16:00",
+        "subjectCode": "EC101",
+        "subjectName": "Analog Electronics Tutorial",
+        "faculty": "Dr. S. Sharma",
+        "room": "Block 6 - Room 204"
+      },
+      {
+        "day": "Friday",
+        "startTime": "09:00",
+        "endTime": "10:00",
+        "subjectCode": "MA101",
+        "subjectName": "Engineering Mathematics I",
+        "faculty": "Dr. R. Gupta",
+        "room": "Block 6 - Room 204"
+      },
+      {
+        "day": "Friday",
+        "startTime": "10:00",
+        "endTime": "11:00",
+        "subjectCode": "EC101",
+        "subjectName": "Analog Electronics",
+        "faculty": "Dr. S. Sharma",
+        "room": "Block 6 - Room 204"
+      },
+      {
+        "day": "Friday",
+        "startTime": "11:15",
+        "endTime": "12:15",
+        "subjectCode": "PH101",
+        "subjectName": "Applied Physics",
+        "faculty": "Prof. V. K. Meena",
+        "room": "Block 6 - Room 204"
+      },
+      {
+        "day": "Friday",
+        "startTime": "13:00",
+        "endTime": "15:00",
+        "subjectCode": "EC103",
+        "subjectName": "Microcontroller Emulation Workshop",
+        "faculty": "Dr. K. Swaminathan",
+        "room": "Mechatronics Lab Block 6"
+      },
+      {
+        "day": "Friday",
+        "startTime": "15:00",
+        "endTime": "16:00",
+        "subjectCode": "SA101",
+        "subjectName": "Society Activity & Mentorship",
+        "faculty": "Faculty Proctor",
+        "room": "Block 6 - Room 204"
+      }
+    ]
+  },
+  {
+    "branch": "CSE",
+    "semester": 1,
+    "section": "1",
+    "schedule": [
+      {
+        "day": "Monday",
+        "startTime": "09:00",
+        "endTime": "10:00",
+        "subjectCode": "CS101",
+        "subjectName": "Foundations of Computer Systems",
+        "faculty": "Dr. M. K. Rao",
+        "room": "Block 4 - Room 101"
+      },
+      {
+        "day": "Monday",
+        "startTime": "10:00",
+        "endTime": "11:00",
+        "subjectCode": "MA101",
+        "subjectName": "Discrete Mathematical Structures",
+        "faculty": "Dr. R. Gupta",
+        "room": "Block 4 - Room 101"
+      },
+      {
+        "day": "Monday",
+        "startTime": "11:15",
+        "endTime": "13:15",
+        "subjectCode": "CS102",
+        "subjectName": "Data Structures & Linux Laboratory",
+        "faculty": "Er. Alok Ranjan",
+        "room": "Turing Lab Block 4"
+      },
+      {
+        "day": "Tuesday",
+        "startTime": "09:00",
+        "endTime": "10:00",
+        "subjectCode": "CS103",
+        "subjectName": "Object-Oriented Programming (C++)",
+        "faculty": "Prof. Deepa Roy",
+        "room": "Block 4 - Room 101"
+      },
+      {
+        "day": "Tuesday",
+        "startTime": "10:00",
+        "endTime": "12:00",
+        "subjectCode": "CS104",
+        "subjectName": "Advanced Algorithms Sprint",
+        "faculty": "Er. Alok Ranjan",
+        "room": "Turing Lab Block 4"
+      },
+      {
+        "day": "Wednesday",
+        "startTime": "09:00",
+        "endTime": "10:00",
+        "subjectCode": "MA101",
+        "subjectName": "Discrete Mathematical Structures",
+        "faculty": "Dr. R. Gupta",
+        "room": "Block 4 - Room 101"
+      },
+      {
+        "day": "Wednesday",
+        "startTime": "11:00",
+        "endTime": "12:00",
+        "subjectCode": "CS101",
+        "subjectName": "Foundations of Computer Systems",
+        "faculty": "Dr. M. K. Rao",
+        "room": "Block 4 - Room 101"
+      },
+      {
+        "day": "Thursday",
+        "startTime": "10:00",
+        "endTime": "11:00",
+        "subjectCode": "CS103",
+        "subjectName": "Object-Oriented Programming (C++)",
+        "faculty": "Prof. Deepa Roy",
+        "room": "Block 4 - Room 101"
+      },
+      {
+        "day": "Thursday",
+        "startTime": "14:00",
+        "endTime": "16:00",
+        "subjectCode": "CS105",
+        "subjectName": "Full-Stack Web Architectures",
+        "faculty": "Guest Fellow",
+        "room": "Block 4 - Lab 202"
+      },
+      {
+        "day": "Friday",
+        "startTime": "09:00",
+        "endTime": "10:00",
+        "subjectCode": "CS101",
+        "subjectName": "Foundations of Computer Systems",
+        "faculty": "Dr. M. K. Rao",
+        "room": "Block 4 - Room 101"
+      },
+      {
+        "day": "Friday",
+        "startTime": "11:00",
+        "endTime": "13:00",
+        "subjectCode": "CS106",
+        "subjectName": "Open Source Hack Sprint",
+        "faculty": "Dr. M. K. Rao",
+        "room": "Turing Lab Block 4"
+      }
+    ]
+  }
+]

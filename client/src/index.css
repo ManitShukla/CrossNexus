@@ -1,0 +1,258 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =============================================================================
+   TACTICAL FUI: SYSTEM CSS VARIABLES (STRICT DESIGN SPEC SECTION 3)
+   ============================================================================= */
+:root {
+  --color-black: #000000;
+  --color-charcoal-base: #070707;
+  --color-charcoal-panel: #0b0c0c;
+  --color-charcoal-surface: #0e1010;
+  --color-phosphor: #cfff04;
+  --color-phosphor-wash: rgba(207, 255, 4, 0.08);
+  --color-teal: #548474;
+  --color-teal-dim: rgba(84, 132, 116, 0.15);
+  --color-hazard: #ff3333;
+  --color-hazard-wash: rgba(255, 51, 51, 0.12);
+  --color-stroke-dim: #1a1f1d;
+  --color-stroke-mid: #242b27;
+  --color-stroke-bright: #2f3833;
+  --color-text-muted: #687771;
+  --color-text-main: #d4ded9;
+  --color-text-bright: #ffffff;
+}
+
+/* =============================================================================
+   TACTICAL CANVAS & GLOBAL GRAPH-PAPER GRID (SPEC SECTION 5)
+   ============================================================================= */
+*, *::before, *::after {
+  border-radius: 0 !important;
+  box-sizing: border-box;
+}
+
+html, body {
+  background-color: var(--color-black);
+  color: var(--color-text-main);
+  font-family: 'JetBrains Mono', 'Space Mono', 'Roboto Mono', monospace !important;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Dual-Grid Tactical Blueprint Graph Paper */
+body {
+  background-color: #000000;
+  background-image:
+    /* Major 120px telemetry grid */
+    linear-gradient(to right, rgba(84, 132, 116, 0.10) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(84, 132, 116, 0.10) 1px, transparent 1px),
+    /* Minor 24px precision graph cells */
+    linear-gradient(to right, rgba(84, 132, 116, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(84, 132, 116, 0.035) 1px, transparent 1px);
+  background-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px;
+  background-position: 0 0, 0 0, 0 0, 0 0;
+}
+
+/* Selection State */
+::selection {
+  background-color: var(--color-phosphor);
+  color: var(--color-black);
+}
+
+/* Monospace Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #000000;
+  border-left: 1px solid var(--color-stroke-dim);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-stroke-bright);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-phosphor);
+}
+
+/* =============================================================================
+   CRT CHARACTERISTICS & TEXTURAL OVERLAYS (SPEC SECTION 5)
+   ============================================================================= */
+.crt-scanlines {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.35) 0px,
+    rgba(0, 0, 0, 0.35) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  opacity: 0.045;
+}
+
+.crt-vignette {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.85);
+}
+
+/* =============================================================================
+   TACTICAL FUI MODULES & GEOMETRY (SPEC SECTION 6 & 7)
+   ============================================================================= */
+.fui-panel {
+  background-color: var(--color-charcoal-panel);
+  border: 1px solid var(--color-stroke-mid);
+  padding: 16px;
+  position: relative;
+}
+
+.fui-panel-header {
+  border-bottom: 1px solid var(--color-stroke-dim);
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-teal);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Brutalist Precision Button (Spec Section 7) */
+.fui-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid var(--color-stroke-bright);
+  border-radius: 0 !important;
+  color: var(--color-text-main);
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 10px 16px;
+  cursor: pointer;
+  position: relative;
+  transition: all 90ms cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+}
+
+.fui-button:hover {
+  background: var(--color-phosphor-wash);
+  border-color: var(--color-phosphor);
+  color: var(--color-phosphor);
+}
+
+.fui-button:active {
+  background: var(--color-phosphor);
+  border-color: var(--color-phosphor);
+  color: var(--color-black);
+}
+
+.fui-button:focus-visible {
+  outline: 1px solid var(--color-phosphor);
+  outline-offset: 3px;
+}
+
+.fui-button-hazard {
+  border-color: rgba(255, 51, 51, 0.4);
+  color: var(--color-hazard);
+}
+.fui-button-hazard:hover {
+  background: var(--color-hazard-wash);
+  border-color: var(--color-hazard);
+}
+.fui-button-hazard:active {
+  background: var(--color-hazard);
+  color: var(--color-black);
+}
+.fui-button-hazard:focus-visible {
+  outline: 1px solid var(--color-hazard);
+  outline-offset: 3px;
+}
+
+/* Animated Hazard Warning Stripe Divider (Spec Section 5) */
+.fui-hazard-divider {
+  height: 6px;
+  width: 100%;
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--color-hazard),
+    var(--color-hazard) 10px,
+    var(--color-black) 10px,
+    var(--color-black) 20px
+  );
+  background-size: 40px 100%;
+  animation: hazard-scroll 8s linear infinite;
+}
+
+@keyframes hazard-scroll {
+  0% { background-position: 0 0; }
+  100% { background-position: 40px 0; }
+}
+
+/* Corner Reticle Brackets (Spec Section 6) */
+.fui-reticle-tl {
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  width: 8px;
+  height: 8px;
+  border-top: 2px solid var(--color-phosphor);
+  border-left: 2px solid var(--color-phosphor);
+  pointer-events: none;
+}
+.fui-reticle-tr {
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  width: 8px;
+  height: 8px;
+  border-top: 2px solid var(--color-phosphor);
+  border-right: 2px solid var(--color-phosphor);
+  pointer-events: none;
+}
+.fui-reticle-bl {
+  position: absolute;
+  bottom: -1px;
+  left: -1px;
+  width: 8px;
+  height: 8px;
+  border-bottom: 2px solid var(--color-phosphor);
+  border-left: 2px solid var(--color-phosphor);
+  pointer-events: none;
+}
+.fui-reticle-br {
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 8px;
+  height: 8px;
+  border-bottom: 2px solid var(--color-phosphor);
+  border-right: 2px solid var(--color-phosphor);
+  pointer-events: none;
+}
+
+.fui-crosshair {
+  color: var(--color-teal);
+  font-size: 0.65rem;
+  line-height: 1;
+  user-select: none;
+  pointer-events: none;
+}
