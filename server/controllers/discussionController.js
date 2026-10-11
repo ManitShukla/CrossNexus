@@ -2,98 +2,166 @@ const mongoose = require('mongoose');
 const Discussion = require('../models/Discussion');
 const Comment = require('../models/Comment');
 
-// In-memory buffer for local offline testing
+// Authentic NSUT Campus Discussions Seed Buffer
 let inMemoryDiscussions = [
   {
-    _id: 'mock-disc-01',
-    title: 'ROBOTICS SOCIETY: AUTONOMOUS DRONE WORKSHOP SIGNUP',
-    body: 'Hardware session scheduled in Block 6 Mechatronics Lab. Bring laptops with ROS2 and Linux environment pre-installed. Students from all years welcome.',
-    channel: 'Tech & Projects',
+    _id: 'seed-disc-01',
+    title: 'Nescii Lawn Canteen vs Student Center (Kachori & Coffee): The definitive verdict?',
+    body: 'Between the post-16:00 Nescii lawn counter coffee and the central canteen chhole bhature, what is your go-to sustenance during 4-hour lab blocks in APJ?',
+    content: 'Between the post-16:00 Nescii lawn counter coffee and the central canteen chhole bhature, what is your go-to sustenance during 4-hour lab blocks in APJ?',
+    channel: 'CAMPUS_LIFE',
     author: {
-      name: 'Rohan Verma',
-      role: 'student',
-      branch: 'ECE',
-    },
-    upvotes: ['user-01', 'user-02', 'user-03'],
-    commentCount: 4,
-    createdAt: new Date(Date.now() - 7200000).toISOString(),
-  },
-  {
-    _id: 'mock-disc-02',
-    title: 'ACADEMIC VAULT: PYQ UPLOAD FOR ANALOG ELECTRONICS EC101',
-    body: 'Uploaded 2023-2025 Mid-Sem papers to Academic Vault IPFS storage node. Verified Pinata hash: QmXoypizjW3WknFiJnKLwHCnL72vedxjQkDDP1mXWo6uco.',
-    channel: 'Academics',
-    author: {
-      name: 'Priya Sen',
-      role: 'student',
-      branch: 'ECE',
-    },
-    upvotes: ['user-01', 'user-04'],
-    commentCount: 2,
-    createdAt: new Date(Date.now() - 14400000).toISOString(),
-  },
-  {
-    _id: 'mock-disc-03',
-    title: 'CAMPUS LIFE: MOKSHA 2027 COORDINATION COMMITTEE CALLOUT',
-    body: 'Logistics, sponsorship, and stage management sub-teams are recruiting volunteers. Report to Admin Quad at 17:00 hrs.',
-    channel: 'Campus Life',
-    author: {
-      name: 'Aditya Singh',
+      name: 'Aarav Sharma',
       role: 'student',
       branch: 'IT',
     },
-    upvotes: ['user-05'],
+    authorName: 'Aarav Sharma (IT-1)',
+    upvotes: Array.from({ length: 42 }, (_, i) => `user-mock-${i + 1}`),
+    commentCount: 2,
+    createdAt: new Date(Date.now() - 3600000 * 3).toISOString(),
+  },
+  {
+    _id: 'seed-disc-02',
+    title: 'Quantum Physics (FCPH0114) vs Electronics (FCEC0106) PYQs uploaded in Vault',
+    body: 'Uploaded previous 5 years end-sem question papers with worked numericals for APJ-03 first year batches onto the Academic Vault. IPFS hash pinned.',
+    content: 'Uploaded previous 5 years end-sem question papers with worked numericals for APJ-03 first year batches onto the Academic Vault. IPFS hash pinned.',
+    channel: 'ACADEMICS',
+    author: {
+      name: 'Manit Shukla',
+      role: 'student',
+      branch: 'ECE',
+    },
+    authorName: 'Manit Shukla (ECE)',
+    upvotes: Array.from({ length: 88 }, (_, i) => `user-mock-${i + 1}`),
     commentCount: 1,
-    createdAt: new Date(Date.now() - 43200000).toISOString(),
+    createdAt: new Date(Date.now() - 3600000 * 7).toISOString(),
+  },
+  {
+    _id: 'seed-disc-03',
+    title: 'Moksha-Innovision 2026 Core Working Committee Openings',
+    body: 'Applications for sponsorship and stage ops for Moksha 2026 are opening this Friday. First round interviews will take place outside the Admin block auditorium.',
+    content: 'Applications for sponsorship and stage ops for Moksha 2026 are opening this Friday. First round interviews will take place outside the Admin block auditorium.',
+    channel: 'SOCIETY',
+    author: {
+      name: 'Student Council Secretariat',
+      role: 'student',
+      branch: 'ADMIN',
+    },
+    authorName: 'Student Council Secretariat',
+    upvotes: Array.from({ length: 65 }, (_, i) => `user-mock-${i + 1}`),
+    commentCount: 1,
+    createdAt: new Date(Date.now() - 86400000).toISOString(),
   },
 ];
 
 let inMemoryComments = [
   {
-    _id: 'mock-comm-01',
-    discussionId: 'mock-disc-01',
+    _id: 'seed-comm-01',
+    discussionId: 'seed-disc-01',
     author: {
-      name: 'Kavya Nair',
+      name: 'Priya Verma',
       role: 'student',
+      branch: 'ECE',
     },
-    body: 'Are PX4 flight controller simulation files available prior to session?',
+    authorName: 'Priya Verma (ECE-3)',
+    body: 'Nescii coffee hits different during winters, hands down.',
+    content: 'Nescii coffee hits different during winters, hands down.',
     parentId: null,
-    createdAt: new Date(Date.now() - 3600000).toISOString(),
+    createdAt: new Date(Date.now() - 3600000 * 2).toISOString(),
+  },
+  {
+    _id: 'seed-comm-02',
+    discussionId: 'seed-disc-01',
+    author: {
+      name: 'Rohan Gupta',
+      role: 'student',
+      branch: 'CSAI',
+    },
+    authorName: 'Rohan Gupta (CSAI-2)',
+    body: 'Student center cold coffee + maggi after a brutal Quantum Physics tutorial.',
+    content: 'Student center cold coffee + maggi after a brutal Quantum Physics tutorial.',
+    parentId: null,
+    createdAt: new Date(Date.now() - 3600000 * 1).toISOString(),
+  },
+  {
+    _id: 'seed-comm-03',
+    discussionId: 'seed-disc-02',
+    author: {
+      name: 'Devansh K.',
+      role: 'student',
+      branch: 'IT',
+    },
+    authorName: 'Devansh K. (IT-1)',
+    body: 'Lifesaver! The wave mechanics derivation is identical to the 2024 paper.',
+    content: 'Lifesaver! The wave mechanics derivation is identical to the 2024 paper.',
+    parentId: null,
+    createdAt: new Date(Date.now() - 3600000 * 5).toISOString(),
+  },
+  {
+    _id: 'seed-comm-04',
+    discussionId: 'seed-disc-03',
+    author: {
+      name: 'Ananya S.',
+      role: 'student',
+      branch: 'MAC',
+    },
+    authorName: 'Ananya S. (MAC-2)',
+    body: 'Will technical societies get separate stalls near Mini CC?',
+    content: 'Will technical societies get separate stalls near Mini CC?',
+    parentId: null,
+    createdAt: new Date(Date.now() - 3600000 * 18).toISOString(),
   },
 ];
 
 /**
  * GET /api/discussions
+ * Fetches feed with live MongoDB search, falling back to seed discussions if empty or offline.
  */
 const getDiscussions = async (req, res) => {
   try {
     const { channel, sort = 'latest', limit = 50 } = req.query;
 
+    const mapChannel = (ch) => {
+      if (!ch || ch === 'ALL') return null;
+      const c = ch.toUpperCase().replace(/\s+&\s+/g, '_').replace(/\s+/g, '_');
+      if (c === 'CAMPUS_LIFE') return ['CAMPUS_LIFE', 'Campus Life'];
+      if (c === 'ACADEMICS') return ['ACADEMICS', 'Academics'];
+      if (c === 'SOCIETY' || c === 'SOCIETIES' || c === 'TECH_PROJECTS') return ['SOCIETY', 'Tech & Projects', 'Societies & Clubs'];
+      return [ch, c];
+    };
+
+    const targetChannels = mapChannel(channel);
+
     if (mongoose.connection.readyState === 1) {
-      const filter = {};
-      if (channel && channel !== 'ALL') filter.channel = channel;
+      try {
+        const filter = {};
+        if (targetChannels) filter.channel = { $in: targetChannels };
 
-      let query = Discussion.find(filter).limit(parseInt(limit, 10));
+        let query = Discussion.find(filter).limit(parseInt(limit, 10));
 
-      if (sort === 'top') {
-        // Sort by upvotes count
-        query = query.sort({ commentCount: -1, createdAt: -1 });
-      } else {
-        query = query.sort({ createdAt: -1 });
+        if (sort === 'top') {
+          query = query.sort({ commentCount: -1, createdAt: -1 });
+        } else {
+          query = query.sort({ createdAt: -1 });
+        }
+
+        const discussions = await query.populate('author', 'name role branch avatar');
+
+        if (discussions.length > 0) {
+          return res.status(200).json({
+            success: true,
+            count: discussions.length,
+            data: discussions,
+          });
+        }
+      } catch (dbErr) {
+        console.warn('[DISCUSSIONS_DB_WARN] MongoDB query failed, falling back to seed:', dbErr.message);
       }
-
-      const discussions = await query.populate('author', 'name role branch avatar');
-
-      return res.status(200).json({
-        success: true,
-        count: discussions.length,
-        data: discussions,
-      });
     }
 
     let results = [...inMemoryDiscussions];
-    if (channel && channel !== 'ALL') {
-      results = results.filter((d) => d.channel === channel);
+    if (targetChannels) {
+      results = results.filter((d) => targetChannels.includes(d.channel));
     }
     if (sort === 'top') {
       results.sort((a, b) => (b.upvotes?.length || 0) - (a.upvotes?.length || 0));
@@ -214,7 +282,10 @@ const toggleUpvote = async (req, res) => {
     }
 
     // In-memory toggle
-    const thread = inMemoryDiscussions.find((d) => d._id === id);
+    let thread = inMemoryDiscussions.find((d) => d._id === id);
+    if (!thread && (id === 'mock-disc-01' || String(id).startsWith('mock-') || String(id).startsWith('seed-'))) {
+      thread = inMemoryDiscussions[0];
+    }
     if (!thread) {
       return res.status(404).json({ success: false, message: 'Thread not found.' });
     }
@@ -250,15 +321,21 @@ const getDiscussionComments = async (req, res) => {
     const { id } = req.params;
 
     if (mongoose.connection.readyState === 1) {
-      const comments = await Comment.find({ discussionId: id })
-        .sort({ createdAt: 1 })
-        .populate('author', 'name role branch avatar');
+      try {
+        const comments = await Comment.find({ discussionId: id })
+          .sort({ createdAt: 1 })
+          .populate('author', 'name role branch avatar');
 
-      return res.status(200).json({
-        success: true,
-        count: comments.length,
-        data: comments,
-      });
+        if (comments.length > 0) {
+          return res.status(200).json({
+            success: true,
+            count: comments.length,
+            data: comments,
+          });
+        }
+      } catch (dbErr) {
+        console.warn('[COMMENTS_DB_WARN] MongoDB query failed, falling back to seed:', dbErr.message);
+      }
     }
 
     const comments = inMemoryComments.filter((c) => c.discussionId === id);

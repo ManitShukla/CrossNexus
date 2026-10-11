@@ -37,8 +37,8 @@ export default function TimetablePage() {
   // Active view tab: 'day' or 'week'
   const [activeTab, setActiveTab] = useState('day');
 
-  // Override cohort filters (default to user profile)
-  const defaultBranch = user?.branch || 'ECE';
+  // Override cohort filters (default to user profile, universal fallback IT-1-1)
+  const defaultBranch = user?.branch || 'IT';
   const defaultSemester = user?.semester || 1;
   const defaultSection = user?.section || '1';
 

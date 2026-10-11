@@ -10,12 +10,18 @@ const CLIENT_URL = (process.env.CLIENT_URL || 'https://crossnexus.vercel.app').r
  * Generate cryptographically signed tactical JWT
  */
 const signToken = (user) => {
+  const defaultBranch = user.role === 'admin' ? 'ECE' : 'IT';
+  const defaultSemester = user.role === 'admin' ? 3 : 1;
+  const defaultSection = user.role === 'admin' ? '3' : '1';
+
   return jwt.sign(
     {
       id: user._id || user.id,
       email: user.email,
       role: user.role,
-      branch: user.branch || null,
+      branch: user.branch || defaultBranch,
+      semester: user.semester || defaultSemester,
+      section: user.section || defaultSection,
       name: user.name || null,
     },
     JWT_SECRET,
@@ -114,7 +120,7 @@ const devLogin = async (req, res) => {
     });
   }
 
-  // Automatic Role Resolution via Whitelist
+  // Automatic Role Resolution & Cohort Calibration
   const adminEmails = (process.env.ADMIN_EMAILS || 'admin@nsut.ac.in,command@nsut.ac.in,admin.terminal@nsut.ac.in')
     .split(',')
     .map((e) => e.trim().toLowerCase());
@@ -123,6 +129,13 @@ const devLogin = async (req, res) => {
   const assignedRole = isInstitutionalAdmin 
     ? 'admin' 
     : (role && ['student', 'admin'].includes(role) ? role : 'student');
+
+  const defaultBranch = assignedRole === 'admin' ? 'ECE' : 'IT';
+  const defaultSemester = assignedRole === 'admin' ? 3 : 1;
+  const defaultSection = assignedRole === 'admin' ? '3' : '1';
+  const resolvedName = assignedRole === 'admin'
+    ? (name === 'Cadet' ? 'Campus Administrator' : name)
+    : (name === 'Cadet' ? 'Student' : name);
 
   try {
     let user = null;
@@ -134,16 +147,37 @@ const devLogin = async (req, res) => {
         if (!user) {
           user = await User.create({
             googleId: `demo-user-${Date.now()}`,
-            name,
+            name: resolvedName,
             email: cleanEmail,
             role: assignedRole,
-            isOnboarded: false,
+            branch: defaultBranch,
+            semester: defaultSemester,
+            section: defaultSection,
+            isOnboarded: true,
           });
         } else {
+          let updated = false;
           if (isInstitutionalAdmin && user.role !== 'admin') {
             user.role = 'admin';
-            await user.save();
+            updated = true;
           }
+          if (!user.branch) {
+            user.branch = defaultBranch;
+            updated = true;
+          }
+          if (!user.semester) {
+            user.semester = defaultSemester;
+            updated = true;
+          }
+          if (!user.section) {
+            user.section = defaultSection;
+            updated = true;
+          }
+          if (!user.isOnboarded) {
+            user.isOnboarded = true;
+            updated = true;
+          }
+          if (updated) await user.save();
         }
       } catch (dbErr) {
         console.warn('[DEV_LOGIN_DB_FALLBACK] Database operation failed, falling back to mock session:', dbErr.message);
@@ -157,19 +191,22 @@ const devLogin = async (req, res) => {
       user = {
         _id: mockId,
         id: mockId,
-        name,
+        name: resolvedName,
         email: cleanEmail,
         role: assignedRole,
-        isOnboarded: false,
+        branch: defaultBranch,
+        semester: defaultSemester,
+        section: defaultSection,
+        isOnboarded: true,
         toTacticalProfile() {
           return {
             id: this._id,
             name: this.name,
             email: this.email,
             role: this.role,
-            branch: this.branch || null,
-            semester: this.semester || null,
-            section: this.section || null,
+            branch: this.branch,
+            semester: this.semester,
+            section: this.section,
             isOnboarded: this.isOnboarded,
           };
         },

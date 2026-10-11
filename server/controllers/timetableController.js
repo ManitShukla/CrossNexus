@@ -8,9 +8,26 @@ try {
   console.warn('[TIMETABLE_BOOT] Initializing empty seed buffer.');
 }
 
+const studentTimetableData = inMemoryTimetables[0] || {
+  branch: 'IT',
+  semester: 1,
+  section: '1',
+  academicYear: '2026-27',
+  schedule: [],
+};
+
+const adminTimetableData = inMemoryTimetables[1] || {
+  branch: 'ECE',
+  semester: 3,
+  section: '3',
+  academicYear: '2026-27',
+  schedule: [],
+};
+
 /**
  * GET /api/timetable
- * Resolves tactical schedule for cadet cohort, falling back safely to query overrides or default seed.
+ * Resolves academic schedule for cohort, universally defaulting to IT Sem 1 Sec 1 (1st.pdf)
+ * or ECE Sem 3 Sec 3 (2nd.pdf) for Admin.
  */
 const getTimetable = async (req, res) => {
   try {
@@ -18,7 +35,7 @@ const getTimetable = async (req, res) => {
 
     const rawBranch = typeof req.query.branch === 'string' && req.query.branch.trim()
       ? req.query.branch
-      : (user.branch || 'ECE');
+      : (user.branch || 'IT');
 
     const rawSemester = req.query.semester !== undefined
       ? parseInt(req.query.semester, 10)
@@ -33,46 +50,44 @@ const getTimetable = async (req, res) => {
     const cleanSection = String(rawSection).trim().toUpperCase();
 
     let timetable = null;
+    let isFallback = false;
 
+    // 1. Query live MongoDB Atlas if active
     if (mongoose.connection.readyState === 1) {
-      timetable = await Timetable.findOne({
-        branch: cleanBranch,
-        semester: cleanSemester,
-        section: cleanSection,
-      });
+      try {
+        timetable = await Timetable.findOne({
+          branch: cleanBranch,
+          semester: cleanSemester,
+          section: cleanSection,
+        });
+      } catch (dbErr) {
+        console.warn('[TIMETABLE_DB_WARN] MongoDB query failed, falling back to seed:', dbErr.message);
+      }
     }
 
+    // 2. In-memory / Universal Fallback Resolution
     if (!timetable) {
-      timetable = inMemoryTimetables.find(
-        (t) => t.branch === cleanBranch && t.semester === cleanSemester && t.section === cleanSection
-      );
-    }
-
-    // Secondary fallback: match on branch if specific section is unmapped
-    if (!timetable) {
-      timetable = inMemoryTimetables.find((t) => t.branch === cleanBranch);
-    }
-
-    // Ultimate fallback: first available institutional seed matrix
-    if (!timetable && inMemoryTimetables.length > 0) {
-      timetable = inMemoryTimetables[0];
-    }
-
-    if (!timetable) {
-      return res.status(404).json({
-        success: false,
-        status: 'SCHEDULE_UNAVAILABLE',
-        message: `No active timetable schedule found for ${cleanBranch} - SEM ${cleanSemester} - SEC ${cleanSection}.`,
-      });
+      if (cleanBranch === 'ECE' && cleanSemester === 3 && cleanSection === '3') {
+        timetable = adminTimetableData;
+      } else if (cleanBranch === 'IT' && cleanSemester === 1 && cleanSection === '1') {
+        timetable = studentTimetableData;
+      } else {
+        // Universal Fallback Rule: For any new, guest, or unmapped cohort query,
+        // automatically default to IT Semester 1, Section 1 (1st.pdf)
+        timetable = studentTimetableData;
+        isFallback = true;
+      }
     }
 
     return res.status(200).json({
       success: true,
       status: 'SCHEDULE_RESOLVED',
+      isFallback,
       cohort: {
         branch: timetable.branch || cleanBranch,
         semester: timetable.semester || cleanSemester,
         section: timetable.section || cleanSection,
+        academicYear: timetable.academicYear || '2026-27',
       },
       data: timetable,
     });

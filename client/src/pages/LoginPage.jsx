@@ -263,7 +263,7 @@ export default function LoginPage() {
             <button
               type="button"
               disabled={simulatingRole !== null || isRedirecting}
-              onClick={() => handleSimulateDevSSO('student.2024@nsut.ac.in', 'student')}
+              onClick={() => handleSimulateDevSSO('student@nsut.ac.in', 'student')}
               className={`text-left p-3.5 border ${
                 simulatingRole === 'student' ? 'border-phosphor bg-phosphor/10' : 'border-phosphor/50 hover:border-phosphor bg-black hover:bg-phosphor/5'
               } transition-colors group flex flex-col justify-between cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed`}
@@ -280,7 +280,7 @@ export default function LoginPage() {
                 </p>
               </div>
               <div className="mt-3 text-[9px] text-phosphor/70 font-mono tracking-tight pt-2 border-t border-stroke-dim">
-                ID: student.2024@nsut.ac.in
+                ID: student@nsut.ac.in (IT-1-1)
               </div>
             </button>
 
@@ -288,7 +288,7 @@ export default function LoginPage() {
             <button
               type="button"
               disabled={simulatingRole !== null || isRedirecting}
-              onClick={() => handleSimulateDevSSO('admin.terminal@nsut.ac.in', 'admin')}
+              onClick={() => handleSimulateDevSSO('admin@nsut.ac.in', 'admin')}
               className={`text-left p-3.5 border ${
                 simulatingRole === 'admin' ? 'border-teal bg-teal/10' : 'border-teal/50 hover:border-teal bg-black hover:bg-teal/5'
               } transition-colors group flex flex-col justify-between cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed`}
@@ -305,7 +305,7 @@ export default function LoginPage() {
                 </p>
               </div>
               <div className="mt-3 text-[9px] text-teal/70 font-mono tracking-tight pt-2 border-t border-stroke-dim">
-                ID: admin.terminal@nsut.ac.in
+                ID: admin@nsut.ac.in (ECE-3-3)
               </div>
             </button>
 

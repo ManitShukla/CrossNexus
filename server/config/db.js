@@ -24,6 +24,10 @@ const connectDB = async () => {
     });
 
     console.log('\x1b[32m%s\x1b[0m', `[DB_UPLINK_ESTABLISHED] Host: ${conn.connection.host} | DB: ${conn.connection.name}`);
+
+    // Auto-seed Atlas collections if freshly initialized or empty
+    const { seedIfEmpty } = require('../utils/seedDatabase');
+    await seedIfEmpty();
   } catch (error) {
     console.error('\x1b[31m%s\x1b[0m', `[DB_UPLINK_FAILURE] Critical failure connecting to MongoDB: ${error.message}`);
     console.warn('\x1b[33m%s\x1b[0m', '[DB_ACTION_REQUIRED] If deploying on Render/cloud, ensure 0.0.0.0/0 is added to MongoDB Atlas Network Access.');
@@ -37,6 +41,8 @@ mongoose.connection.on('disconnected', () => {
 
 mongoose.connection.on('reconnected', () => {
   console.log('\x1b[32m%s\x1b[0m', '[DB_STATUS] MongoDB re-established active uplink.');
+  const { seedIfEmpty } = require('../utils/seedDatabase');
+  seedIfEmpty();
 });
 
 module.exports = connectDB;

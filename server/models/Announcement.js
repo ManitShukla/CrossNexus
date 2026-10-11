@@ -16,7 +16,7 @@ const announcementSchema = new mongoose.Schema(
     },
     category: {
       type: String,
-      enum: ['Exams', 'Placements', 'Administration', 'Events', 'General'],
+      enum: ['ACADEMIC', 'SOCIETY', 'PLACEMENT', 'ADMIN', 'Exams', 'Placements', 'Administration', 'Events', 'General'],
       default: 'General',
     },
     priority: {

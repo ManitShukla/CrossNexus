@@ -16,7 +16,7 @@ const discussionSchema = new mongoose.Schema(
     },
     channel: {
       type: String,
-      enum: ['General', 'Academics', 'Tech & Projects', 'Campus Life'],
+      enum: ['CAMPUS_LIFE', 'ACADEMICS', 'SOCIETY', 'General', 'Academics', 'Tech & Projects', 'Campus Life'],
       default: 'General',
     },
     author: {

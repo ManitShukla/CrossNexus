@@ -72,13 +72,20 @@ const configurePassport = () => {
                 return done(null, user);
               }
 
+              const defaultBranch = assignedRole === 'admin' ? 'ECE' : 'IT';
+              const defaultSemester = assignedRole === 'admin' ? 3 : 1;
+              const defaultSection = assignedRole === 'admin' ? '3' : '1';
+
               user = await User.create({
                 googleId,
                 name,
                 email,
                 avatar,
                 role: assignedRole,
-                isOnboarded: false,
+                branch: defaultBranch,
+                semester: defaultSemester,
+                section: defaultSection,
+                isOnboarded: true,
               });
 
               console.log('\x1b[32m%s\x1b[0m', `[USER_REGISTERED] New NSUT user registered: ${email} (${user._id}) [ROLE: ${assignedRole.toUpperCase()}]`);
@@ -91,6 +98,9 @@ const configurePassport = () => {
           }
 
           // Resilient Fallback: Issue valid in-memory session for verified Google identity
+          const defaultBranch = assignedRole === 'admin' ? 'ECE' : 'IT';
+          const defaultSemester = assignedRole === 'admin' ? 3 : 1;
+          const defaultSection = assignedRole === 'admin' ? '3' : '1';
           const mockId = '66b0a1c2' + Buffer.from(email).toString('hex').padEnd(16, '0').slice(0, 16);
           const fallbackUser = {
             _id: mockId,
@@ -100,6 +110,9 @@ const configurePassport = () => {
             email,
             avatar,
             role: assignedRole,
+            branch: defaultBranch,
+            semester: defaultSemester,
+            section: defaultSection,
             isOnboarded: true, // Allow seamless entry during degraded mode
             toTacticalProfile() {
               return {
@@ -108,10 +121,10 @@ const configurePassport = () => {
                 email: this.email,
                 avatar: this.avatar,
                 role: this.role,
-                branch: 'COE',
-                semester: 1,
-                section: '1',
-                isOnboarded: true,
+                branch: this.branch,
+                semester: this.semester,
+                section: this.section,
+                isOnboarded: this.isOnboarded,
               };
             },
           };

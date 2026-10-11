@@ -1,46 +1,67 @@
 const mongoose = require('mongoose');
 const Announcement = require('../models/Announcement');
 
-// In-memory buffer for local testing (Zero email leakage)
+// Authentic NSUT Campus Announcements Seed Buffer
 let inMemoryAnnouncements = [
   {
-    _id: 'mock-ann-01',
-    title: 'END-SEMESTER EXAMINATION SCHEDULE [DEC 2026]',
-    body: 'Examination Cell has uploaded the provisional datesheet for all B.Tech branches. Cross-verify subject codes EC101, CS102, and MA101 with timetable portal.',
-    category: 'Exams',
+    _id: 'seed-ann-01',
+    title: 'OFFICIAL // MID-SEMESTER EXAMINATION SCHEDULE & SEATING MATRIX (ODD SEM 2026)',
+    body: 'All B.Tech students are hereby informed that Mid-Semester Examinations commence from Monday. Seating plans for APJ Block (APJ-01 to APJ-12) and Block 6 will be displayed outside the Examination Cell. Ensure physical possession of your NSUT Smart Identity Card.',
+    content: 'All B.Tech students are hereby informed that Mid-Semester Examinations commence from Monday. Seating plans for APJ Block (APJ-01 to APJ-12) and Block 6 will be displayed outside the Examination Cell. Ensure physical possession of your NSUT Smart Identity Card.',
+    category: 'ACADEMIC',
     priority: 'critical',
     isPinned: true,
     author: {
-      name: 'Academic Affairs Admin',
+      name: 'Academic Examination Cell',
       role: 'admin',
     },
-    createdAt: new Date(Date.now() - 3600000).toISOString(),
+    authorName: 'Academic Examination Cell',
+    createdAt: new Date(Date.now() - 3600000 * 2).toISOString(),
   },
   {
-    _id: 'mock-ann-02',
-    title: 'CAMPUS PLACEMENT DRIVE: TIER-1 FIRMS',
-    body: 'Training and Placement Cell registration window closes at 23:59 hrs. Students must ensure updated resumes are submitted.',
-    category: 'Placements',
+    _id: 'seed-ann-02',
+    title: 'CROSSLINKS // ANNUAL CAMPUS JOURNALIST & MEDIA TEAM RECRUITMENT',
+    body: 'Crosslinks, the official student media and publication body of NSUT, is now accepting applications for Tech, Editorial, and Visual Design teams for the 2026-27 session. Online briefing tomorrow at 18:00 hrs.',
+    content: 'Crosslinks, the official student media and publication body of NSUT, is now accepting applications for Tech, Editorial, and Visual Design teams for the 2026-27 session. Online briefing tomorrow at 18:00 hrs.',
+    category: 'SOCIETY',
     priority: 'high',
-    isPinned: false,
+    isPinned: true,
     author: {
-      name: 'T&P Officer',
+      name: 'Crosslinks Media Body',
       role: 'admin',
     },
+    authorName: 'Crosslinks Media Body',
+    createdAt: new Date(Date.now() - 3600000 * 12).toISOString(),
+  },
+  {
+    _id: 'seed-ann-03',
+    title: 'TRAINING & PLACEMENT CELL // TIER-1 SDE MOCK ASSESSMENT LINK ACTIVE',
+    body: 'The Training & Placement Cell (TNP) mock coding rounds are active in Mini CC Labs 1-3. All registered pre-final and final year candidates must log in with institutional credentials.',
+    content: 'The Training & Placement Cell (TNP) mock coding rounds are active in Mini CC Labs 1-3. All registered pre-final and final year candidates must log in with institutional credentials.',
+    category: 'PLACEMENT',
+    priority: 'medium',
+    isPinned: false,
+    author: {
+      name: 'Training & Placement Cell',
+      role: 'admin',
+    },
+    authorName: 'Training & Placement Cell',
     createdAt: new Date(Date.now() - 86400000).toISOString(),
   },
   {
-    _id: 'mock-ann-03',
-    title: 'CAMPUS NETWORK UPGRADE // WI-FI ACCESS POINT',
-    body: 'Campus network maintenance scheduled between 02:00-04:00 hrs. Academic Vault files will remain accessible via IPFS gateway.',
-    category: 'Administration',
+    _id: 'seed-ann-04',
+    title: 'ADMIN // APJ COMPLEX WING-B HVAC & WI-FI RE-CALIBRATION NOTICE',
+    body: 'Maintenance activities in progress across APJ-03 and APJ-04 smart podiums. Lectures scheduled in these halls between 08:00 and 10:00 will proceed in normal hybrid mode.',
+    content: 'Maintenance activities in progress across APJ-03 and APJ-04 smart podiums. Lectures scheduled in these halls between 08:00 and 10:00 will proceed in normal hybrid mode.',
+    category: 'ADMIN',
     priority: 'low',
     isPinned: false,
     author: {
-      name: 'Network Administration',
+      name: 'Estate & Campus Management',
       role: 'admin',
     },
-    createdAt: new Date(Date.now() - 172800000).toISOString(),
+    authorName: 'Estate & Campus Management',
+    createdAt: new Date(Date.now() - 86400000 * 2).toISOString(),
   },
 ];
 
@@ -48,30 +69,49 @@ let inMemoryAnnouncements = [
  * GET /api/announcements
  * Fetches official announcements sorted by isPinned DESC, createdAt DESC.
  * Strict Privacy: Never populates email or googleId.
+ * Fallback Resilience: Serves seed announcements if DB collection is empty.
  */
 const getAnnouncements = async (req, res) => {
   try {
     const { category, priority, limit = 50 } = req.query;
 
+    const mapCategory = (cat) => {
+      if (!cat || cat === 'ALL') return null;
+      const c = cat.toUpperCase();
+      if (c === 'EXAMS' || c === 'ACADEMIC' || c === 'ACADEMICS') return ['ACADEMIC', 'Exams', 'Academics'];
+      if (c === 'PLACEMENTS' || c === 'PLACEMENT') return ['PLACEMENT', 'Placements'];
+      if (c === 'ADMINISTRATION' || c === 'ADMIN') return ['ADMIN', 'Administration'];
+      if (c === 'EVENTS' || c === 'SOCIETY' || c === 'SOCIETIES') return ['SOCIETY', 'Events', 'Societies'];
+      return [cat];
+    };
+
+    const targetCategories = mapCategory(category);
+
     if (mongoose.connection.readyState === 1) {
-      const filter = {};
-      if (category && category !== 'ALL') filter.category = category;
-      if (priority && priority !== 'ALL') filter.priority = priority;
+      try {
+        const filter = {};
+        if (targetCategories) filter.category = { $in: targetCategories };
+        if (priority && priority !== 'ALL') filter.priority = priority;
 
-      const announcements = await Announcement.find(filter)
-        .sort({ isPinned: -1, createdAt: -1 })
-        .limit(parseInt(limit, 10))
-        .populate('author', 'name role avatar'); // Sanitized: No email or googleId
+        const announcements = await Announcement.find(filter)
+          .sort({ isPinned: -1, createdAt: -1 })
+          .limit(parseInt(limit, 10))
+          .populate('author', 'name role avatar'); // Sanitized: No email or googleId
 
-      return res.status(200).json({
-        success: true,
-        count: announcements.length,
-        data: announcements,
-      });
+        if (announcements.length > 0) {
+          return res.status(200).json({
+            success: true,
+            count: announcements.length,
+            data: announcements,
+          });
+        }
+      } catch (dbErr) {
+        console.warn('[ANNOUNCEMENTS_DB_WARN] MongoDB query failed, falling back to seed:', dbErr.message);
+      }
     }
 
     let results = [...inMemoryAnnouncements];
-    if (category && category !== 'ALL') results = results.filter((a) => a.category === category);
+    if (targetCategories) results = results.filter((a) => targetCategories.includes(a.category));
     if (priority && priority !== 'ALL') results = results.filter((a) => a.priority === priority);
 
     return res.status(200).json({

@@ -34,13 +34,15 @@ export default function DiscussionCard({ discussion, currentUserId }) {
   };
 
   const channelColor =
-    channel === 'Tech & Projects'
-      ? 'text-phosphor border-phosphor/40 bg-phosphor/5'
-      : channel === 'Academics'
+    channel === 'CAMPUS_LIFE' || channel === 'Campus Life'
       ? 'text-teal border-teal/40 bg-teal/5'
+      : channel === 'ACADEMICS' || channel === 'Academics'
+      ? 'text-phosphor border-phosphor/40 bg-phosphor/5'
+      : channel === 'SOCIETY' || channel === 'Societies & Clubs' || channel === 'Tech & Projects'
+      ? 'text-amber-400 border-amber-400/40 bg-amber-400/5'
       : 'text-tactical-main border-stroke-bright bg-charcoal-base';
 
-  const formattedDate = new Date(createdAt).toISOString().replace('T', ' ').slice(0, 16) + ' UTC';
+  const formattedDate = createdAt ? new Date(createdAt).toISOString().replace('T', ' ').slice(0, 16) + ' UTC' : 'CURRENT_CYCLE';
 
   return (
     <div className="fui-panel border border-stroke-dim hover:border-stroke-bright transition-all mb-4 relative group">
@@ -72,7 +74,7 @@ export default function DiscussionCard({ discussion, currentUserId }) {
 
       {/* THREAD CONTENT */}
       <p className="text-xs text-tactical-main leading-relaxed mb-4 whitespace-pre-line font-mono">
-        {body}
+        {body || discussion.content}
       </p>
 
       {/* FOOTER ACTIONS */}

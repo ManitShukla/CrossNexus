@@ -187,14 +187,14 @@ async function runFinalAcceptanceSuite() {
 
   await asyncTest('TIMETABLE 4.1: Compound Index Cohort lookup resolves schedule matrix with fallback', async () => {
     const req = {
-      query: { branch: 'ECE', semester: '1', section: '1' },
-      user: { branch: 'ECE', semester: 1, section: '1' },
+      query: { branch: 'IT', semester: '1', section: '1' },
+      user: { branch: 'IT', semester: 1, section: '1' },
     };
     const res = createMockRes();
     await getTimetable(req, res);
     assert.strictEqual(res.statusCode, 200);
     assert.strictEqual(res.data.success, true);
-    assert.strictEqual(res.data.data.branch, 'ECE');
+    assert.strictEqual(res.data.data.branch, 'IT');
     assert.strictEqual(Array.isArray(res.data.data.schedule), true);
     assert.strictEqual(res.data.data.schedule.length > 0, true);
 

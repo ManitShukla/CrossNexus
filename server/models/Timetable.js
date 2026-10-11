@@ -1,4 +1,4 @@
-﻿const mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
 /**
  * Tactical Timetable Slot Schema
@@ -9,11 +9,12 @@ const slotSchema = new mongoose.Schema({
   day: { 
     type: String, 
     enum: {
-      values: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+      values: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
       message: '{VALUE} is not a valid institutional academic weekday.'
     }, 
     required: [true, 'Academic weekday is mandatory.']
   },
+  slotNumber: { type: Number },
   startTime: { 
     type: String, 
     required: [true, 'Slot start time is mandatory.'],
@@ -25,9 +26,12 @@ const slotSchema = new mongoose.Schema({
     match: [/^([01]\d|2[0-3]):[0-5]\d$/, 'End time must strictly match 24h military format (HH:mm)']
   },
   subjectCode: { type: String, required: [true, 'Subject code is mandatory.'], uppercase: true, trim: true },
+  courseCode: { type: String, uppercase: true, trim: true },
   subjectName: { type: String, required: [true, 'Subject title is mandatory.'], trim: true },
+  courseTitle: { type: String, trim: true },
   faculty: { type: String, default: 'TBA', trim: true },
-  room: { type: String, required: [true, 'Room vector is mandatory.'], trim: true }
+  room: { type: String, required: [true, 'Room vector is mandatory.'], trim: true },
+  type: { type: String, default: 'Lecture', trim: true }
 }, { _id: true });
 
 /**
@@ -38,6 +42,7 @@ const timetableSchema = new mongoose.Schema({
   branch: { type: String, required: true, uppercase: true, trim: true },
   semester: { type: Number, required: true, min: 1, max: 8 },
   section: { type: String, required: true, uppercase: true, trim: true },
+  academicYear: { type: String, default: '2026-27' },
   schedule: [slotSchema]
 }, { timestamps: true });
 

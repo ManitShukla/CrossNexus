@@ -39,13 +39,20 @@ const authenticateJWT = async (req, res, next) => {
 
     // If user not in database (e.g. demo session or degraded offline mode), construct verified session from JWT claims
     if (!user) {
+      const fallbackRole = decoded.role || 'student';
+      const fallbackBranch = decoded.branch || (fallbackRole === 'admin' ? 'ECE' : 'IT');
+      const fallbackSemester = decoded.semester || (fallbackRole === 'admin' ? 3 : 1);
+      const fallbackSection = decoded.section || (fallbackRole === 'admin' ? '3' : '1');
+
       user = {
         _id: decoded.id,
         id: decoded.id,
-        name: decoded.name || 'Verified Student',
-        email: decoded.email || 'student.2024@nsut.ac.in',
-        role: decoded.role || 'student',
-        branch: decoded.branch || null,
+        name: decoded.name || (fallbackRole === 'admin' ? 'Campus Administrator' : 'Student'),
+        email: decoded.email || (fallbackRole === 'admin' ? 'admin@nsut.ac.in' : 'student@nsut.ac.in'),
+        role: fallbackRole,
+        branch: fallbackBranch,
+        semester: fallbackSemester,
+        section: fallbackSection,
         isOnboarded: true,
         toTacticalProfile() {
           return {
@@ -54,6 +61,8 @@ const authenticateJWT = async (req, res, next) => {
             email: this.email,
             role: this.role,
             branch: this.branch,
+            semester: this.semester,
+            section: this.section,
             isOnboarded: this.isOnboarded,
           };
         },

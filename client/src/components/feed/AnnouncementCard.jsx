@@ -19,7 +19,7 @@ export default function AnnouncementCard({ announcement, onDelete, isAdmin }) {
     badgeStyle = 'text-phosphor border-phosphor/40 bg-phosphor/10 font-bold';
   }
 
-  const formattedDate = new Date(createdAt).toISOString().replace('T', ' ').slice(0, 16) + ' UTC';
+  const formattedDate = createdAt ? new Date(createdAt).toISOString().replace('T', ' ').slice(0, 16) + ' UTC' : 'CURRENT_CYCLE';
 
   return (
     <div className={`fui-panel border ${borderStyle} transition-all relative group mb-3`}>
@@ -65,7 +65,7 @@ export default function AnnouncementCard({ announcement, onDelete, isAdmin }) {
 
       {/* NOTICE BODY */}
       <p className="text-xs text-tactical-main leading-relaxed mb-3 whitespace-pre-line font-mono">
-        {body}
+        {body || announcement.content}
       </p>
 
       {/* FOOTER METADATA */}
@@ -75,7 +75,7 @@ export default function AnnouncementCard({ announcement, onDelete, isAdmin }) {
           <span className="text-tactical-bright font-medium">{author?.name || 'Campus Administration'}</span>
           <span className="text-teal font-mono">[{author?.role?.toUpperCase() || 'ADMIN'}]</span>
         </div>
-        <span className="font-mono text-stroke-bright">NOTICE_ID: {_id.slice(-6).toUpperCase()}</span>
+        <span className="font-mono text-stroke-bright">NOTICE_ID: {_id ? String(_id).slice(-6).toUpperCase() : 'SYS-01'}</span>
       </div>
     </div>
   );

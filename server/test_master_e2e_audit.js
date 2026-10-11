@@ -194,17 +194,25 @@ async function runMasterE2EAudit() {
   // =========================================================================
   console.log('\n--- SECTION 4: SMART TIMETABLE ENGINE & MATRIX (PHASE 5) ---');
 
-  await asyncTest('TIMETABLE 4.1: Compound Query Timetable Retrieval (ECE Sem 1 Sec 1)', async () => {
+  await asyncTest('TIMETABLE 4.1: Compound Query Timetable Retrieval (IT Sem 1 Sec 1 & Universal Fallback)', async () => {
     const req = {
-      query: { branch: 'ECE', semester: '1', section: '1' },
-      user: { branch: 'ECE', semester: 1, section: '1' },
+      query: { branch: 'IT', semester: '1', section: '1' },
+      user: { branch: 'IT', semester: 1, section: '1' },
     };
     const res = createMockRes(200);
     await getTimetable(req, res);
     assert.strictEqual(res.statusCode, 200);
     assert.strictEqual(res.data.success, true);
-    assert.strictEqual(res.data.data.branch, 'ECE');
+    assert.strictEqual(res.data.data.branch, 'IT');
     assert.strictEqual(Array.isArray(res.data.data.schedule), true);
+
+    // Verify unmapped cohort triggers Universal Fallback to IT Sem 1 Sec 1
+    const unmappedReq = { query: { branch: 'CIVIL', semester: '7', section: '2' } };
+    const unmappedRes = createMockRes(200);
+    await getTimetable(unmappedReq, unmappedRes);
+    assert.strictEqual(unmappedRes.statusCode, 200);
+    assert.strictEqual(unmappedRes.data.isFallback, true);
+    assert.strictEqual(unmappedRes.data.data.branch, 'IT');
   });
 
   // =========================================================================
