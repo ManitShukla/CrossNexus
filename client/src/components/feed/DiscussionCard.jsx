@@ -58,13 +58,13 @@ export default function DiscussionCard({ discussion, currentUserId }) {
           </span>
         </div>
         <div className="text-tactical-muted flex items-center gap-1.5">
-          <span className="text-stroke-bright">&gt; TRANSMITTER:</span>
-          <span className="text-tactical-bright font-medium">{author?.name || 'Cadet'}</span>
+          <span className="text-stroke-bright">&gt; AUTHOR:</span>
+          <span className="text-tactical-bright font-medium">{author?.name || 'Student'}</span>
           {author?.branch && <span className="text-teal font-mono">[{author.branch}]</span>}
         </div>
       </div>
 
-      {/* THREAD TITLE WITH TERMINAL LINK PATTERN */}
+      {/* THREAD TITLE */}
       <h3 className="text-xs sm:text-sm font-bold uppercase tracking-ui text-tactical-bright mb-2 hover:text-phosphor cursor-pointer transition-colors flex items-center gap-1.5">
         <span className="text-phosphor text-xs">&gt;&gt;</span>
         {title}
@@ -81,12 +81,12 @@ export default function DiscussionCard({ discussion, currentUserId }) {
         <button
           onClick={handleToggleUpvote}
           disabled={isUpvoting}
-          className={`px-2.5 py-1 text-[11px] border flex items-center gap-1.5 transition-all ${
+          className={`px-2.5 py-1 text-[11px] border flex items-center gap-1.5 transition-all cursor-pointer ${
             hasUpvoted
               ? 'border-phosphor bg-phosphor text-black font-bold'
               : 'border-stroke-bright bg-charcoal-base text-tactical-muted hover:border-phosphor hover:text-phosphor'
           }`}
-          title="Toggle Cadet Upvote Verification"
+          title="Upvote discussion"
         >
           <ChevronUp className={`w-3.5 h-3.5 ${hasUpvoted ? 'stroke-[3]' : ''}`} />
           <span>&lt;▲ {upvoteList.length}&gt;</span>
@@ -95,12 +95,12 @@ export default function DiscussionCard({ discussion, currentUserId }) {
         {/* COMMENT TOGGLE */}
         <button
           onClick={() => setShowComments(!showComments)}
-          className={`px-2.5 py-1 text-[11px] border border-stroke-dim bg-charcoal-base text-tactical-muted hover:border-stroke-bright hover:text-tactical-bright flex items-center gap-1.5 transition-colors ${
+          className={`px-2.5 py-1 text-[11px] border border-stroke-dim bg-charcoal-base text-tactical-muted hover:border-stroke-bright hover:text-tactical-bright flex items-center gap-1.5 transition-colors cursor-pointer ${
             showComments ? 'border-teal text-teal' : ''
           }`}
         >
           <MessageSquare className="w-3.5 h-3.5 text-teal" />
-          <span>&lt;COMM: {localCommentCount}&gt;</span>
+          <span>&lt;REPLIES: {localCommentCount}&gt;</span>
         </button>
       </div>
 

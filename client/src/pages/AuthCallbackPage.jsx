@@ -7,7 +7,7 @@ export default function AuthCallbackPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { login } = useAuth();
-  const [status, setStatus] = useState('DECRYPTING');
+  const [status, setStatus] = useState('VERIFYING');
   const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export default function AuthCallbackPage() {
 
       if (!token) {
         setStatus('FAILED');
-        setErrorMessage('No authentication token detected in inbound downlink.');
+        setErrorMessage('No authentication token detected in callback.');
         setTimeout(() => navigate('/login?error=token_missing'), 2000);
         return;
       }
@@ -35,11 +35,11 @@ export default function AuthCallbackPage() {
           setStatus('VERIFIED');
           setTimeout(() => navigate('/'), 800);
         } else {
-          throw new Error('Token signature rejection.');
+          throw new Error('Token verification rejected.');
         }
       } catch (err) {
         setStatus('FAILED');
-        setErrorMessage(err.message || 'Cryptographic handshake failure.');
+        setErrorMessage(err.message || 'Authentication handshake failure.');
         setTimeout(() => navigate('/login?error=session_hydration_failure'), 2500);
       }
     };
@@ -62,7 +62,7 @@ export default function AuthCallbackPage() {
           <>
             <ShieldAlert className="w-10 h-10 text-hazard mx-auto mb-4 animate-bounce" />
             <div className="text-xs font-bold text-hazard tracking-alert uppercase mb-2">
-              [ HANDSHAKE REJECTED ]
+              [ AUTHENTICATION FAILED ]
             </div>
             <div className="text-[11px] text-tactical-muted leading-relaxed">
               {errorMessage}
@@ -72,20 +72,20 @@ export default function AuthCallbackPage() {
           <>
             <CheckCircle2 className="w-10 h-10 text-phosphor mx-auto mb-4 animate-pulse" />
             <div className="text-xs font-bold text-phosphor tracking-alert uppercase mb-2">
-              [ CLEARANCE CONFIRMED ]
+              [ LOGIN VERIFIED ]
             </div>
             <div className="text-[11px] text-tactical-muted">
-              Redirecting cadet to command console...
+              Redirecting to campus portal...
             </div>
           </>
         ) : (
           <>
-            <div className="text-sm font-bold text-teal font-mono tracking-widest mb-4">[ DECRYPTING UPLINK TOKEN █ ]</div>
+            <div className="text-sm font-bold text-teal font-mono tracking-widest mb-4">[ VERIFYING SESSION TOKEN █ ]</div>
             <div className="text-xs font-bold text-teal tracking-alert uppercase mb-2">
-              [ DECRYPTING UPLINK TOKEN ]
+              [ VERIFYING SESSION TOKEN ]
             </div>
             <div className="text-[11px] text-tactical-muted">
-              Establishing stateless JWT session telemetry...
+              Establishing authenticated session...
             </div>
           </>
         )}

@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../services/api';
 import { 
@@ -59,7 +59,7 @@ export default function ResourceCard({ resource, onVerifyToggle, onDelete }) {
 
   const handleDelete = async () => {
     if (!canDelete || deleting) return;
-    const confirmPurge = window.confirm(`[PURGE PROTOCOL] Confirm deletion of resource: ${resource.title}?`);
+    const confirmPurge = window.confirm(`Confirm deletion of resource: ${resource.title}?`);
     if (!confirmPurge) return;
 
     try {
@@ -75,7 +75,7 @@ export default function ResourceCard({ resource, onVerifyToggle, onDelete }) {
     }
   };
 
-  // Truncated CID for compact tactical display
+  // Truncated CID for compact display
   const truncatedHash = resource.ipfsHash 
     ? `${resource.ipfsHash.slice(0, 10)}...${resource.ipfsHash.slice(-8)}`
     : 'UNKNOWN_CID';
@@ -106,7 +106,7 @@ export default function ResourceCard({ resource, onVerifyToggle, onDelete }) {
           <div className="flex items-center gap-1.5 truncate max-w-[70%]">
             <User className="w-3 h-3 text-stroke-bright shrink-0" />
             <span className="text-tactical-main font-medium truncate">
-              {resource.uploadedBy?.name || 'Cadet'}
+              {resource.uploadedBy?.name || 'Student'}
             </span>
             {resource.uploadedBy?.branch && (
               <>
@@ -121,7 +121,7 @@ export default function ResourceCard({ resource, onVerifyToggle, onDelete }) {
         </div>
       </div>
 
-      {/* CRYPTOGRAPHIC TELEMETRY STRIP */}
+      {/* STORAGE & IPFS TELEMETRY STRIP */}
       <div className="px-4 py-3 bg-black/40 border-b border-stroke-dim space-y-2">
         {/* CID TELEMETRY BADGE */}
         <div className="flex items-center justify-between gap-2 font-mono text-[11px]">
@@ -136,17 +136,17 @@ export default function ResourceCard({ resource, onVerifyToggle, onDelete }) {
           <button
             type="button"
             onClick={handleCopyHash}
-            className={`px-2 py-1 text-[10px] uppercase font-mono tracking-wider border transition-colors flex items-center gap-1 shrink-0 ${
+            className={`px-2 py-1 text-[10px] uppercase font-mono tracking-wider border transition-colors flex items-center gap-1 shrink-0 cursor-pointer ${
               copied
                 ? 'border-phosphor bg-phosphor/20 text-phosphor'
                 : 'border-stroke-dim hover:border-phosphor text-tactical-muted hover:text-phosphor'
             }`}
-            title="Copy full IPFS multihash to clipboard"
+            title="Copy full IPFS hash to clipboard"
           >
             {copied ? (
               <>
                 <Check className="w-3 h-3 text-phosphor" />
-                <span>[ ACK ] COPIED</span>
+                <span>[ COPIED ]</span>
               </>
             ) : (
               <>
@@ -162,12 +162,12 @@ export default function ResourceCard({ resource, onVerifyToggle, onDelete }) {
           {resource.verified ? (
             <div className="flex items-center gap-1.5 px-2 py-0.5 border border-phosphor/60 bg-phosphor/10 text-phosphor text-[10px] font-mono font-bold tracking-wider">
               <ShieldCheck className="w-3.5 h-3.5 text-phosphor shrink-0" />
-              <span>[ VERIFIED ACADEMIC RECORD ]</span>
+              <span>[ VERIFIED STUDY MATERIAL ]</span>
             </div>
           ) : (
             <div className="flex items-center gap-1.5 px-2 py-0.5 border border-teal/40 bg-teal/5 text-teal text-[10px] font-mono tracking-wider">
-              <Clock className="w-3 h-3 text-teal shrink-0" />
-              <span>[ PENDING PEER ATTESTATION ]</span>
+              <Clock className="w-3.5 h-3.5 text-teal shrink-0" />
+              <span>[ PENDING VERIFICATION ]</span>
             </div>
           )}
 
@@ -185,9 +185,9 @@ export default function ResourceCard({ resource, onVerifyToggle, onDelete }) {
           href={`https://gateway.pinata.cloud/ipfs/${resource.ipfsHash}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex-1 min-w-[140px] flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-mono font-bold uppercase border border-phosphor/80 bg-phosphor/10 text-phosphor hover:bg-phosphor hover:text-black transition-colors text-center"
+          className="flex-1 min-w-[140px] flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-mono font-bold uppercase border border-phosphor/80 bg-phosphor/10 text-phosphor hover:bg-phosphor hover:text-black transition-colors text-center cursor-pointer"
         >
-          <span>OPEN GATEWAY</span>
+          <span>OPEN DOCUMENT (IPFS)</span>
           <ExternalLink className="w-3.5 h-3.5" />
         </a>
 
@@ -196,7 +196,7 @@ export default function ResourceCard({ resource, onVerifyToggle, onDelete }) {
             type="button"
             onClick={handleVerifyToggle}
             disabled={verifying}
-            className={`px-2.5 py-1.5 text-[11px] font-mono uppercase tracking-wider border transition-colors ${
+            className={`px-2.5 py-1.5 text-[11px] font-mono uppercase tracking-wider border transition-colors cursor-pointer ${
               resource.verified
                 ? 'border-hazard/60 text-hazard hover:bg-hazard hover:text-black'
                 : 'border-teal/60 text-teal hover:bg-teal hover:text-black'
@@ -211,8 +211,8 @@ export default function ResourceCard({ resource, onVerifyToggle, onDelete }) {
             type="button"
             onClick={handleDelete}
             disabled={deleting}
-            className="p-1.5 text-stroke-bright hover:text-hazard border border-transparent hover:border-hazard/40 transition-colors"
-            title="Purge record from vault registry"
+            className="p-1.5 text-stroke-bright hover:text-hazard border border-transparent hover:border-hazard/40 transition-colors cursor-pointer"
+            title="Delete resource"
           >
             <Trash2 className="w-3.5 h-3.5" />
           </button>

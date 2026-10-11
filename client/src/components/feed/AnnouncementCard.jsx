@@ -49,8 +49,8 @@ export default function AnnouncementCard({ announcement, onDelete, isAdmin }) {
           {isAdmin && onDelete && (
             <button
               onClick={() => onDelete(_id)}
-              className="text-tactical-muted hover:text-hazard transition-colors p-0.5"
-              title="Purge Command Notice"
+              className="text-tactical-muted hover:text-hazard transition-colors p-0.5 cursor-pointer"
+              title="Delete Announcement"
             >
               <Trash2 className="w-3.5 h-3.5" />
             </button>
@@ -71,11 +71,11 @@ export default function AnnouncementCard({ announcement, onDelete, isAdmin }) {
       {/* FOOTER METADATA */}
       <div className="pt-2 border-t border-stroke-dim/60 flex items-center justify-between text-[10px] text-tactical-muted">
         <div className="flex items-center gap-1.5">
-          <span className="text-stroke-bright">&gt; TRANSMITTED_BY:</span>
-          <span className="text-tactical-bright font-medium">{author?.name || 'Academic Command'}</span>
-          <span className="text-teal font-mono">[{author?.role?.toUpperCase() || 'OFFICER'}]</span>
+          <span className="text-stroke-bright">&gt; POSTED_BY:</span>
+          <span className="text-tactical-bright font-medium">{author?.name || 'Campus Administration'}</span>
+          <span className="text-teal font-mono">[{author?.role?.toUpperCase() || 'ADMIN'}]</span>
         </div>
-        <span className="font-mono text-stroke-bright">SYS_NOTICE_ID: {_id.slice(-6).toUpperCase()}</span>
+        <span className="font-mono text-stroke-bright">NOTICE_ID: {_id.slice(-6).toUpperCase()}</span>
       </div>
     </div>
   );

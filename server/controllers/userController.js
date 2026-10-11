@@ -3,7 +3,7 @@ const User = require('../models/User');
 
 /**
  * PUT /api/users/onboard
- * Calibrates cadet profile with branch, semester, and section parameters.
+ * Sets up student profile with branch, semester, and section cohort parameters.
  */
 const onboardUser = async (req, res) => {
   try {
@@ -13,7 +13,7 @@ const onboardUser = async (req, res) => {
       return res.status(400).json({
         success: false,
         status: 'VALIDATION_FAILURE',
-        message: 'Telemetry incomplete. Branch, Semester, and Section are mandatory parameters.',
+        message: 'Branch, Semester, and Section are mandatory parameters.',
       });
     }
 
@@ -59,7 +59,7 @@ const onboardUser = async (req, res) => {
       updatedUser = req.user;
     }
 
-    console.log(`[CADET_CALIBRATED] ${req.user.email} -> ${cleanBranch} | Sem ${parsedSemester} | Sec ${cleanSection}`);
+    console.log(`[USER_ONBOARDED] ${req.user.email} -> ${cleanBranch} | Sem ${parsedSemester} | Sec ${cleanSection}`);
 
     const profile = {
       id: updatedUser._id || updatedUser.id,
@@ -77,7 +77,7 @@ const onboardUser = async (req, res) => {
     return res.status(200).json({
       success: true,
       status: 'ONBOARDING_COMPLETE',
-      message: 'Operator parameters initialized. Full HUD access granted.',
+      message: 'Academic profile setup complete. Welcome to NSUT Connect.',
       user: profile,
     });
   } catch (error) {
@@ -85,7 +85,7 @@ const onboardUser = async (req, res) => {
     return res.status(500).json({
       success: false,
       status: 'SYSTEM_ERROR',
-      message: error.message || 'Internal error during calibration sequence.',
+      message: error.message || 'Internal error during setup sequence.',
     });
   }
 };

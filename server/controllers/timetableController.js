@@ -1,4 +1,4 @@
-﻿const mongoose = require('mongoose');
+const mongoose = require('mongoose');
 const Timetable = require('../models/Timetable');
 
 let inMemoryTimetables = [];
@@ -62,7 +62,7 @@ const getTimetable = async (req, res) => {
       return res.status(404).json({
         success: false,
         status: 'SCHEDULE_UNAVAILABLE',
-        message: `No active timetable matrix resolved for ${cleanBranch} - SEM ${cleanSemester} - SEC ${cleanSection}.`,
+        message: `No active timetable schedule found for ${cleanBranch} - SEM ${cleanSemester} - SEC ${cleanSection}.`,
       });
     }
 
@@ -81,7 +81,7 @@ const getTimetable = async (req, res) => {
     return res.status(500).json({
       success: false,
       status: 'SYSTEM_ERROR',
-      message: 'Failed retrieving timetable matrix telemetry.',
+      message: 'Failed retrieving timetable schedule.',
     });
   }
 };
@@ -157,7 +157,7 @@ const upsertTimetable = async (req, res) => {
     return res.status(200).json({
       success: true,
       status: 'SCHEDULE_CALIBRATED',
-      message: 'Tactical schedule matrix updated successfully.',
+      message: 'Timetable schedule updated successfully.',
       data: updatedDoc,
     });
   } catch (error) {

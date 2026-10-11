@@ -1,4 +1,4 @@
-﻿import React, { createContext, useContext, useState, useEffect, useRef, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef, useCallback } from 'react';
 import { io } from 'socket.io-client';
 import { useAuth } from './AuthContext';
 
@@ -31,7 +31,7 @@ export const SocketProvider = ({ children }) => {
     // -------------------------------------------------------------------------
     if (!isAuthenticated || !token) {
       if (socketRef.current) {
-        console.log('[WSS] Cadet unauthenticated. Severing socket connection.');
+        console.log('[WSS] User unauthenticated. Closing socket connection.');
         socketRef.current.removeAllListeners();
         socketRef.current.disconnect();
         socketRef.current = null;

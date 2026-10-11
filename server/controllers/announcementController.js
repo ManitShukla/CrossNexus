@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Announcement = require('../models/Announcement');
 
-// In-memory telemetry buffer for local offline testing (Zero email leakage)
+// In-memory buffer for local testing (Zero email leakage)
 let inMemoryAnnouncements = [
   {
     _id: 'mock-ann-01',
@@ -18,8 +18,8 @@ let inMemoryAnnouncements = [
   },
   {
     _id: 'mock-ann-02',
-    title: 'CAMPUS PLACEMENT DRIVE: TIER-1 CORE FIRMS',
-    body: 'Training and Placement Cell registration window closes at 2359 HRS. Cadets must ensure verified resume hashes are attached.',
+    title: 'CAMPUS PLACEMENT DRIVE: TIER-1 FIRMS',
+    body: 'Training and Placement Cell registration window closes at 23:59 hrs. Students must ensure updated resumes are submitted.',
     category: 'Placements',
     priority: 'high',
     isPinned: false,
@@ -31,13 +31,13 @@ let inMemoryAnnouncements = [
   },
   {
     _id: 'mock-ann-03',
-    title: 'CAMPUS NETWORK UPGRADE // WI-FI PORTAL SECTOR 03',
-    body: 'Server telemetry maintenance scheduled between 0200-0400 HRS. Academic Vault nodes will remain reachable via Pinata IPFS gateway.',
+    title: 'CAMPUS NETWORK UPGRADE // WI-FI ACCESS POINT',
+    body: 'Campus network maintenance scheduled between 02:00-04:00 hrs. Academic Vault files will remain accessible via IPFS gateway.',
     category: 'Administration',
     priority: 'low',
     isPinned: false,
     author: {
-      name: 'Network Ops Command',
+      name: 'Network Administration',
       role: 'admin',
     },
     createdAt: new Date(Date.now() - 172800000).toISOString(),
@@ -84,7 +84,7 @@ const getAnnouncements = async (req, res) => {
     return res.status(500).json({
       success: false,
       status: 'SYSTEM_ERROR',
-      message: 'Failed fetching command notices.',
+      message: 'Failed fetching announcements.',
     });
   }
 };
@@ -100,7 +100,7 @@ const createAnnouncement = async (req, res) => {
       return res.status(400).json({
         success: false,
         status: 'VALIDATION_FAILURE',
-        message: 'Notice title and body content are required.',
+        message: 'Announcement title and body content are required.',
       });
     }
 
@@ -139,13 +139,13 @@ const createAnnouncement = async (req, res) => {
 
     if (req.io) {
       req.io.to('campus_all').emit('new_announcement', createdAnnouncement);
-      console.log(`[WSS_BROADCAST] Dispatched notice '${createdAnnouncement.title}' to campus_all.`);
+      console.log(`[SOCKET_BROADCAST] Sent notice '${createdAnnouncement.title}' to campus_all.`);
     }
 
     return res.status(201).json({
       success: true,
-      status: 'TRANSMISSION_BROADCAST',
-      message: 'Official announcement deployed to campus telemetry.',
+      status: 'NOTICE_PUBLISHED',
+      message: 'Official announcement published to campus feed.',
       data: createdAnnouncement,
     });
   } catch (error) {
@@ -153,7 +153,7 @@ const createAnnouncement = async (req, res) => {
     return res.status(500).json({
       success: false,
       status: 'SYSTEM_ERROR',
-      message: error.message || 'Failed creating notice.',
+      message: error.message || 'Failed creating announcement.',
     });
   }
 };
@@ -184,8 +184,8 @@ const deleteAnnouncement = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      status: 'DECOMMISSIONED',
-      message: 'Announcement removed from command buffer.',
+      status: 'ANNOUNCEMENT_REMOVED',
+      message: 'Announcement removed successfully.',
       id,
     });
   } catch (error) {

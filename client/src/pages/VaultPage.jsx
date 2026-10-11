@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import Navbar from '../components/common/Navbar';
 import ResourceCard from '../components/vault/ResourceCard';
 import UploadResourceModal from '../components/vault/UploadResourceModal';
@@ -43,7 +43,7 @@ export default function VaultPage() {
       }
     } catch (err) {
       console.error('[VAULT_FETCH_ERROR]', err);
-      setError(err.response?.data?.message || err.message || 'IPFS registry query rejected.');
+      setError(err.response?.data?.message || err.message || 'IPFS repository query rejected.');
     } finally {
       setLoading(false);
     }
@@ -117,12 +117,12 @@ export default function VaultPage() {
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 bg-phosphor inline-block animate-pulse" />
               <h1 className="text-sm font-bold tracking-widest text-phosphor uppercase">
-                // ACADEMIC VAULT // DECENTRALIZED IPFS REGISTRY
+                // ACADEMIC VAULT // IPFS REPOSITORY
               </h1>
             </div>
             <div className="flex items-center gap-2 text-[11px] text-teal">
               <Wifi className="w-3.5 h-3.5 text-teal animate-pulse" />
-              <span className="hidden sm:inline">CLUSTER GATEWAY:</span>
+              <span className="hidden sm:inline">RESOURCE GATEWAY:</span>
               <span className="font-bold tracking-wider">ONLINE [PINATA IPFS]</span>
             </div>
           </div>
@@ -131,16 +131,16 @@ export default function VaultPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
             <div className="border border-stroke-dim bg-black/50 p-3">
               <span className="text-[10px] text-tactical-muted block uppercase tracking-wider">
-                TOTAL RECORDS PINNED
+                TOTAL DOCUMENTS
               </span>
               <span className="text-base sm:text-lg font-bold text-phosphor">
-                {telemetry.totalRecords} BLOCKS
+                {telemetry.totalRecords} FILES
               </span>
             </div>
 
             <div className="border border-stroke-dim bg-black/50 p-3">
               <span className="text-[10px] text-tactical-muted block uppercase tracking-wider">
-                DISTRIBUTED FOOTPRINT
+                STORAGE FOOTPRINT
               </span>
               <span className="text-base sm:text-lg font-bold text-teal">
                 {telemetry.totalMB} MB
@@ -149,7 +149,7 @@ export default function VaultPage() {
 
             <div className="border border-stroke-dim bg-black/50 p-3">
               <span className="text-[10px] text-tactical-muted block uppercase tracking-wider">
-                ATTESTATION INTEGRITY
+                VERIFICATION STATUS
               </span>
               <span className="text-base sm:text-lg font-bold text-phosphor">
                 {telemetry.verifiedRatio}% VERIFIED
@@ -159,7 +159,7 @@ export default function VaultPage() {
             <div className="border border-stroke-dim bg-black/50 p-3 flex items-center justify-between">
               <div>
                 <span className="text-[10px] text-tactical-muted block uppercase tracking-wider">
-                  ENCRYPTION / PROTOCOL
+                  STORAGE PROTOCOL
                 </span>
                 <span className="text-xs font-bold text-tactical-bright uppercase">
                   SHA-256 // BASE58
@@ -169,8 +169,8 @@ export default function VaultPage() {
                 type="button"
                 onClick={fetchResources}
                 disabled={loading}
-                className="p-1.5 border border-stroke-dim hover:border-phosphor text-tactical-muted hover:text-phosphor transition-colors"
-                title="Refresh telemetry"
+                className="p-1.5 border border-stroke-dim hover:border-phosphor text-tactical-muted hover:text-phosphor transition-colors cursor-pointer"
+                title="Refresh resources"
               >
                 <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'text-phosphor animate-pulse' : ''}`} />
               </button>
@@ -195,35 +195,35 @@ export default function VaultPage() {
                 <button
                   type="button"
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] text-tactical-muted hover:text-hazard font-mono"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] text-tactical-muted hover:text-hazard font-mono cursor-pointer"
                 >
                   [CLEAR]
                 </button>
               )}
             </div>
 
-            {/* VERIFIED ONLY TOGGLE & TRANSMIT CTA */}
+            {/* VERIFIED ONLY TOGGLE & UPLOAD CTA */}
             <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={() => setOnlyVerified(!onlyVerified)}
-                className={`px-3 py-2 text-xs uppercase font-mono tracking-wider border transition-colors flex items-center gap-1.5 ${
+                className={`px-3 py-2 text-xs uppercase font-mono tracking-wider border transition-colors flex items-center gap-1.5 cursor-pointer ${
                   onlyVerified
                     ? 'border-phosphor bg-phosphor/15 text-phosphor font-bold'
                     : 'border-stroke-dim bg-black/40 text-tactical-muted hover:border-stroke-bright hover:text-tactical-main'
                 }`}
               >
                 <ShieldCheck className="w-3.5 h-3.5" />
-                <span>{onlyVerified ? 'VERIFIED ONLY [ACTIVE]' : 'ALL ATTESTATIONS'}</span>
+                <span>{onlyVerified ? 'VERIFIED ONLY' : 'ALL DOCUMENTS'}</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setIsUploadOpen(true)}
-                className="px-4 py-2 border border-phosphor bg-phosphor text-black hover:bg-phosphor/90 font-bold uppercase tracking-wider text-xs flex items-center gap-1.5 transition-colors"
+                className="px-4 py-2 border border-phosphor bg-phosphor text-black hover:bg-phosphor/90 font-bold uppercase tracking-wider text-xs flex items-center gap-1.5 transition-colors cursor-pointer"
               >
                 <Plus className="w-4 h-4" />
-                <span>TRANSMIT ASSET</span>
+                <span>UPLOAD MATERIAL</span>
               </button>
             </div>
           </div>
@@ -231,14 +231,14 @@ export default function VaultPage() {
           {/* CATEGORY FILTER PILLS */}
           <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-stroke-dim/60 text-xs">
             <span className="text-[10px] text-tactical-muted uppercase tracking-wider mr-1">
-              TIER FILTER:
+              CATEGORY FILTER:
             </span>
             {CATEGORIES.map((cat) => (
               <button
                 key={cat}
                 type="button"
                 onClick={() => setSelectedType(cat)}
-                className={`px-2.5 py-1 text-[11px] font-mono uppercase tracking-wider border transition-colors ${
+                className={`px-2.5 py-1 text-[11px] font-mono uppercase tracking-wider border transition-colors cursor-pointer ${
                   selectedType === cat
                     ? 'border-teal bg-teal/20 text-teal font-bold'
                     : 'border-stroke-dim bg-black/40 text-tactical-muted hover:border-stroke-bright hover:text-tactical-main'
@@ -255,13 +255,13 @@ export default function VaultPage() {
           <div className="border border-hazard bg-hazard/10 p-4 text-hazard font-mono text-xs flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 bg-hazard inline-block animate-pulse" />
-              <span>[TELEMETRY_FAILURE] {error}</span>
+              <span>[NOTICE] {error}</span>
             </div>
             <button
               onClick={fetchResources}
-              className="border border-hazard px-2.5 py-1 hover:bg-hazard hover:text-black uppercase text-[11px]"
+              className="border border-hazard px-2.5 py-1 hover:bg-hazard hover:text-black uppercase text-[11px] cursor-pointer"
             >
-              [ RETRY UPLINK ]
+              [ RETRY REQUEST ]
             </button>
           </div>
         )}
@@ -270,20 +270,20 @@ export default function VaultPage() {
         {loading ? (
           <div className="border border-stroke-dim bg-charcoal-panel p-12 text-center space-y-2">
             <p className="text-phosphor font-bold tracking-widest text-xs animate-pulse">
-              [ AWAITING TELEMETRY █ ]
+              [ LOADING DOCUMENTS █ ]
             </p>
             <p className="text-[11px] text-tactical-muted">
-              QUERYING DISTRIBUTED IPFS REPOSITORY REGISTRY...
+              QUERYING IPFS RESOURCE GATEWAY...
             </p>
           </div>
         ) : filteredResources.length === 0 ? (
           <div className="border border-dashed border-stroke-dim bg-charcoal-panel/60 p-12 text-center space-y-3">
             <FileQuestion className="w-8 h-8 text-stroke-bright mx-auto" />
             <h3 className="text-tactical-bright font-bold tracking-wider text-xs uppercase">
-              [ NO IMMUTABLE RECORDS RETURNED // SECTOR VACANT ]
+              [ NO RESOURCES FOUND ]
             </h3>
             <p className="text-[11px] text-tactical-muted max-w-md mx-auto">
-              No matching academic resources located in active registry. Adjust filter parameters or transmit a new syllabus/PYQ asset.
+              No matching academic resources found in repository. Adjust search filters or upload a new syllabus/PYQ document.
             </p>
             <div className="pt-2 flex justify-center gap-3">
               {(searchQuery || selectedType !== 'ALL' || onlyVerified) && (
@@ -294,17 +294,17 @@ export default function VaultPage() {
                     setSelectedType('ALL');
                     setOnlyVerified(false);
                   }}
-                  className="px-3 py-1.5 border border-stroke-bright text-xs text-tactical-muted hover:text-white uppercase"
+                  className="px-3 py-1.5 border border-stroke-bright text-xs text-tactical-muted hover:text-white uppercase cursor-pointer"
                 >
-                  [ RESET SECTOR FILTERS ]
+                  [ RESET FILTERS ]
                 </button>
               )}
               <button
                 type="button"
                 onClick={() => setIsUploadOpen(true)}
-                className="px-4 py-1.5 border border-phosphor bg-phosphor/10 text-phosphor hover:bg-phosphor hover:text-black text-xs font-bold uppercase"
+                className="px-4 py-1.5 border border-phosphor bg-phosphor/10 text-phosphor hover:bg-phosphor hover:text-black text-xs font-bold uppercase cursor-pointer"
               >
-                + TRANSMIT ASSET TO SECTOR
+                + UPLOAD STUDY MATERIAL
               </button>
             </div>
           </div>
@@ -331,4 +331,3 @@ export default function VaultPage() {
     </div>
   );
 }
-

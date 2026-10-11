@@ -4,7 +4,7 @@ import { ShieldAlert } from 'lucide-react';
 
 /**
  * Role-Based Access Sentry: RoleGuard
- * Isolates sensitive command modules to validated clearance levels (e.g., ADMIN).
+ * Restricts sensitive administrative modules to validated roles (e.g., ADMIN).
  */
 export const RoleGuard = ({ allowedRoles = ['admin'], children, fallback = null }) => {
   const { user, role } = useAuth();
@@ -22,10 +22,10 @@ export const RoleGuard = ({ allowedRoles = ['admin'], children, fallback = null 
           <ShieldAlert className="w-5 h-5 text-hazard flex-shrink-0 mt-0.5" />
           <div>
             <div className="text-xs font-bold text-hazard tracking-alert uppercase">
-              [ ACCESS DENIED // CLEARANCE INSUFFICIENT ]
+              [ ACCESS DENIED // INSUFFICIENT PERMISSIONS ]
             </div>
             <div className="text-[11px] text-tactical-muted mt-1 leading-relaxed">
-              Target sector requires clearance: <span className="text-tactical-bright font-semibold">[{allowedRoles.join(', ')}]</span>. Cadet status: <span className="text-hazard font-semibold">{role || 'ANONYMOUS'}</span>.
+              This section requires role: <span className="text-tactical-bright font-semibold">[{allowedRoles.join(', ')}]</span>. Current role: <span className="text-hazard font-semibold">{role || 'ANONYMOUS'}</span>.
             </div>
           </div>
         </div>

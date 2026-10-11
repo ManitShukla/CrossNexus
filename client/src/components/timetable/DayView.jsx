@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Clock, MapPin, User, CheckCircle2, Radio, Calendar } from 'lucide-react';
 
 const WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
@@ -48,7 +48,7 @@ export default function DayView({ schedule = [] }) {
               <button
                 key={d}
                 onClick={() => setSelectedDay(d)}
-                className={`px-3 py-1.5 text-xs uppercase tracking-label border transition-colors flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 text-xs uppercase tracking-label border transition-colors flex items-center gap-1.5 cursor-pointer ${
                   isSelected
                     ? 'border-phosphor bg-phosphor/10 text-phosphor font-bold'
                     : 'border-stroke-dim text-tactical-muted hover:border-stroke-bright hover:text-tactical-bright'
@@ -65,7 +65,7 @@ export default function DayView({ schedule = [] }) {
 
         <div className="text-[11px] text-tactical-muted uppercase flex items-center gap-2">
           <Calendar className="w-3.5 h-3.5 text-teal" />
-          <span>DAY SORTIES: {daySlots.length} ENGAGEMENTS</span>
+          <span>DAY SCHEDULE: {daySlots.length} CLASSES</span>
         </div>
       </div>
 
@@ -73,10 +73,10 @@ export default function DayView({ schedule = [] }) {
       {daySlots.length === 0 ? (
         <div className="fui-panel border border-stroke-dim p-8 text-center bg-charcoal-panel">
           <div className="text-xs text-tactical-muted uppercase tracking-label">
-            // NO SORTIES SCHEDULED FOR {selectedDay.toUpperCase()} // ALL CLEAR
+            // NO CLASSES SCHEDULED FOR {selectedDay.toUpperCase()}
           </div>
           <div className="text-[11px] text-tactical-muted mt-2">
-            No institutional laboratory or classroom requirements mapped for this date.
+            No institutional laboratory or classroom lectures mapped for this date.
           </div>
         </div>
       ) : (
@@ -130,7 +130,7 @@ export default function DayView({ schedule = [] }) {
                     ) : isFuture ? (
                       <span className="inline-flex items-center gap-1.5 px-2 py-0.5 text-[10px] text-teal border border-teal/30 bg-teal/5 uppercase tabular-nums">
                         <Clock className="w-3 h-3 text-teal" />
-                        T-MINUS {Math.max(0, startMin - currentMinutes)}M
+                        STARTS IN {Math.max(0, startMin - currentMinutes)}M
                       </span>
                     ) : (
                       <span className="inline-flex items-center gap-1.5 px-2 py-0.5 text-[10px] text-tactical-muted border border-stroke-dim uppercase">
@@ -157,7 +157,7 @@ export default function DayView({ schedule = [] }) {
 
                   <div className="flex items-center gap-1.5 text-tactical-muted">
                     <User className="w-3.5 h-3.5 text-teal" />
-                    <span>OFFICER:</span>
+                    <span>FACULTY:</span>
                     <span className="text-tactical-bright font-medium truncate">
                       {slot.faculty || 'FACULTY TBA'}
                     </span>

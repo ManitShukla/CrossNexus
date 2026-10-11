@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 import Navbar from '../components/common/Navbar';
-import { Terminal, Shield, Cpu, CheckCircle2, ChevronRight, AlertTriangle } from 'lucide-react';
+import { Cpu, CheckCircle2, ChevronRight, AlertTriangle } from 'lucide-react';
 
 const BRANCH_OPTIONS = [
   'CSE', 'IT', 'ECE', 'EE', 'MECH', 'ICE', 'BT', 'CIVIL', 'MAC', 'DESIGN'
@@ -40,11 +40,11 @@ export default function OnboardingPage() {
         await verifySession();
         navigate('/feed', { replace: true });
       } else {
-        throw new Error(res.data?.message || 'Calibration handshake rejected.');
+        throw new Error(res.data?.message || 'Academic profile setup failed.');
       }
     } catch (err) {
-      console.error('[CALIBRATION_ERR]', err);
-      setError(err.message || 'Calibration transmission failed. Check connection.');
+      console.error('[SETUP_ERR]', err);
+      setError(err.message || 'Profile setup request failed. Check connection.');
     } finally {
       setIsSubmitting(false);
     }
@@ -58,7 +58,7 @@ export default function OnboardingPage() {
       <Navbar />
 
       <main className="flex-grow max-w-4xl w-full mx-auto p-4 sm:p-8 flex flex-col justify-center">
-        {/* OPERATOR CALIBRATION PANEL */}
+        {/* ACADEMIC SETUP PANEL */}
         <div className="fui-panel border border-stroke-bright bg-charcoal-panel p-6 sm:p-8 relative">
           <div className="fui-reticle-tl" />
           <div className="fui-reticle-tr" />
@@ -72,13 +72,13 @@ export default function OnboardingPage() {
           <div className="fui-panel-header">
             <span className="flex items-center gap-2">
               <Cpu className="w-4 h-4 text-phosphor" />
-              CADET PROFILE CALIBRATION PROTOCOL
+              STUDENT ACADEMIC COHORT SETUP
             </span>
-            <span className="text-[10px] text-teal">STEP 01 // ACADEMIC PROFILE MATRIX</span>
+            <span className="text-[10px] text-teal">STEP 01 // SETUP ACADEMIC PROFILE</span>
           </div>
 
           <p className="text-xs text-tactical-muted leading-relaxed mb-6">
-            Initial setup required for automated smart timetable resolution, batch-specific announcements, and Academic Vault permissions. Select your assigned institutional academic parameters below.
+            Initial setup required for automated smart timetable resolution, batch-specific announcements, and Academic Vault access. Select your assigned institutional academic parameters below.
           </p>
 
           {error && (
@@ -91,7 +91,7 @@ export default function OnboardingPage() {
           {success && (
             <div className="border border-phosphor bg-phosphor/10 p-3 mb-6 flex items-center gap-2.5 text-xs text-phosphor animate-pulse">
               <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
-              <span>CALIBRATION CONFIRMED: Redirecting to Tactical Feed...</span>
+              <span>SETUP CONFIRMED: Redirecting to Campus Feed...</span>
             </div>
           )}
 
@@ -168,7 +168,7 @@ export default function OnboardingPage() {
             {/* TELEMETRY READOUT BAR */}
             <div className="border border-stroke-dim bg-black p-3.5 flex flex-wrap items-center justify-between gap-3 text-xs">
               <div className="flex items-center gap-2">
-                <span className="text-tactical-muted">CALIBRATED TARGET:</span>
+                <span className="text-tactical-muted">SELECTED COHORT:</span>
                 <span className="text-phosphor font-bold tracking-ui">
                   {branch} // SEM 0{semester} // SECTION {section}
                 </span>
@@ -182,9 +182,9 @@ export default function OnboardingPage() {
             <button
               type="submit"
               disabled={isSubmitting || success}
-              className="fui-button w-full py-3.5 text-xs font-semibold tracking-ui flex items-center justify-center gap-2"
+              className="fui-button w-full py-3.5 text-xs font-semibold tracking-ui flex items-center justify-center gap-2 cursor-pointer"
             >
-              <span>&lt;{isSubmitting ? 'CALIBRATING OPERATOR MATRIX...' : 'INITIALIZE HUD'}&gt;</span>
+              <span>&lt;{isSubmitting ? 'SAVING ACADEMIC PROFILE...' : 'COMPLETE SETUP & ENTER PORTAL'}&gt;</span>
               <ChevronRight className="w-4 h-4 text-phosphor" />
             </button>
           </form>
@@ -192,7 +192,7 @@ export default function OnboardingPage() {
       </main>
 
       <footer className="border-t border-stroke-dim p-4 text-center text-[10px] text-tactical-muted">
-        OPERATOR INITIALIZATION GATE // NSUT CONNECT MIL-SPEC HUD
+        ACADEMIC SETUP GATEWAY // NSUT CONNECT CAMPUS OPERATING SYSTEM
       </footer>
     </div>
   );

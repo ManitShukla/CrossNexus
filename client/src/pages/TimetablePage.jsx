@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useOfflineTimetable } from '../hooks/useOfflineTimetable';
@@ -37,7 +37,7 @@ export default function TimetablePage() {
   // Active view tab: 'day' or 'week'
   const [activeTab, setActiveTab] = useState('day');
 
-  // Override calibration filters (default to user profile)
+  // Override cohort filters (default to user profile)
   const defaultBranch = user?.branch || 'ECE';
   const defaultSemester = user?.semester || 1;
   const defaultSection = user?.section || '1';
@@ -91,7 +91,7 @@ export default function TimetablePage() {
       });
 
       if (cached) {
-        console.log('[TIMETABLE_CACHE_RESTORED] Serving stored timetable matrix snapshot.');
+        console.log('[TIMETABLE_CACHE_RESTORED] Serving stored timetable schedule snapshot.');
         setTimetable(cached);
         setIsFromCache(true);
         setError(null);
@@ -126,18 +126,18 @@ export default function TimetablePage() {
 
       <Navbar />
 
-      {/* SUB-HEADER TELEMETRY BAR */}
+      {/* SUB-HEADER STATUS BAR */}
       <div className="border-b border-stroke-dim bg-charcoal-base px-4 py-2">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-[11px] text-tactical-muted">
           <div className="flex items-center gap-2">
-            <span className="text-phosphor">&gt;&gt; RECON_MODULE:</span>
-            <span className="text-tactical-bright font-bold">SMART TIMETABLE MATRIX</span>
+            <span className="text-phosphor">&gt;&gt; SCHEDULE_MODULE:</span>
+            <span className="text-tactical-bright font-bold">SMART TIMETABLE SCHEDULE</span>
             <span className="text-stroke-bright">//</span>
             <span className="text-teal">COHORT: {selectedBranch} - SEM {selectedSemester} - SEC {selectedSection}</span>
           </div>
 
           <div className="flex items-center gap-3">
-            <span>ACTIVE SCHEDULES: {timetable?.schedule?.length || 0} SLOTS</span>
+            <span>ACTIVE SCHEDULE: {timetable?.schedule?.length || 0} SLOTS</span>
             <span className="text-stroke-bright">|</span>
             {isOffline || isFromCache ? (
               <span className="text-hazard font-semibold flex items-center gap-1">
@@ -145,25 +145,25 @@ export default function TimetablePage() {
                 [OFFLINE LOCAL CACHE]
               </span>
             ) : (
-              <span className="text-phosphor">[AUTONOMOUS DETECTOR ENGAGED]</span>
+              <span className="text-phosphor">[LIVE TRACKING ACTIVE]</span>
             )}
           </div>
         </div>
       </div>
 
       <main className="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6">
-        {/* TACTICAL OFFLINE TELEMETRY BANNER */}
+        {/* OFFLINE STATUS BANNER */}
         {(isOffline || isFromCache) && (
           <div className="border border-hazard bg-hazard/10 p-3 mb-6 text-xs text-hazard font-mono flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2">
               <AlertTriangle className="w-4 h-4 shrink-0 text-hazard animate-pulse" />
               <span className="font-bold tracking-widest uppercase">
-                [ OFFLINE PROTOCOL ENGAGED // SHOWING LOCALLY STORED TIMETABLE MATRIX ]
+                [ OFFLINE MODE ACTIVE // SHOWING LOCALLY STORED TIMETABLE ]
               </span>
             </div>
             <div className="flex items-center gap-2 text-[10px] text-hazard/80 font-mono">
               <Database className="w-3.5 h-3.5 shrink-0" />
-              <span>AUTONOMOUS DISCONNECTED BUFFER ACTIVE</span>
+              <span>OFFLINE CACHE ACTIVE</span>
               {cachedTimestamp && (
                 <span className="hidden sm:inline text-tactical-muted">
                   [SNAPSHOT: {new Date(cachedTimestamp).toLocaleTimeString()}]
@@ -173,7 +173,7 @@ export default function TimetablePage() {
           </div>
         )}
 
-        {/* CALIBRATION OVERRIDE TOOLBAR */}
+        {/* COHORT FILTER TOOLBAR */}
         <div className="fui-panel border border-stroke-bright bg-charcoal-panel p-4 mb-6">
           <div className="fui-reticle-tl" />
           <div className="fui-reticle-tr" />
@@ -184,9 +184,9 @@ export default function TimetablePage() {
             <div className="flex items-center gap-2">
               <Sliders className="w-4 h-4 text-teal flex-shrink-0" />
               <div>
-                <div className="text-[10px] text-teal tracking-label uppercase">MATRIX PARAMETERS</div>
+                <div className="text-[10px] text-teal tracking-label uppercase">COHORT SELECTION</div>
                 <div className="text-xs font-bold text-tactical-bright uppercase">
-                  COHORT CALIBRATION SENTRY
+                  ACADEMIC COHORT FILTER
                 </div>
               </div>
             </div>
@@ -199,7 +199,7 @@ export default function TimetablePage() {
                 <select
                   value={selectedBranch}
                   onChange={(e) => setSelectedBranch(e.target.value)}
-                  className="bg-black border border-stroke-mid text-tactical-bright text-xs px-2 py-1 outline-none focus:border-phosphor font-mono"
+                  className="bg-black border border-stroke-mid text-tactical-bright text-xs px-2 py-1 outline-none focus:border-phosphor font-mono cursor-pointer"
                 >
                   {BRANCH_OPTIONS.map((b) => (
                     <option key={b} value={b}>{b}</option>
@@ -213,7 +213,7 @@ export default function TimetablePage() {
                 <select
                   value={selectedSemester}
                   onChange={(e) => setSelectedSemester(Number(e.target.value))}
-                  className="bg-black border border-stroke-mid text-tactical-bright text-xs px-2 py-1 outline-none focus:border-phosphor font-mono"
+                  className="bg-black border border-stroke-mid text-tactical-bright text-xs px-2 py-1 outline-none focus:border-phosphor font-mono cursor-pointer"
                 >
                   {SEMESTER_OPTIONS.map((s) => (
                     <option key={s} value={s}>SEM {s}</option>
@@ -227,7 +227,7 @@ export default function TimetablePage() {
                 <select
                   value={selectedSection}
                   onChange={(e) => setSelectedSection(e.target.value)}
-                  className="bg-black border border-stroke-mid text-tactical-bright text-xs px-2 py-1 outline-none focus:border-phosphor font-mono"
+                  className="bg-black border border-stroke-mid text-tactical-bright text-xs px-2 py-1 outline-none focus:border-phosphor font-mono cursor-pointer"
                 >
                   {SECTION_OPTIONS.map((sec) => (
                     <option key={sec} value={sec}>SEC {sec}</option>
@@ -239,18 +239,18 @@ export default function TimetablePage() {
               {isOverrideActive && (
                 <button
                   onClick={handleResetToMyProfile}
-                  className="fui-button py-1 px-2.5 text-[10px] text-teal border-teal/50 hover:border-teal flex items-center gap-1"
-                  title="Restore My Saved Profile Calibration"
+                  className="fui-button py-1 px-2.5 text-[10px] text-teal border-teal/50 hover:border-teal flex items-center gap-1 cursor-pointer"
+                  title="Restore My Saved Profile Cohort"
                 >
                   <RotateCcw className="w-3 h-3" />
-                  <span>&lt;RESET TO MY PROFILE&gt;</span>
+                  <span>&lt;RESET TO MY COHORT&gt;</span>
                 </button>
               )}
             </div>
           </div>
         </div>
 
-        {/* REAL-TIME "HAPPENING NOW" SENTRY BANNER */}
+        {/* REAL-TIME "HAPPENING NOW" BANNER */}
         <CurrentSlotCard schedule={timetable?.schedule || []} />
 
         {/* VIEW NAVIGATION TABS */}
@@ -258,31 +258,31 @@ export default function TimetablePage() {
           <div className="flex items-center gap-2">
             <button
               onClick={() => setActiveTab('day')}
-              className={`px-4 py-2 text-xs font-bold uppercase tracking-label border-t border-x transition-colors flex items-center gap-2 ${
+              className={`px-4 py-2 text-xs font-bold uppercase tracking-label border-t border-x transition-colors flex items-center gap-2 cursor-pointer ${
                 activeTab === 'day'
                   ? 'border-stroke-bright bg-charcoal-panel text-phosphor border-b-2 border-b-transparent'
                   : 'border-transparent text-tactical-muted hover:text-tactical-bright'
               }`}
             >
               <Calendar className="w-3.5 h-3.5" />
-              <span>&lt;DAY RECON&gt;</span>
+              <span>&lt;DAY VIEW&gt;</span>
             </button>
 
             <button
               onClick={() => setActiveTab('week')}
-              className={`px-4 py-2 text-xs font-bold uppercase tracking-label border-t border-x transition-colors flex items-center gap-2 ${
+              className={`px-4 py-2 text-xs font-bold uppercase tracking-label border-t border-x transition-colors flex items-center gap-2 cursor-pointer ${
                 activeTab === 'week'
                   ? 'border-stroke-bright bg-charcoal-panel text-phosphor border-b-2 border-b-transparent'
                   : 'border-transparent text-tactical-muted hover:text-tactical-bright'
               }`}
             >
               <Grid className="w-3.5 h-3.5" />
-              <span>&lt;WEEK MATRIX&gt;</span>
+              <span>&lt;WEEKLY VIEW&gt;</span>
             </button>
           </div>
 
           <div className="text-[10px] text-tactical-muted uppercase hidden sm:block">
-            TACTICAL GRID DENSITY: MIL-SPEC
+            VIEW MODE: ACADEMIC CALENDAR
           </div>
         </div>
 
@@ -290,16 +290,16 @@ export default function TimetablePage() {
         {loading ? (
           <div className="fui-panel border border-stroke-dim p-12 text-center bg-charcoal-panel">
             <div className="text-base text-phosphor font-mono tracking-widest mb-2 font-bold">
-              AWAITING TELEMETRY <span className="fui-cursor">█</span>
+              LOADING TIMETABLE DATA <span className="fui-cursor">█</span>
             </div>
             <div className="text-[11px] text-tactical-muted font-mono uppercase tracking-label">
-              Resolving academic cohort timetable matrix...
+              Resolving academic cohort schedule...
             </div>
           </div>
         ) : error ? (
           <div className="border border-hazard bg-charcoal-base p-6 text-xs text-hazard flex flex-col items-center text-center gap-2">
             <AlertTriangle className="w-6 h-6 text-hazard mb-1 animate-pulse" />
-            <div className="font-bold tracking-alert uppercase">[ ERR ] NO COHORT MATRIX RESOLVED</div>
+            <div className="font-bold tracking-alert uppercase">[ NOTICE ] NO TIMETABLE FOUND</div>
             <p className="text-tactical-muted max-w-md">{error}</p>
           </div>
         ) : (

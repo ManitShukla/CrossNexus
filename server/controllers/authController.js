@@ -37,7 +37,7 @@ const handleGoogleCallback = (req, res) => {
     }
 
     const token = signToken(req.user);
-    console.log(`[AUTH_TOKEN_ISSUED] Cadet session generated for: ${req.user.email} (ROLE: ${req.user.role})`);
+    console.log(`[AUTH_TOKEN_ISSUED] Session generated for: ${req.user.email} (ROLE: ${req.user.role})`);
 
     return res.redirect(`${CLIENT_URL}/auth/callback?token=${token}`);
   } catch (error) {

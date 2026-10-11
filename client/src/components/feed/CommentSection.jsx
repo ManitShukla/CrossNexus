@@ -45,7 +45,7 @@ export default function CommentSection({ discussionId, onCommentAdded }) {
         if (onCommentAdded) onCommentAdded();
       }
     } catch (err) {
-      setError(err.message || 'Failed transmitting reply.');
+      setError(err.message || 'Failed submitting reply.');
     } finally {
       setIsSubmitting(false);
     }
@@ -56,7 +56,7 @@ export default function CommentSection({ discussionId, onCommentAdded }) {
       <div className="text-[10px] text-teal tracking-label uppercase mb-3 flex items-center justify-between">
         <span className="flex items-center gap-1.5">
           <MessageSquare className="w-3 h-3 text-teal" />
-          [ DEPLOYMENT COMM-LOG ] ({comments.length} RESPONSES)
+          [ DISCUSSION REPLIES ] ({comments.length} RESPONSES)
         </span>
         {loading && <span className="text-[10px] text-phosphor font-mono tracking-widest">[ SYNCING █ ]</span>}
       </div>
@@ -65,14 +65,14 @@ export default function CommentSection({ discussionId, onCommentAdded }) {
       <div className="space-y-2 mb-3 max-h-60 overflow-y-auto">
         {comments.length === 0 && !loading && (
           <div className="text-[11px] text-tactical-muted py-2 font-mono">
-            // NO REPLIES RECORDED. AWAITING TELEMETRY █
+            // NO REPLIES YET. BE THE FIRST TO RESPOND.
           </div>
         )}
 
         {comments.map((comm) => (
           <div key={comm._id} className="border-l-2 border-stroke-mid pl-2.5 py-1 text-xs">
             <div className="flex items-center gap-2 text-[10px] text-tactical-muted mb-0.5">
-              <span className="text-tactical-bright font-medium">{comm.author?.name || 'Cadet'}</span>
+              <span className="text-tactical-bright font-medium">{comm.author?.name || 'Student'}</span>
               {comm.author?.branch && <span className="text-teal">[{comm.author.branch}]</span>}
               <span className="text-stroke-bright">•</span>
               <span>{new Date(comm.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
@@ -90,13 +90,13 @@ export default function CommentSection({ discussionId, onCommentAdded }) {
           type="text"
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
-          placeholder="TRANSMIT FIELD REPLY..."
+          placeholder="WRITE A REPLY..."
           className="flex-grow bg-charcoal-base border border-stroke-mid px-3 py-1.5 text-xs text-tactical-bright placeholder:text-tactical-muted font-mono focus:border-phosphor focus:outline-none"
         />
         <button
           type="submit"
           disabled={isSubmitting || !newComment.trim()}
-          className="fui-button py-1.5 px-3 text-[10px] flex items-center gap-1 border-stroke-bright hover:border-phosphor"
+          className="fui-button py-1.5 px-3 text-[10px] flex items-center gap-1 border-stroke-bright hover:border-phosphor cursor-pointer"
         >
           <span>&lt;SEND&gt;</span>
           <Send className="w-3 h-3 text-phosphor" />

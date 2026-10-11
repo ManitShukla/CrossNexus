@@ -1,4 +1,4 @@
-﻿const mongoose = require('mongoose');
+const mongoose = require('mongoose');
 const Resource = require('../models/Resource');
 const { pinFileToIPFS } = require('../config/ipfs');
 
@@ -76,7 +76,7 @@ let inMemoryResources = [
     ipfsHash: 'QmSrPmbaUKA3ZmWhuTqa2KcNFxjULDHpmmP8PYdITzrNX6',
     fileSize: 3120000,
     uploadedBy: {
-      name: 'Command Staff',
+      name: 'Academic Administration',
       branch: 'ADMIN',
       role: 'admin',
       avatar: '',
@@ -253,7 +253,7 @@ const uploadResource = async (req, res) => {
         fileSize: req.file.size,
         uploadedBy: {
           _id: req.user?._id || req.user?.id,
-          name: req.user?.name || 'Tactical Cadet',
+          name: req.user?.name || 'Student',
           branch: req.user?.branch || 'ECE',
           role: req.user?.role || 'student',
           avatar: req.user?.avatar || '',
@@ -355,8 +355,8 @@ const deleteResource = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      status: 'RECORD_PURGED',
-      message: 'Resource decommissioned from active vault registry.',
+      status: 'RECORD_REMOVED',
+      message: 'Resource removed from active vault repository.',
       id,
     });
   } catch (error) {

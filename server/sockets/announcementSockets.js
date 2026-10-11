@@ -1,15 +1,15 @@
-﻿const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const User = require('../models/User');
 
 /**
- * Tactical WebSocket Infrastructure: Announcement Sockets
- * Enforces cryptographic handshake authentication and provisions
- * campus broadcast telemetry rooms.
+ * WebSocket Infrastructure: Announcement Sockets
+ * Enforces authentication and provisions
+ * campus broadcast notification channels.
  */
 function initAnnouncementSockets(io) {
   // ---------------------------------------------------------------------------
-  // AUTHENTICATION SENTRY: HANDSHAKE MIDDLEWARE
+  // AUTHENTICATION: HANDSHAKE MIDDLEWARE
   // ---------------------------------------------------------------------------
   io.use(async (socket, next) => {
     try {
@@ -18,8 +18,8 @@ function initAnnouncementSockets(io) {
         || (authHeader && authHeader.replace(/^Bearer\s+/i, ''));
 
       if (!token) {
-        console.warn(`[WSS_HANDSHAKE_REJECTED] Socket ${socket.id}: Missing cryptographic token.`);
-        return next(new Error('AUTHENTICATION_FAILED: Telemetry token missing.'));
+        console.warn(`[WSS_HANDSHAKE_REJECTED] Socket ${socket.id}: Missing token.`);
+        return next(new Error('AUTHENTICATION_FAILED: Session token missing.'));
       }
 
       const jwtSecret = process.env.JWT_SECRET || 'TACTICAL_ALPHA_KEY_SECURE_9812739182371982_NSUT_CONNECT';
@@ -31,27 +31,27 @@ function initAnnouncementSockets(io) {
         return next(new Error(`AUTHENTICATION_FAILED: ${jwtErr.message}`));
       }
 
-      let cadet;
+      let userRecord;
       if (mongoose.connection.readyState === 1) {
-        cadet = await User.findById(decoded.id).select('name email role branch semester section');
-        if (!cadet) {
-          console.warn(`[WSS_HANDSHAKE_REJECTED] Socket ${socket.id}: Cadet ${decoded.id} not found in database.`);
-          return next(new Error('AUTHENTICATION_FAILED: Cadet record not registered.'));
+        userRecord = await User.findById(decoded.id).select('name email role branch semester section');
+        if (!userRecord) {
+          console.warn(`[WSS_HANDSHAKE_REJECTED] Socket ${socket.id}: User ${decoded.id} not found in database.`);
+          return next(new Error('AUTHENTICATION_FAILED: User record not registered.'));
         }
       } else {
         // Resilient development / in-memory session stub
-        cadet = {
-          _id: decoded.id || 'dev-cadet-socket',
-          id: decoded.id || 'dev-cadet-socket',
-          name: decoded.name || 'Tactical Cadet',
-          email: decoded.email || 'cadet@nsut.ac.in',
+        userRecord = {
+          _id: decoded.id || 'dev-user-socket',
+          id: decoded.id || 'dev-user-socket',
+          name: decoded.name || 'Student',
+          email: decoded.email || 'student@nsut.ac.in',
           role: decoded.role || 'student',
           branch: decoded.branch || 'ECE',
         };
       }
 
       // Attach authenticated identity to socket instance
-      socket.user = cadet;
+      socket.user = userRecord;
       next();
     } catch (err) {
       console.error(`[WSS_AUTH_FATAL] Error in socket handshake:`, err.message);
@@ -60,25 +60,25 @@ function initAnnouncementSockets(io) {
   });
 
   // ---------------------------------------------------------------------------
-  // CONNECTION MATRIX & CHANNEL MANAGEMENT
+  // CONNECTION & CHANNEL MANAGEMENT
   // ---------------------------------------------------------------------------
   io.on('connection', (socket) => {
-    const cadet = socket.user;
-    console.log(`\x1b[32m%s\x1b[0m`, `[WSS_LINK_ACQUIRED] Terminal Socket: ${socket.id} | Cadet: ${cadet?.email} | Role: ${cadet?.role}`);
+    const userRecord = socket.user;
+    console.log(`\x1b[32m%s\x1b[0m`, `[WSS_CONNECTED] Socket: ${socket.id} | User: ${userRecord?.email} | Role: ${userRecord?.role}`);
 
-    // Automatically assign cadet to universal campus broadcast channel
+    // Automatically assign user to universal campus broadcast channel
     socket.join('campus_all');
     console.log(`[WSS_CHANNEL_JOIN] Socket ${socket.id} -> channel 'campus_all'`);
 
-    // Assign to branch-specific telemetry channel if calibrated
-    if (cadet?.branch) {
-      const branchChannel = `branch_${cadet.branch.toUpperCase()}`;
+    // Assign to branch-specific channel if profile has branch
+    if (userRecord?.branch) {
+      const branchChannel = `branch_${userRecord.branch.toUpperCase()}`;
       socket.join(branchChannel);
       console.log(`[WSS_CHANNEL_JOIN] Socket ${socket.id} -> channel '${branchChannel}'`);
     }
 
-    // Assign admin to administrative command channel
-    if (cadet?.role === 'admin') {
+    // Assign admin to administrative channel
+    if (userRecord?.role === 'admin') {
       socket.join('channel_command_admin');
       console.log(`[WSS_CHANNEL_JOIN] Socket ${socket.id} -> channel 'channel_command_admin'`);
     }
@@ -88,7 +88,7 @@ function initAnnouncementSockets(io) {
       const serverTimestamp = Date.now();
       if (typeof callback === 'function') {
         callback({
-          status: 'UPLINK_STABLE',
+          status: 'LIVE',
           serverTimestamp,
           rtt: clientTimestamp ? serverTimestamp - clientTimestamp : null,
         });
@@ -97,16 +97,16 @@ function initAnnouncementSockets(io) {
 
     // Handle client disconnect
     socket.on('disconnect', (reason) => {
-      console.log(`\x1b[33m%s\x1b[0m`, `[WSS_LINK_DROPPED] Terminal Socket: ${socket.id} | Cadet: ${cadet?.email} | Reason: ${reason}`);
+      console.log(`\x1b[33m%s\x1b[0m`, `[WSS_DISCONNECTED] Socket: ${socket.id} | User: ${userRecord?.email} | Reason: ${reason}`);
     });
 
-    // Handle internal transmission error
+    // Handle internal socket error
     socket.on('error', (err) => {
       console.error(`[WSS_ERROR] Socket ${socket.id} exception:`, err);
     });
   });
 
-  console.log('[WSS_INIT] Announcement WebSocket infrastructure armed.');
+  console.log('[WSS_INIT] Announcement WebSocket infrastructure initialized.');
 }
 
 module.exports = {

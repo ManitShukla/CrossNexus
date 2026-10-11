@@ -2,19 +2,19 @@ const mongoose = require('mongoose');
 const Discussion = require('../models/Discussion');
 const Comment = require('../models/Comment');
 
-// In-memory telemetry buffer for local offline testing
+// In-memory buffer for local offline testing
 let inMemoryDiscussions = [
   {
     _id: 'mock-disc-01',
     title: 'ROBOTICS SOCIETY: AUTONOMOUS DRONE WORKSHOP SIGNUP',
-    body: 'Hardware deployment session scheduled in Block 6 Mechatronics Lab. Bring laptops with ROS2 and Linux environment pre-installed. Cadets from all years welcome.',
+    body: 'Hardware session scheduled in Block 6 Mechatronics Lab. Bring laptops with ROS2 and Linux environment pre-installed. Students from all years welcome.',
     channel: 'Tech & Projects',
     author: {
       name: 'Rohan Verma',
       role: 'student',
       branch: 'ECE',
     },
-    upvotes: ['mock-cadet-01', 'mock-cadet-02', 'mock-cadet-03'],
+    upvotes: ['user-01', 'user-02', 'user-03'],
     commentCount: 4,
     createdAt: new Date(Date.now() - 7200000).toISOString(),
   },
@@ -28,21 +28,21 @@ let inMemoryDiscussions = [
       role: 'student',
       branch: 'ECE',
     },
-    upvotes: ['mock-cadet-01', 'mock-cadet-04'],
+    upvotes: ['user-01', 'user-04'],
     commentCount: 2,
     createdAt: new Date(Date.now() - 14400000).toISOString(),
   },
   {
     _id: 'mock-disc-03',
     title: 'CAMPUS LIFE: MOKSHA 2027 COORDINATION COMMITTEE CALLOUT',
-    body: 'Logistics, sponsorship, and stage operations sub-teams are recruiting volunteers. Report to Admin Quad at 1700 HRS.',
+    body: 'Logistics, sponsorship, and stage management sub-teams are recruiting volunteers. Report to Admin Quad at 17:00 hrs.',
     channel: 'Campus Life',
     author: {
       name: 'Aditya Singh',
       role: 'student',
       branch: 'IT',
     },
-    upvotes: ['mock-cadet-05'],
+    upvotes: ['user-05'],
     commentCount: 1,
     createdAt: new Date(Date.now() - 43200000).toISOString(),
   },
@@ -111,7 +111,7 @@ const getDiscussions = async (req, res) => {
     return res.status(500).json({
       success: false,
       status: 'SYSTEM_ERROR',
-      message: 'Failed fetching thread telemetry.',
+      message: 'Failed fetching discussion threads.',
     });
   }
 };
@@ -154,7 +154,7 @@ const createDiscussion = async (req, res) => {
           _id: req.user._id || req.user.id,
           name: req.user.name,
           role: req.user.role,
-          branch: req.user.branch || 'CADET',
+          branch: req.user.branch || 'STUDENT',
         },
         upvotes: [req.user._id || req.user.id],
         commentCount: 0,
@@ -163,12 +163,12 @@ const createDiscussion = async (req, res) => {
       inMemoryDiscussions.unshift(createdDiscussion);
     }
 
-    console.log(`[THREAD_DEPLOYED] Channel: ${channel} | Title: '${title.slice(0, 30)}...'`);
+    console.log(`[POST_CREATED] Channel: ${channel} | Title: '${title.slice(0, 30)}...'`);
 
     return res.status(201).json({
       success: true,
-      status: 'DEPLOYMENT_LIVE',
-      message: 'Discussion transmission established.',
+      status: 'POST_PUBLISHED',
+      message: 'Discussion post created successfully.',
       data: createdDiscussion,
     });
   } catch (error) {
@@ -182,7 +182,7 @@ const createDiscussion = async (req, res) => {
 
 /**
  * POST /api/discussions/:id/upvote
- * Toggles cadet ID in upvotes array
+ * Toggles user ID in upvotes array
  */
 const toggleUpvote = async (req, res) => {
   try {
@@ -195,7 +195,7 @@ const toggleUpvote = async (req, res) => {
         return res.status(404).json({
           success: false,
           status: 'NOT_FOUND',
-          message: 'Thread not found in registry.',
+          message: 'Discussion thread not found.',
         });
       }
 
@@ -325,7 +325,7 @@ const createComment = async (req, res) => {
 
     return res.status(201).json({
       success: true,
-      status: 'TRANSMISSION_RECORDED',
+      status: 'COMMENT_POSTED',
       data: createdComment,
     });
   } catch (error) {

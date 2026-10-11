@@ -18,7 +18,7 @@ export default function CreatePostModal({ isOpen, onClose, onCreated, defaultTyp
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!title.trim() || !body.trim()) {
-      setError('Title and transmission payload required.');
+      setError('Title and content are required.');
       return;
     }
 
@@ -51,7 +51,7 @@ export default function CreatePostModal({ isOpen, onClose, onCreated, defaultTyp
       }
     } catch (err) {
       console.error('[POST_FAIL]', err);
-      setError(err.message || 'Failed transmitting payload to server.');
+      setError(err.message || 'Failed publishing post to server.');
     } finally {
       setIsSubmitting(false);
     }
@@ -69,9 +69,9 @@ export default function CreatePostModal({ isOpen, onClose, onCreated, defaultTyp
         <div className="fui-panel-header">
           <span className="flex items-center gap-2">
             <Radio className="w-4 h-4 text-phosphor" />
-            COMMUNICATION DISPATCH PROTOCOL
+            CREATE POST // PUBLISH CONTENT
           </span>
-          <button onClick={onClose} className="text-tactical-muted hover:text-hazard">
+          <button onClick={onClose} className="text-tactical-muted hover:text-hazard cursor-pointer">
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -82,24 +82,24 @@ export default function CreatePostModal({ isOpen, onClose, onCreated, defaultTyp
             <button
               type="button"
               onClick={() => setPostType('discussion')}
-              className={`flex-1 py-1.5 text-xs uppercase tracking-ui border ${
+              className={`flex-1 py-1.5 text-xs uppercase tracking-ui border cursor-pointer ${
                 postType === 'discussion'
                   ? 'border-phosphor bg-phosphor/10 text-phosphor font-bold'
                   : 'border-stroke-dim text-tactical-muted'
               }`}
             >
-              [ DISCUSSION THREAD ]
+              [ DISCUSSION POST ]
             </button>
             <button
               type="button"
               onClick={() => setPostType('announcement')}
-              className={`flex-1 py-1.5 text-xs uppercase tracking-ui border ${
+              className={`flex-1 py-1.5 text-xs uppercase tracking-ui border cursor-pointer ${
                 postType === 'announcement'
                   ? 'border-hazard bg-hazard/10 text-hazard font-bold'
                   : 'border-stroke-dim text-tactical-muted'
               }`}
             >
-              [ OFFICIAL NOTICE (ADMIN) ]
+              [ OFFICIAL ANNOUNCEMENT (ADMIN) ]
             </button>
           </div>
         )}
@@ -115,13 +115,13 @@ export default function CreatePostModal({ isOpen, onClose, onCreated, defaultTyp
           {/* TITLE INPUT */}
           <div>
             <label className="block text-[10px] text-teal tracking-label uppercase mb-1">
-              &gt; TRANSMISSION HEADER / TITLE
+              &gt; POST TITLE
             </label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="ENTER DISPATCH TITLE..."
+              placeholder="ENTER POST TITLE..."
               className="w-full bg-black border border-stroke-mid px-3 py-2 text-xs text-tactical-bright placeholder:text-tactical-muted font-mono focus:border-phosphor focus:outline-none"
               required
             />
@@ -131,7 +131,7 @@ export default function CreatePostModal({ isOpen, onClose, onCreated, defaultTyp
           {postType === 'discussion' ? (
             <div>
               <label className="block text-[10px] text-teal tracking-label uppercase mb-1">
-                &gt; CHANNEL ROUTING
+                &gt; CHANNEL
               </label>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 {['General', 'Academics', 'Tech & Projects', 'Campus Life'].map((ch) => (
@@ -139,7 +139,7 @@ export default function CreatePostModal({ isOpen, onClose, onCreated, defaultTyp
                     type="button"
                     key={ch}
                     onClick={() => setChannel(ch)}
-                    className={`p-2 border text-[11px] uppercase tracking-tight text-center ${
+                    className={`p-2 border text-[11px] uppercase tracking-tight text-center cursor-pointer ${
                       channel === ch
                         ? 'border-phosphor bg-phosphor/10 text-phosphor font-bold'
                         : 'border-stroke-dim bg-black text-tactical-muted hover:border-stroke-bright'
@@ -154,12 +154,12 @@ export default function CreatePostModal({ isOpen, onClose, onCreated, defaultTyp
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div>
                 <label className="block text-[10px] text-teal tracking-label uppercase mb-1">
-                  &gt; NOTICE CATEGORY
+                  &gt; CATEGORY
                 </label>
                 <select
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
-                  className="w-full bg-black border border-stroke-mid px-2.5 py-1.5 text-xs text-tactical-bright focus:border-phosphor focus:outline-none"
+                  className="w-full bg-black border border-stroke-mid px-2.5 py-1.5 text-xs text-tactical-bright focus:border-phosphor focus:outline-none cursor-pointer"
                 >
                   {['Exams', 'Placements', 'Administration', 'Events', 'General'].map((c) => (
                     <option key={c} value={c} className="bg-charcoal-base">
@@ -171,12 +171,12 @@ export default function CreatePostModal({ isOpen, onClose, onCreated, defaultTyp
 
               <div>
                 <label className="block text-[10px] text-teal tracking-label uppercase mb-1">
-                  &gt; SEVERITY TIER
+                  &gt; PRIORITY LEVEL
                 </label>
                 <select
                   value={priority}
                   onChange={(e) => setPriority(e.target.value)}
-                  className="w-full bg-black border border-stroke-mid px-2.5 py-1.5 text-xs text-tactical-bright focus:border-phosphor focus:outline-none"
+                  className="w-full bg-black border border-stroke-mid px-2.5 py-1.5 text-xs text-tactical-bright focus:border-phosphor focus:outline-none cursor-pointer"
                 >
                   {['low', 'medium', 'high', 'critical'].map((p) => (
                     <option key={p} value={p} className="bg-charcoal-base">
@@ -194,7 +194,7 @@ export default function CreatePostModal({ isOpen, onClose, onCreated, defaultTyp
                     onChange={(e) => setIsPinned(e.target.checked)}
                     className="accent-phosphor w-4 h-4 bg-black border-stroke-mid"
                   />
-                  <span>[PIN TO TOP RAIL]</span>
+                  <span>[PIN TO TOP]</span>
                 </label>
               </div>
             </div>
@@ -203,13 +203,13 @@ export default function CreatePostModal({ isOpen, onClose, onCreated, defaultTyp
           {/* BODY INPUT */}
           <div>
             <label className="block text-[10px] text-teal tracking-label uppercase mb-1">
-              &gt; DISPATCH PAYLOAD / BODY
+              &gt; CONTENT / DETAILS
             </label>
             <textarea
               rows={4}
               value={body}
               onChange={(e) => setBody(e.target.value)}
-              placeholder="ENTER TELEMETRY INTEL..."
+              placeholder="ENTER POST CONTENT..."
               className="w-full bg-black border border-stroke-mid p-3 text-xs text-tactical-bright placeholder:text-tactical-muted font-mono focus:border-phosphor focus:outline-none leading-relaxed"
               required
             />
@@ -220,17 +220,17 @@ export default function CreatePostModal({ isOpen, onClose, onCreated, defaultTyp
             <button
               type="button"
               onClick={onClose}
-              className="fui-button py-2 px-4 text-xs border-stroke-mid text-tactical-muted hover:border-stroke-bright"
+              className="fui-button py-2 px-4 text-xs border-stroke-mid text-tactical-muted hover:border-stroke-bright cursor-pointer"
             >
-              &lt;ABORT&gt;
+              &lt;CANCEL&gt;
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="fui-button py-2 px-5 text-xs border-phosphor text-phosphor hover:bg-phosphor hover:text-black font-semibold flex items-center gap-2"
+              className="fui-button py-2 px-5 text-xs border-phosphor text-phosphor hover:bg-phosphor hover:text-black font-semibold flex items-center gap-2 cursor-pointer"
             >
               <Send className="w-3.5 h-3.5" />
-              <span>&lt;{isSubmitting ? 'TRANSMITTING...' : 'TRANSMIT DISPATCH'}&gt;</span>
+              <span>&lt;{isSubmitting ? 'PUBLISHING...' : postType === 'announcement' ? 'POST ANNOUNCEMENT' : 'PUBLISH POST'}&gt;</span>
             </button>
           </div>
         </form>

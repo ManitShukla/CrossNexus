@@ -5,11 +5,11 @@ import {
   ShieldAlert, 
   Terminal, 
   KeyRound, 
-  CornerDownRight, 
-  Wifi, 
-  Lock,
-  CheckCircle2,
-  AlertTriangle
+  UserCheck, 
+  ShieldCheck, 
+  XCircle,
+  Activity,
+  Layers
 } from 'lucide-react';
 
 export default function LoginPage() {
@@ -18,7 +18,6 @@ export default function LoginPage() {
   const { loginDev, loading } = useAuth();
   const [isRedirecting, setIsRedirecting] = useState(false);
   const [devError, setDevError] = useState(null);
-  const [showHarness, setShowHarness] = useState(false);
   const [currentTime, setCurrentTime] = useState(() => 
     new Date().toISOString().replace('T', ' // ').slice(0, 22) + ' UTC'
   );
@@ -69,27 +68,27 @@ export default function LoginPage() {
       <div className="crt-scanlines" />
       <div className="crt-vignette" />
 
-      {/* TOP TELEMETRY PROTOCOL BAR */}
+      {/* TOP SYSTEM STATUS BAR */}
       <header className="border border-stroke-mid bg-charcoal-panel p-3 flex flex-wrap items-center justify-between gap-3 text-xs tracking-ui">
         <div className="flex items-center gap-3">
           <span className="w-2.5 h-2.5 bg-phosphor inline-block animate-pulse" />
-          <span className="text-phosphor font-semibold">GATEWAY_NODE: AUTH-01</span>
+          <span className="text-phosphor font-semibold">CAMPUS AUTHENTICATION GATEWAY</span>
           <span className="text-stroke-bright">//</span>
-          <span className="text-teal font-medium">SECURE ACCESS POINT</span>
+          <span className="text-teal font-medium">STUDENT & FACULTY PORTAL</span>
           <span className="text-stroke-bright">//</span>
           <span className="text-tactical-muted hidden md:inline">{currentTime}</span>
         </div>
         <div className="flex items-center gap-3 text-[11px]">
-          <span className="text-tactical-muted">ENCRYPTION: <span className="text-teal font-bold">AES-256-GCM</span></span>
+          <span className="text-tactical-muted">STATUS: <span className="text-phosphor font-bold">ONLINE</span></span>
           <span className="text-stroke-bright">|</span>
-          <span className="text-tactical-muted">DOMAIN_GATE: <span className="text-phosphor font-semibold">@nsut.ac.in ONLY</span></span>
+          <span className="text-tactical-muted">DOMAIN: <span className="text-phosphor font-semibold">@nsut.ac.in ONLY</span></span>
         </div>
       </header>
 
       {/* CENTERED ACCESS TERMINAL */}
-      <main className="max-w-xl w-full mx-auto my-8 relative z-10 flex flex-col gap-6">
+      <main className="max-w-2xl w-full mx-auto my-8 relative z-10 flex flex-col gap-6">
         
-        {/* CRITICAL HAZARD ALERT: DOMAIN RESTRICTION REJECTION */}
+        {/* CRITICAL DOMAIN RESTRICTION REJECTION BANNER */}
         {isUnauthorizedDomain && (
           <div className="border border-hazard bg-charcoal-base p-4 relative animate-shake">
             <div className="fui-hazard-divider -mx-4 -mt-4 mb-4" />
@@ -102,13 +101,13 @@ export default function LoginPage() {
               <ShieldAlert className="w-6 h-6 text-hazard flex-shrink-0 animate-pulse mt-0.5" />
               <div className="space-y-2">
                 <div className="text-xs font-bold text-hazard tracking-alert uppercase">
-                  [ ACCESS DENIED // UNAUTHORIZED DOMAIN: ONLY @nsut.ac.in CADETS PERMITTED ]
+                  [ ACCESS DENIED // UNAUTHORIZED DOMAIN: ONLY @nsut.ac.in ACCOUNTS PERMITTED ]
                 </div>
                 <p className="text-[11px] text-tactical-bright leading-relaxed">
-                  CRITICAL: Perimeter gate rejected identity handshake. Access is strictly restricted to verified <span className="text-hazard font-bold">@nsut.ac.in</span> institutional credentials. Personal consumer emails (e.g., @gmail.com) are rejected at perimeter.
+                  Perimeter gate rejected identity handshake. Access is strictly restricted to verified <span className="text-hazard font-bold">@nsut.ac.in</span> institutional credentials. Personal consumer emails (e.g., @gmail.com) are rejected at the authentication gateway.
                 </p>
                 <div className="text-[10px] text-tactical-muted font-mono pt-1 border-t border-stroke-dim">
-                  TELEMETRY_LOG: CODE_403_GATEWAY_REJECT // IP_ADDR_INTERCEPTED // PROTOCOL_TERMINATED
+                  AUDIT LOG: HTTP_403_DOMAIN_REJECT // NON_INSTITUTIONAL_IDENTITY // ACCESS_REFUSED
                 </div>
               </div>
             </div>
@@ -116,14 +115,14 @@ export default function LoginPage() {
           </div>
         )}
 
-        {/* GENERAL ERROR BANNER */}
+        {/* GENERAL ERROR NOTICE */}
         {isOtherError && !isUnauthorizedDomain && (
           <div className="border border-stroke-bright bg-charcoal-surface p-4 text-xs text-tactical-muted">
-            <span className="text-hazard font-bold">[ SYSTEM NOTICE ]</span> Authentication error occurred: {errorParam || devError}. Check server telemetry.
+            <span className="text-hazard font-bold">[ SYSTEM NOTICE ]</span> Authentication error occurred: {errorParam || devError}. Check server status.
           </div>
         )}
 
-        {/* MAIN HERO TERMINAL CARD */}
+        {/* CONTAINER A: MAIN AUTHENTICATION BOX */}
         <div className="fui-panel border border-stroke-bright bg-charcoal-panel p-6 sm:p-8 relative">
           <div className="fui-reticle-tl" />
           <div className="fui-reticle-tr" />
@@ -138,34 +137,37 @@ export default function LoginPage() {
           <div className="fui-panel-header">
             <span className="flex items-center gap-2">
               <Terminal className="w-4 h-4 text-phosphor" />
-              CADET VERIFICATION PORTAL
+              STUDENT & FACULTY PORTAL
             </span>
-            <span className="text-[10px] text-tactical-muted">CLEARANCE: INSTITUTIONAL SENTRY</span>
+            <span className="text-[10px] text-tactical-muted">AUTH SPEC: GOOGLE OAUTH 2.0</span>
           </div>
 
-          {/* BRAND TITLE & COMMAND BRIEFING */}
+          {/* BRAND TITLE & ACADEMIC PORTAL BRIEFING */}
           <div className="mb-6">
-            <h1 className="text-xl sm:text-2xl font-bold tracking-ui text-tactical-bright uppercase mb-2">
-              NSUT CONNECT <span className="text-phosphor">//</span> HUD
+            <h1 className="text-xl sm:text-2xl font-bold tracking-ui text-tactical-bright uppercase mb-1">
+              NSUT CONNECT <span className="text-phosphor">//</span> PORTAL
             </h1>
+            <p className="text-xs text-teal font-medium mb-3 uppercase tracking-wider">
+              Official Academic Portal // Netaji Subhas University of Technology
+            </p>
             <p className="text-xs text-tactical-muted leading-relaxed font-mono">
-              Welcome to NSUT Connect, the tactical campus intelligence and academic coordination network for Netaji Subhas University of Technology. Access real-time broadcast announcements, the smart timetable matrix with live class detection, community discussion channels, and the decentralized IPFS study vault.
+              Welcome to NSUT Connect, the unified academic collaboration and campus operations network. Access real-time campus announcements, the smart timetable matrix with live lecture tracking, peer discussion forums, and the decentralized IPFS academic resource repository.
             </p>
           </div>
 
-          {/* TELEMETRY MATRIX */}
-          <div className="grid grid-cols-2 gap-2 text-[11px] mb-6 p-3 bg-black border border-stroke-dim">
+          {/* SYSTEM STATUS TELEMETRY */}
+          <div className="grid grid-cols-3 gap-2 text-[11px] mb-6 p-3 bg-black border border-stroke-dim">
             <div>
-              <span className="text-tactical-muted">NODE_STATUS:</span> <span className="text-phosphor font-medium">ONLINE</span>
+              <span className="text-tactical-muted block text-[10px]">STATUS:</span>
+              <span className="text-phosphor font-medium">ONLINE</span>
             </div>
             <div>
-              <span className="text-tactical-muted">ENCRYPTION:</span> <span className="text-teal font-medium">AES-256-GCM</span>
+              <span className="text-tactical-muted block text-[10px]">AUTH:</span>
+              <span className="text-teal font-medium">GOOGLE OAUTH 2.0</span>
             </div>
             <div>
-              <span className="text-tactical-muted">REQUIRED_DOMAIN:</span> <span className="text-phosphor font-medium">@nsut.ac.in</span>
-            </div>
-            <div>
-              <span className="text-tactical-muted">SESSION_TYPE:</span> <span className="text-tactical-bright font-medium">STATELESS_JWT</span>
+              <span className="text-tactical-muted block text-[10px]">DOMAIN:</span>
+              <span className="text-phosphor font-medium">@nsut.ac.in</span>
             </div>
           </div>
 
@@ -174,74 +176,117 @@ export default function LoginPage() {
             <button
               onClick={handleGoogleSSO}
               disabled={isRedirecting || loading}
-              className="fui-button w-full py-4 text-xs font-bold tracking-widest uppercase flex items-center justify-center gap-3 relative group border-phosphor bg-phosphor/10 hover:bg-phosphor hover:text-black text-phosphor transition-all"
+              className="w-full py-4 px-6 border border-phosphor bg-black hover:bg-phosphor hover:text-black font-mono font-bold text-sm tracking-widest text-phosphor transition-colors uppercase flex items-center justify-center gap-3 cursor-pointer group"
             >
               <KeyRound className="w-4 h-4 group-hover:rotate-45 transition-transform" />
               <span>
-                &lt;{isRedirecting ? 'TRANSFERRING TO GOOGLE OAUTH...' : 'ACTIVATE SECURE UPLINK'}&gt;
+                {isRedirecting 
+                  ? '[ CONNECTING TO GOOGLE OAUTH... ]' 
+                  : '[ SIGN IN WITH GOOGLE // @nsut.ac.in ]'}
               </span>
             </button>
             <div className="text-[10px] text-center text-tactical-muted tracking-tightest space-y-1">
-              <p className="text-tactical-bright">OFFICIAL @nsut.ac.in GOOGLE ACCOUNTS REQUIRED FOR INSTITUTIONAL CLEARANCE.</p>
-              <p className="text-tactical-muted">ROLES (STUDENT / ADMIN) ARE AUTOMATICALLY RESOLVED AT PERIMETER GATE.</p>
+              <p className="text-tactical-bright uppercase">Only official @nsut.ac.in institutional accounts are permitted entry.</p>
+              <p className="text-tactical-muted">Roles (Student / Campus Admin) are automatically resolved upon verified institutional login.</p>
             </div>
           </div>
+        </div>
 
-          {/* PROGRESSIVE DISCLOSURE: EVALUATION & SIMULATION HARNESS */}
-          <div className="mt-8 border-t border-stroke-dim pt-4">
+        {/* CONTAINER B: EVALUATOR & VERIFICATION BOX (UNMISSABLE HACKATHON HARNESS) */}
+        <div className="border border-teal/40 bg-charcoal-panel/90 p-5 sm:p-6 relative">
+          <div className="fui-reticle-tl border-teal" />
+          <div className="fui-reticle-tr border-teal" />
+          <div className="fui-reticle-bl border-teal" />
+          <div className="fui-reticle-br border-teal" />
+
+          {/* HEADER BADGE */}
+          <div className="flex items-center justify-between pb-3 mb-4 border-b border-stroke-dim">
+            <div className="flex items-center gap-2">
+              <Layers className="w-4 h-4 text-teal" />
+              <span className="text-xs font-bold text-teal tracking-widest uppercase">
+                [ EVALUATOR & HACKATHON DEMO HARNESS // INSTANT ACCESS ]
+              </span>
+            </div>
+            <span className="text-[10px] text-phosphor bg-phosphor/10 px-2 py-0.5 border border-phosphor/30 font-semibold uppercase">
+              ZERO CONFIG / INSTANT DEMO
+            </span>
+          </div>
+
+          {/* GUIDANCE TEXT */}
+          <p className="text-[11px] text-tactical-muted mb-4 leading-relaxed font-mono">
+            For faculty review, hackathon evaluation, and offline local testing. Select an identity below to bypass Google OAuth and inspect the platform with full role-specific permissions:
+          </p>
+
+          {/* THREE LARGE ACTION CARDS */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            {/* STUDENT DEMO CARD */}
             <button
               type="button"
-              onClick={() => setShowHarness(!showHarness)}
-              className="w-full text-left font-mono text-[11px] text-tactical-muted hover:text-phosphor flex items-center justify-between transition-colors py-1 cursor-pointer select-none"
+              onClick={() => handleSimulateDevSSO('student.2024@nsut.ac.in', 'student')}
+              className="text-left p-3.5 border border-phosphor/50 hover:border-phosphor bg-black hover:bg-phosphor/5 transition-colors group flex flex-col justify-between"
             >
-              <span className="font-semibold text-stroke-bright hover:text-phosphor transition-colors">
-                [ {showHarness ? '▲ COLLAPSE' : '▼ EXPAND'} EVALUATION & SIMULATION HARNESS ]
-              </span>
-              <span className="text-[10px] text-tactical-muted uppercase">For Local Judges & Verification</span>
+              <div>
+                <div className="flex items-center gap-1.5 text-xs font-bold text-phosphor uppercase mb-1">
+                  <UserCheck className="w-3.5 h-3.5" />
+                  <span>&lt;DEMO: LOGIN AS STUDENT&gt;</span>
+                </div>
+                <p className="text-[10px] text-tactical-muted leading-snug">
+                  Standard student privileges: View timetable, browse IPFS vault, participate in discussions.
+                </p>
+              </div>
+              <div className="mt-3 text-[9px] text-phosphor/70 font-mono tracking-tight pt-2 border-t border-stroke-dim">
+                ID: student.2024@nsut.ac.in
+              </div>
             </button>
 
-            {showHarness && (
-              <div className="mt-3 p-4 border border-stroke-dim bg-black/60 space-y-3">
-                <div className="text-[10px] text-teal tracking-label uppercase flex items-center gap-1.5">
-                  <CornerDownRight className="w-3 h-3 text-teal" />
-                  LOCAL TELEMETRY SIMULATION HARNESS (DEVELOPMENT TESTING)
+            {/* ADMIN DEMO CARD */}
+            <button
+              type="button"
+              onClick={() => handleSimulateDevSSO('admin.terminal@nsut.ac.in', 'admin')}
+              className="text-left p-3.5 border border-teal/50 hover:border-teal bg-black hover:bg-teal/5 transition-colors group flex flex-col justify-between"
+            >
+              <div>
+                <div className="flex items-center gap-1.5 text-xs font-bold text-teal uppercase mb-1">
+                  <ShieldCheck className="w-3.5 h-3.5" />
+                  <span>&lt;DEMO: LOGIN AS CAMPUS ADMIN&gt;</span>
                 </div>
-                <p className="text-[10px] text-tactical-muted leading-relaxed">
-                  Simulate instant institutional SSO with automated role detection without requiring external Google OAuth API credentials:
+                <p className="text-[10px] text-tactical-muted leading-snug">
+                  Administrative privileges: Broadcast urgent real-time announcements, verify uploaded study materials.
                 </p>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                  <button
-                    type="button"
-                    onClick={() => handleSimulateDevSSO('cadet.2024@nsut.ac.in', 'student')}
-                    className="fui-button py-2 text-[10px] text-tactical-main border-stroke-mid hover:border-phosphor hover:text-phosphor"
-                  >
-                    &lt;SSO: (STUDENT) CADET&gt;
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleSimulateDevSSO('admin.terminal@nsut.ac.in', 'admin')}
-                    className="fui-button py-2 text-[10px] text-teal border-stroke-mid hover:border-teal hover:text-tactical-bright"
-                  >
-                    &lt;SSO: (ADMIN) COMMAND&gt;
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleSimulateDevSSO('intruder@gmail.com', 'student')}
-                    className="fui-button-hazard py-2 text-[10px] border-hazard/40 text-hazard hover:border-hazard"
-                  >
-                    &lt;TEST: (FAIL) @GMAIL.COM&gt;
-                  </button>
-                </div>
               </div>
-            )}
+              <div className="mt-3 text-[9px] text-teal/70 font-mono tracking-tight pt-2 border-t border-stroke-dim">
+                ID: admin.terminal@nsut.ac.in
+              </div>
+            </button>
+
+            {/* DOMAIN FAILURE TEST CARD */}
+            <button
+              type="button"
+              onClick={() => handleSimulateDevSSO('intruder@gmail.com', 'student')}
+              className="text-left p-3.5 border border-hazard/50 hover:border-hazard bg-black hover:bg-hazard/5 transition-colors group flex flex-col justify-between"
+            >
+              <div>
+                <div className="flex items-center gap-1.5 text-xs font-bold text-hazard uppercase mb-1">
+                  <XCircle className="w-3.5 h-3.5" />
+                  <span>&lt;TEST: ATTEMPT @GMAIL.COM LOGIN&gt;</span>
+                </div>
+                <p className="text-[10px] text-tactical-muted leading-snug">
+                  Simulates unauthorized personal email to verify the domain gate rejects non-NSUT addresses.
+                </p>
+              </div>
+              <div className="mt-3 text-[9px] text-hazard/70 font-mono tracking-tight pt-2 border-t border-stroke-dim">
+                ID: intruder@gmail.com (REJECTED)
+              </div>
+            </button>
           </div>
         </div>
+
       </main>
 
       {/* FOOTER TICKER */}
       <footer className="border-t border-stroke-dim pt-3 flex flex-wrap items-center justify-between gap-3 text-[11px] text-tactical-muted">
-        <div>NSUT CONNECT DEFENSE GRID // ACCESS NODE 09</div>
-        <div className="text-stroke-bright font-mono">ENCRYPTION: VERIFIED</div>
+        <div>NSUT CONNECT // OFFICIAL ACADEMIC PLATFORM // NODE 01</div>
+        <div className="text-stroke-bright font-mono">STATUS: VERIFIED</div>
       </footer>
     </div>
   );

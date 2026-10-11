@@ -1,4 +1,4 @@
-﻿import React, { useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import api from '../../services/api';
 import { 
   X, 
@@ -30,7 +30,7 @@ export default function UploadResourceModal({ isOpen, onClose, onUploadSuccess }
     if (!file) return;
 
     if (file.size > MAX_FILE_SIZE_BYTES) {
-      setErrorMessage(`[PAYLOAD_REJECTED] File exceeds 25MB tactical ceiling (${(file.size / (1024 * 1024)).toFixed(1)} MB).`);
+      setErrorMessage(`[FILE_REJECTED] File exceeds 25MB maximum size limit (${(file.size / (1024 * 1024)).toFixed(1)} MB).`);
       setSelectedFile(null);
       return;
     }
@@ -96,12 +96,12 @@ export default function UploadResourceModal({ isOpen, onClose, onUploadSuccess }
           handleClose();
         }, 1000);
       } else {
-        throw new Error(res.data?.message || 'Decentralized pinning transmission failed.');
+        throw new Error(res.data?.message || 'Resource upload failed.');
       }
     } catch (err) {
       console.error('[VAULT_UPLOAD_ERROR]', err);
       setUploadState('ERROR');
-      setErrorMessage(err.response?.data?.message || err.message || 'Cryptographic pinning uplink severed.');
+      setErrorMessage(err.response?.data?.message || err.message || 'Could not connect to storage gateway.');
     }
   };
 
@@ -126,14 +126,14 @@ export default function UploadResourceModal({ isOpen, onClose, onUploadSuccess }
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 bg-phosphor inline-block animate-pulse" />
             <span className="text-phosphor font-bold tracking-widest uppercase">
-              // TRANSMIT ACADEMIC ASSET TO IPFS VAULT
+              // UPLOAD STUDY MATERIAL TO IPFS VAULT
             </span>
           </div>
           <button
             type="button"
             onClick={handleClose}
             disabled={isTransmitting}
-            className="text-tactical-muted hover:text-hazard transition-colors disabled:opacity-30"
+            className="text-tactical-muted hover:text-hazard transition-colors disabled:opacity-30 cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -144,7 +144,7 @@ export default function UploadResourceModal({ isOpen, onClose, onUploadSuccess }
           {/* FILE UPLOAD TARGET ZONE */}
           <div>
             <label className="block text-[11px] uppercase tracking-wider text-tactical-muted mb-1.5">
-              1. ACADEMIC PAYLOAD (MAX 25MB)
+              1. SELECT DOCUMENT (MAX 25MB)
             </label>
             <div
               onDragEnter={handleDrag}
@@ -175,17 +175,17 @@ export default function UploadResourceModal({ isOpen, onClose, onUploadSuccess }
                     {selectedFile.name}
                   </p>
                   <p className="text-[11px] text-teal">
-                    PAYLOAD SIZE: {(selectedFile.size / 1024).toFixed(1)} KB // STAGED FOR BUFFERING
+                    FILE SIZE: {(selectedFile.size / 1024).toFixed(1)} KB // READY FOR STORAGE
                   </p>
                   <span className="text-[10px] text-tactical-muted underline block mt-2">
-                    CLICK OR DRAG TO REPLACE PAYLOAD
+                    CLICK OR DRAG TO REPLACE FILE
                   </span>
                 </div>
               ) : (
                 <div className="space-y-2">
                   <UploadCloud className="w-7 h-7 text-stroke-bright mx-auto" />
                   <p className="text-tactical-bright font-medium">
-                    DRAG & DROP COURSE ASSET OR CLICK TO SELECT
+                    DRAG & DROP COURSE MATERIAL OR CLICK TO SELECT
                   </p>
                   <p className="text-[10px] text-tactical-muted">
                     PDF, DOCX, ZIP, IMAGES ACCEPTED (MAX 25MB)
@@ -214,13 +214,13 @@ export default function UploadResourceModal({ isOpen, onClose, onUploadSuccess }
 
             <div>
               <label className="block text-[11px] uppercase tracking-wider text-tactical-muted mb-1">
-                3. CLASSIFICATION TIER
+                3. MATERIAL CATEGORY
               </label>
               <select
                 value={type}
                 onChange={(e) => setType(e.target.value)}
                 disabled={isTransmitting}
-                className="w-full bg-black border border-stroke-dim px-3 py-2 text-teal focus:border-phosphor focus:outline-none font-mono"
+                className="w-full bg-black border border-stroke-dim px-3 py-2 text-teal focus:border-phosphor focus:outline-none font-mono cursor-pointer"
               >
                 {RESOURCE_TYPES.map((t) => (
                   <option key={t} value={t}>
@@ -234,7 +234,7 @@ export default function UploadResourceModal({ isOpen, onClose, onUploadSuccess }
           {/* RESOURCE TITLE */}
           <div>
             <label className="block text-[11px] uppercase tracking-wider text-tactical-muted mb-1">
-              4. RESOURCE MANIFEST TITLE
+              4. TITLE / DESCRIPTION
             </label>
             <input
               type="text"
@@ -261,14 +261,14 @@ export default function UploadResourceModal({ isOpen, onClose, onUploadSuccess }
               <div className="flex items-center gap-2 font-bold tracking-wider">
                 <span className="w-2 h-2 bg-teal inline-block animate-ping" />
                 {uploadState === 'HASHING' && (
-                  <span>[ STEP 1/2 ] COMPUTING CRYPTOGRAPHIC SHA-256 HASH █</span>
+                  <span>[ STEP 1/2 ] COMPUTING SHA-256 CHECKSUM █</span>
                 )}
                 {uploadState === 'PINNING' && (
-                  <span>[ STEP 2/2 ] PINNING BUFFER TO DISTRIBUTED IPFS NODES █</span>
+                  <span>[ STEP 2/2 ] PINNING FILE TO IPFS STORAGE █</span>
                 )}
               </div>
               <p className="text-[10px] text-tactical-muted pl-4">
-                STREAMING DIRECT TO PINATA / DETERMINISTIC MEMORY BUFFER...
+                STREAMING DIRECT TO PINATA / IPFS GATEWAY...
               </p>
             </div>
           )}
@@ -276,7 +276,7 @@ export default function UploadResourceModal({ isOpen, onClose, onUploadSuccess }
           {uploadState === 'SUCCESS' && (
             <div className="border border-phosphor bg-phosphor/15 p-3 text-phosphor flex items-center gap-2 font-mono font-bold tracking-wider">
               <span className="w-2 h-2 bg-phosphor inline-block" />
-              <span>[ CONFIRMED ] IMMUTABLE CID PINNED TO ACTIVE REGISTRY.</span>
+              <span>[ CONFIRMED ] RESOURCE SUCCESSFULLY STORED ON IPFS.</span>
             </div>
           )}
 
@@ -286,16 +286,16 @@ export default function UploadResourceModal({ isOpen, onClose, onUploadSuccess }
               type="button"
               onClick={handleClose}
               disabled={isTransmitting}
-              className="px-4 py-2 border border-stroke-dim hover:border-stroke-bright text-tactical-muted hover:text-white uppercase transition-colors disabled:opacity-30"
+              className="px-4 py-2 border border-stroke-dim hover:border-stroke-bright text-tactical-muted hover:text-white uppercase transition-colors disabled:opacity-30 cursor-pointer"
             >
               [ CANCEL ]
             </button>
             <button
               type="submit"
               disabled={isTransmitting || !selectedFile || !courseCode || !title}
-              className="px-5 py-2 border border-phosphor bg-phosphor/20 text-phosphor hover:bg-phosphor hover:text-black font-bold uppercase tracking-wider transition-colors disabled:opacity-40 flex items-center gap-2"
+              className="px-5 py-2 border border-phosphor bg-phosphor/20 text-phosphor hover:bg-phosphor hover:text-black font-bold uppercase tracking-wider transition-colors disabled:opacity-40 flex items-center gap-2 cursor-pointer"
             >
-              <span>CONFIRM PINNING TO GATEWAY</span>
+              <span>CONFIRM UPLOAD TO IPFS</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>

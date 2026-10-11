@@ -4,8 +4,8 @@ import { useAuth } from '../../context/AuthContext';
 import { RefreshCw } from 'lucide-react';
 
 /**
- * Tactical Route Sentry: ProtectedRoute
- * Intercepts unauthenticated navigation attempts and diverts cadets to the login terminal.
+ * Route Guard: ProtectedRoute
+ * Intercepts unauthenticated navigation attempts and directs students to the login portal.
  */
 export const ProtectedRoute = ({ children, requireOnboarded = false }) => {
   const { isAuthenticated, isOnboarded, loading } = useAuth();
@@ -21,12 +21,12 @@ export const ProtectedRoute = ({ children, requireOnboarded = false }) => {
           <div className="fui-reticle-tr" />
           <div className="fui-reticle-bl" />
           <div className="fui-reticle-br" />
-          <div className="text-sm font-bold text-phosphor font-mono tracking-widest mb-4">AWAITING TELEMETRY <span className="fui-cursor">█</span></div>
+          <div className="text-sm font-bold text-phosphor font-mono tracking-widest mb-4">VERIFYING SESSION <span className="fui-cursor">█</span></div>
           <div className="text-xs font-semibold tracking-alert text-phosphor uppercase mb-2">
-            [ DECRYPTING IDENTITY TELEMETRY ]
+            [ AUTHENTICATING SESSION ]
           </div>
           <div className="text-[11px] text-tactical-muted">
-            Verifying cryptographic token with NSUT command cluster...
+            Verifying session credentials with NSUT authentication gateway...
           </div>
         </div>
       </div>

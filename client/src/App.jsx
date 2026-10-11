@@ -19,14 +19,14 @@ function DashboardHUD() {
   const { user, role } = useAuth();
   const navigate = useNavigate();
   const [time, setTime] = useState(new Date().toISOString());
-  const [serverStatus, setServerStatus] = useState({ status: 'STANDBY', message: 'Awaiting tactical telemetry downlink' });
+  const [serverStatus, setServerStatus] = useState({ status: 'STANDBY', message: 'Awaiting server connection' });
   const [isPinging, setIsPinging] = useState(false);
   const [logs, setLogs] = useState([
-    `[AUTH_LOCK] Session verified for cadet: ${user?.email || 'authenticated'}`,
-    `[CLEARANCE] Security Clearance tier: ${role?.toUpperCase() || 'STUDENT'}`,
-    `[CADET_PROFILE] Branch: ${user?.branch || 'UNASSIGNED'} | Sem: ${user?.semester || 'N/A'} | Sec: ${user?.section || 'N/A'}`,
-    '[GRID_MAPPED] Two-column Tactical Feed armed (Discussions + Announcements).',
-    '[BRUTALIST] Border-radius locked to 0px globally. Soft shadows purged.',
+    `[AUTH_LOCK] Session verified for student: ${user?.email || 'authenticated'}`,
+    `[ROLE_CHECK] Access role: ${role?.toUpperCase() || 'STUDENT'}`,
+    `[USER_PROFILE] Branch: ${user?.branch || 'UNASSIGNED'} | Sem: ${user?.semester || 'N/A'} | Sec: ${user?.section || 'N/A'}`,
+    '[GRID_MAPPED] Two-column Campus Feed active (Discussions + Announcements).',
+    '[BRUTALIST] Border-radius locked to 0px globally. Monospace high-performance UI.',
     '[REALTIME] Socket.io campus-wide broadcast channel active.',
   ]);
 
@@ -39,21 +39,21 @@ function DashboardHUD() {
 
   const handleDiagnosticPing = async () => {
     setIsPinging(true);
-    setLogs(prev => [`[${new Date().toLocaleTimeString()}] Pinging backend /health telemetry...`, ...prev]);
+    setLogs(prev => [`[${new Date().toLocaleTimeString()}] Pinging backend /health endpoint...`, ...prev]);
     try {
       const res = await fetch('http://localhost:5000/health');
       const data = await res.json();
       setServerStatus({ 
-        status: 'UPLINK_VERIFIED', 
+        status: 'CONNECTION_VERIFIED', 
         message: `Status: ${data.status} | DB: ${data.database.state} | Uptime: ${data.uptimeSeconds}s` 
       });
-      setLogs(prev => [`[${new Date().toLocaleTimeString()}] Telemetry response ACK. Node: ${data.nodeVersion} | Sockets: ${data.socketClients}`, ...prev]);
+      setLogs(prev => [`[${new Date().toLocaleTimeString()}] Server response ACK. Node: ${data.nodeVersion} | Sockets: ${data.socketClients}`, ...prev]);
     } catch (err) {
       setServerStatus({ 
         status: 'OFFLINE_STANDBY', 
         message: 'Server offline or initializing. Start via npm run server:dev' 
       });
-      setLogs(prev => [`[${new Date().toLocaleTimeString()}] Telemetry probe error: ${err.message}`, ...prev]);
+      setLogs(prev => [`[${new Date().toLocaleTimeString()}] Connection probe error: ${err.message}`, ...prev]);
     } finally {
       setIsPinging(false);
     }
@@ -73,9 +73,9 @@ function DashboardHUD() {
 
       {/* MAIN OPERATIONS GRID */}
       <main className="max-w-7xl w-full mx-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 flex-grow">
-        {/* LEFT COLUMN: ACTIVE CADET STATUS & QUICK LAUNCH */}
+        {/* LEFT COLUMN: ACTIVE USER STATUS & QUICK LAUNCH */}
         <section className="lg:col-span-7 flex flex-col gap-6">
-          {/* CADET IDENTITY PANEL */}
+          {/* USER IDENTITY PANEL */}
           <div className="fui-panel">
             <div className="fui-reticle-tl" />
             <div className="fui-reticle-tr" />
@@ -85,25 +85,25 @@ function DashboardHUD() {
             <div className="fui-panel-header">
               <span className="flex items-center gap-2">
                 <UserIcon className="w-4 h-4 text-phosphor" />
-                AUTHENTICATED CADET TELEMETRY
+                AUTHENTICATED USER DETAILS
               </span>
-              <span className="text-xs text-phosphor font-semibold">CLEARANCE: {role?.toUpperCase()}</span>
+              <span className="text-xs text-phosphor font-semibold">ROLE: {role?.toUpperCase()}</span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4 text-xs">
               <div className="border border-stroke-dim bg-charcoal-base p-2.5">
-                <div className="text-[10px] text-tactical-muted uppercase tracking-label">Cadet Identifier</div>
-                <div className="text-tactical-bright font-semibold mt-0.5 truncate">{user?.name || 'Active Cadet'}</div>
+                <div className="text-[10px] text-tactical-muted uppercase tracking-label">Student Name</div>
+                <div className="text-tactical-bright font-semibold mt-0.5 truncate">{user?.name || 'Active Student'}</div>
               </div>
               <div className="border border-stroke-dim bg-charcoal-base p-2.5">
                 <div className="text-[10px] text-tactical-muted uppercase tracking-label">Academic Profile</div>
                 <div className="text-phosphor font-semibold mt-0.5">
-                  {user?.branch ? `${user.branch} / S0${user.semester} / SEC ${user.section}` : 'CALIBRATION PENDING'}
+                  {user?.branch ? `${user.branch} / S0${user.semester} / SEC ${user.section}` : 'SETUP PENDING'}
                 </div>
               </div>
               <div className="border border-stroke-dim bg-charcoal-base p-2.5">
-                <div className="text-[10px] text-tactical-muted uppercase tracking-label">Onboarding State</div>
-                <div className="text-teal font-semibold mt-0.5">{user?.isOnboarded ? 'CALIBRATED' : 'ACTION REQUIRED'}</div>
+                <div className="text-[10px] text-tactical-muted uppercase tracking-label">Profile Status</div>
+                <div className="text-teal font-semibold mt-0.5">{user?.isOnboarded ? 'SETUP COMPLETE' : 'ACTION REQUIRED'}</div>
               </div>
             </div>
 
@@ -113,7 +113,7 @@ function DashboardHUD() {
                 to="/feed"
                 className="fui-button py-2 text-xs text-phosphor border-phosphor font-semibold flex items-center justify-center gap-2"
               >
-                <span>&lt;COMM-HUB FEED&gt;</span>
+                <span>&lt;CAMPUS FEED&gt;</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
               <Link
@@ -134,7 +134,7 @@ function DashboardHUD() {
                 to="/onboard"
                 className="fui-button py-2 text-xs text-tactical-muted border-stroke-dim hover:border-teal font-semibold flex items-center justify-center gap-2"
               >
-                <span>&lt;CALIBRATE PROFILE&gt;</span>
+                <span>&lt;SETUP PROFILE&gt;</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
@@ -142,13 +142,13 @@ function DashboardHUD() {
             {/* INTERACTION AREA */}
             <div className="border border-stroke-dim bg-charcoal-base p-3 flex flex-wrap items-center justify-between gap-3">
               <div>
-                <div className="text-[10px] text-tactical-muted uppercase tracking-label">Backend Telemetry Uplink</div>
+                <div className="text-[10px] text-tactical-muted uppercase tracking-label">Backend Server Telemetry</div>
                 <div className="text-xs font-medium text-tactical-bright mt-0.5">{serverStatus.message}</div>
               </div>
               <button 
                 onClick={handleDiagnosticPing}
                 disabled={isPinging}
-                className="fui-button flex items-center gap-2"
+                className="fui-button flex items-center gap-2 cursor-pointer"
               >
                 <RefreshCw className={`w-3.5 h-3.5 ${isPinging ? 'text-phosphor' : 'text-tactical-muted'}`} />
                 <span>&lt;{isPinging ? 'PROBING...' : 'PING SERVER /HEALTH'}&gt;</span>
@@ -161,7 +161,7 @@ function DashboardHUD() {
             <div className="fui-panel-header">
               <span className="flex items-center gap-2">
                 <Activity className="w-4 h-4 text-teal" />
-                SYSTEM MACHINE LOGS
+                SYSTEM ACTIVITY LOGS
               </span>
               <span className="text-[10px] text-tactical-muted">BUFFER: {logs.length}</span>
             </div>
@@ -176,27 +176,27 @@ function DashboardHUD() {
           </div>
         </section>
 
-        {/* RIGHT COLUMN: PHASE 3 VERIFICATION CHECKLIST */}
+        {/* RIGHT COLUMN: CORE MODULES CHECKLIST */}
         <section className="lg:col-span-5 flex flex-col gap-6">
           <div className="fui-panel flex-grow">
             <div className="fui-panel-header">
               <span className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-phosphor" />
-                PHASE 3 CORE API MATRIX
+                CAMPUS CORE PLATFORM MODULES
               </span>
               <span className="text-xs text-phosphor font-semibold">100% OPERATIONAL</span>
             </div>
 
             <div className="space-y-3 text-xs">
               {[
-                { title: 'User Calibration (PUT /onboard)', desc: 'Branch, semester, section persistence armed.', ok: true },
-                { title: 'System Logs (GET /announcements)', desc: 'Official notice feed with category & priority filters.', ok: true },
-                { title: 'Mutation Security Gate', desc: 'requireAdmin strictly enforcing notice create/delete.', ok: true },
-                { title: 'Socket Broadcast Dispatch', desc: 'io.to("campus_all").emit("new_announcement") live.', ok: true },
-                { title: 'Active Deployments (Discussions)', desc: 'Forum threads with channel routing & pagination.', ok: true },
-                { title: 'Cryptographic Upvotes ($addToSet)', desc: 'Cadet voting toggle with real-time tally update.', ok: true },
+                { title: 'Academic Setup (PUT /onboard)', desc: 'Branch, semester, section cohort persistence.', ok: true },
+                { title: 'Official Notices (GET /announcements)', desc: 'Campus announcements feed with category & priority filters.', ok: true },
+                { title: 'Administrative Security Gate', desc: 'requireAdmin strictly enforcing notice create/delete.', ok: true },
+                { title: 'Real-Time Notification Dispatch', desc: 'io.to("campus_all").emit("new_announcement") live.', ok: true },
+                { title: 'Campus Discussions', desc: 'Forum threads with channel categorization & sorting.', ok: true },
+                { title: 'Student Upvoting ($addToSet)', desc: 'Atomic participation toggle with real-time tally update.', ok: true },
                 { title: 'Hierarchical Comments', desc: 'Threaded responses with parentId support.', ok: true },
-                { title: 'Two-Column Tactical Feed Grid', desc: 'minmax(420px, 1.45fr) minmax(320px, 1fr) layout.', ok: true },
+                { title: 'Two-Column Campus Feed Grid', desc: 'minmax(420px, 1.45fr) minmax(320px, 1fr) layout.', ok: true },
               ].map((item, idx) => (
                 <div key={idx} className="border border-stroke-dim bg-charcoal-surface p-3 flex items-start justify-between gap-3">
                   <div>
@@ -215,10 +215,10 @@ function DashboardHUD() {
 
       {/* FOOTER TICKER */}
       <footer className="border-t border-stroke-dim p-4 max-w-7xl mx-auto w-full flex flex-wrap items-center justify-between gap-3 text-[11px] text-tactical-muted font-mono">
-        <div>MIL-SPEC FUI ARCHITECTURE // PHASES 1-7 CERTIFIED OPERATIONAL</div>
+        <div>NSUT CONNECT // CAMPUS OPERATING SYSTEM // ALL MODULES OPERATIONAL</div>
         <div className="flex items-center gap-3">
-          <span>MISSION STATUS: FINAL RELEASE CERTIFIED</span>
-          <span className="text-phosphor font-bold">[ARMED]</span>
+          <span>SYSTEM STATUS: PRODUCTION READY</span>
+          <span className="text-phosphor font-bold">[ACTIVE]</span>
         </div>
       </footer>
     </div>
@@ -250,7 +250,7 @@ export default function App() {
               </ProtectedRoute>
             } 
           />
-                    <Route 
+          <Route 
             path="/timetable" 
             element={
               <ProtectedRoute>
