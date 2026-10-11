@@ -59,6 +59,14 @@ const onboardUser = async (req, res) => {
       updatedUser = req.user;
     }
 
+    if (!updatedUser) {
+      req.user.branch = cleanBranch;
+      req.user.semester = parsedSemester;
+      req.user.section = cleanSection;
+      req.user.isOnboarded = true;
+      updatedUser = req.user;
+    }
+
     console.log(`[USER_ONBOARDED] ${req.user.email} -> ${cleanBranch} | Sem ${parsedSemester} | Sec ${cleanSection}`);
 
     const profile = {

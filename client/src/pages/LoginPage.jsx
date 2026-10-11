@@ -17,6 +17,7 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const { loginDev, loading } = useAuth();
   const [isRedirecting, setIsRedirecting] = useState(false);
+  const [simulatingRole, setSimulatingRole] = useState(null);
   const [devError, setDevError] = useState(null);
   const [currentTime, setCurrentTime] = useState(() => 
     new Date().toISOString().replace('T', ' // ').slice(0, 22) + ' UTC'
@@ -54,15 +55,25 @@ export default function LoginPage() {
       setDevError('unauthorized_domain');
       return;
     }
-    const result = await loginDev(email, role);
-    if (result?.success) {
-      if (!result.user?.isOnboarded) {
-        navigate('/onboard');
+    try {
+      setSimulatingRole(role);
+      const result = await loginDev(email, role);
+      if (result?.success) {
+        if (!result.user?.isOnboarded) {
+          navigate('/onboard');
+        } else {
+          navigate('/feed');
+        }
       } else {
-        navigate('/feed');
+        const errDetail = typeof result?.error === 'string'
+          ? result.error
+          : result?.error?.message || result?.error?.error || 'Server connection failed. Please ensure backend is active.';
+        setDevError(errDetail);
       }
-    } else {
-      setDevError(result?.error?.message || 'Server connection failed. Please ensure the backend is active.');
+    } catch (err) {
+      setDevError(err.message || 'Simulation error.');
+    } finally {
+      setSimulatingRole(null);
     }
   };
 
@@ -251,13 +262,18 @@ export default function LoginPage() {
             {/* STUDENT DEMO CARD */}
             <button
               type="button"
+              disabled={simulatingRole !== null || isRedirecting}
               onClick={() => handleSimulateDevSSO('student.2024@nsut.ac.in', 'student')}
-              className="text-left p-3.5 border border-phosphor/50 hover:border-phosphor bg-black hover:bg-phosphor/5 transition-colors group flex flex-col justify-between"
+              className={`text-left p-3.5 border ${
+                simulatingRole === 'student' ? 'border-phosphor bg-phosphor/10' : 'border-phosphor/50 hover:border-phosphor bg-black hover:bg-phosphor/5'
+              } transition-colors group flex flex-col justify-between cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed`}
             >
               <div>
                 <div className="flex items-center gap-1.5 text-xs font-bold text-phosphor uppercase mb-1">
                   <UserCheck className="w-3.5 h-3.5" />
-                  <span>&lt;DEMO: LOGIN AS STUDENT&gt;</span>
+                  <span>
+                    {simulatingRole === 'student' ? '[ AUTHENTICATING STUDENT... ]' : '<DEMO: LOGIN AS STUDENT>'}
+                  </span>
                 </div>
                 <p className="text-[10px] text-tactical-muted leading-snug">
                   Standard student privileges: View timetable, browse IPFS vault, participate in discussions.
@@ -271,13 +287,18 @@ export default function LoginPage() {
             {/* ADMIN DEMO CARD */}
             <button
               type="button"
+              disabled={simulatingRole !== null || isRedirecting}
               onClick={() => handleSimulateDevSSO('admin.terminal@nsut.ac.in', 'admin')}
-              className="text-left p-3.5 border border-teal/50 hover:border-teal bg-black hover:bg-teal/5 transition-colors group flex flex-col justify-between"
+              className={`text-left p-3.5 border ${
+                simulatingRole === 'admin' ? 'border-teal bg-teal/10' : 'border-teal/50 hover:border-teal bg-black hover:bg-teal/5'
+              } transition-colors group flex flex-col justify-between cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed`}
             >
               <div>
                 <div className="flex items-center gap-1.5 text-xs font-bold text-teal uppercase mb-1">
                   <ShieldCheck className="w-3.5 h-3.5" />
-                  <span>&lt;DEMO: LOGIN AS CAMPUS ADMIN&gt;</span>
+                  <span>
+                    {simulatingRole === 'admin' ? '[ AUTHENTICATING ADMIN... ]' : '<DEMO: LOGIN AS CAMPUS ADMIN>'}
+                  </span>
                 </div>
                 <p className="text-[10px] text-tactical-muted leading-snug">
                   Administrative privileges: Broadcast urgent real-time announcements, verify uploaded study materials.
@@ -291,8 +312,9 @@ export default function LoginPage() {
             {/* DOMAIN FAILURE TEST CARD */}
             <button
               type="button"
+              disabled={simulatingRole !== null || isRedirecting}
               onClick={() => handleSimulateDevSSO('intruder@gmail.com', 'student')}
-              className="text-left p-3.5 border border-hazard/50 hover:border-hazard bg-black hover:bg-hazard/5 transition-colors group flex flex-col justify-between"
+              className="text-left p-3.5 border border-hazard/50 hover:border-hazard bg-black hover:bg-hazard/5 transition-colors group flex flex-col justify-between cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <div>
                 <div className="flex items-center gap-1.5 text-xs font-bold text-hazard uppercase mb-1">

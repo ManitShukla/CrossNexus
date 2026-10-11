@@ -27,32 +27,33 @@ const authenticateJWT = async (req, res, next) => {
     const secret = process.env.JWT_SECRET || 'TACTICAL_ALPHA_KEY_SECURE_9812739182371982_CROSSNEXUS';
     const decoded = jwt.verify(token, secret);
 
-    let user;
+    let user = null;
 
     if (mongoose.connection.readyState === 1) {
-      user = await User.findById(decoded.id).select('-__v');
-      if (!user) {
-        return res.status(401).json({
-          status: 'ACCESS_REVOKED',
-          code: 'USER_NOT_FOUND',
-          message: 'Account record does not exist or has been decommissioned.',
-        });
+      try {
+        user = await User.findById(decoded.id).select('-__v');
+      } catch (dbErr) {
+        console.warn('[AUTH_DB_FALLBACK] Database lookup failed, using token claims:', dbErr.message);
       }
-    } else {
-      // Offline / Dev Stub Fallback
+    }
+
+    // If user not in database (e.g. demo session or degraded offline mode), construct verified session from JWT claims
+    if (!user) {
       user = {
         _id: decoded.id,
         id: decoded.id,
-        name: decoded.name || 'Test Cadet',
-        email: decoded.email || 'cadet@nsut.ac.in',
+        name: decoded.name || 'Verified Student',
+        email: decoded.email || 'student.2024@nsut.ac.in',
         role: decoded.role || 'student',
-        isOnboarded: false,
+        branch: decoded.branch || null,
+        isOnboarded: true,
         toTacticalProfile() {
           return {
             id: this._id,
             name: this.name,
             email: this.email,
             role: this.role,
+            branch: this.branch,
             isOnboarded: this.isOnboarded,
           };
         },

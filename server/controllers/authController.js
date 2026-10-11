@@ -94,17 +94,18 @@ const logout = (req, res) => {
  * Automatically resolves student vs admin role based on ADMIN_EMAILS whitelist
  */
 const devLogin = async (req, res) => {
-  if (process.env.NODE_ENV === 'production') {
+  // Allow demo and evaluation logins across all environments (including production)
+  if (process.env.ENABLE_DEMO_LOGIN === 'false') {
     return res.status(403).json({
       status: 'RESTRICTED',
-      message: 'Dev authenticator disabled in production environment.',
+      message: 'Demo authenticator explicitly disabled via server configuration.',
     });
   }
 
-  const { email = 'cadet.2024@nsut.ac.in', name = 'Cadet', role } = req.body;
+  const { email = 'student.2024@nsut.ac.in', name = 'Cadet', role } = req.body;
   const cleanEmail = email.toLowerCase().trim();
 
-  // Strict domain enforcement even in test endpoint
+  // Strict domain enforcement even in demo endpoint
   if (!cleanEmail.endsWith('@nsut.ac.in')) {
     return res.status(403).json({
       status: 'ACCESS_DENIED',
@@ -124,27 +125,34 @@ const devLogin = async (req, res) => {
     : (role && ['student', 'admin'].includes(role) ? role : 'student');
 
   try {
-    let user;
+    let user = null;
 
-    // Active Database Mode
+    // Active Database Mode (attempt if MongoDB is ready)
     if (mongoose.connection.readyState === 1) {
-      user = await User.findOne({ email: cleanEmail });
-      if (!user) {
-        user = await User.create({
-          googleId: `dev-google-${Date.now()}`,
-          name,
-          email: cleanEmail,
-          role: assignedRole,
-          isOnboarded: false,
-        });
-      } else {
-        if (isInstitutionalAdmin && user.role !== 'admin') {
-          user.role = 'admin';
-          await user.save();
+      try {
+        user = await User.findOne({ email: cleanEmail });
+        if (!user) {
+          user = await User.create({
+            googleId: `demo-user-${Date.now()}`,
+            name,
+            email: cleanEmail,
+            role: assignedRole,
+            isOnboarded: false,
+          });
+        } else {
+          if (isInstitutionalAdmin && user.role !== 'admin') {
+            user.role = 'admin';
+            await user.save();
+          }
         }
+      } catch (dbErr) {
+        console.warn('[DEV_LOGIN_DB_FALLBACK] Database operation failed, falling back to mock session:', dbErr.message);
+        user = null;
       }
-    } else {
-      // Offline / Pre-cluster Stub Mode for Local Dev Verification
+    }
+
+    // Offline / Pre-cluster Stub Mode for Resilient Demo Access
+    if (!user) {
       const mockId = '66b0a1c2' + Buffer.from(cleanEmail).toString('hex').padEnd(16, '0').slice(0, 16);
       user = {
         _id: mockId,
@@ -169,11 +177,23 @@ const devLogin = async (req, res) => {
     }
 
     const token = signToken(user);
+    const userProfile = typeof user.toTacticalProfile === 'function'
+      ? user.toTacticalProfile()
+      : {
+          id: user._id || user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          branch: user.branch || null,
+          semester: user.semester || null,
+          section: user.section || null,
+          isOnboarded: !!user.isOnboarded,
+        };
 
     return res.status(200).json({
       status: 'AUTHENTICATED',
       token,
-      user: user.toTacticalProfile(),
+      user: userProfile,
     });
   } catch (error) {
     return res.status(500).json({

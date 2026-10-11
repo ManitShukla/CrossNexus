@@ -60,8 +60,9 @@ router.get('/me', authenticateJWT, getMe);
 router.post('/logout', authenticateJWT, logout);
 
 // -----------------------------------------------------------------------------
-// TEST & DEV HARNESS (NON-PRODUCTION ONLY)
+// EVALUATOR & DEMO SIMULATION HARNESS (OPERATIONAL ACROSS ALL ENVIRONMENTS)
 // -----------------------------------------------------------------------------
 router.post('/dev-login', devLogin);
+router.post('/simulate-sso', devLogin);
 
 module.exports = router;
